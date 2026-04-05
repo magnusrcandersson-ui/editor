@@ -1114,7 +1114,9 @@
           <option value="side">Från sidan</option>
           <option value="back">Bakifrån</option>
           <option value="45deg">45 grader</option>
-          <option value="drone_above">Drönare snett uppifrån</option>
+          <option value="drone_close">Drönare snett uppifrån (nära)</option>
+          <option value="drone_mid">Drönare uppifrån (medelhöjd)</option>
+          <option value="drone_high">Drönare rakt uppifrån (högt)</option>
           <option value="low_angle">Underifrån (heroisk)</option>
           <option value="shoe_level">Skonivå (cool)</option>
           <option value="close_up">Närbild</option>
@@ -2995,8 +2997,8 @@ const SCENARIOS = {
   warmup: 'doing warm-up exercises on a running track, preparing for training',
   finish_line: 'crossing the finish line of a race with arms raised in triumph, joyful expression',
   celebrating: 'celebrating after completing a race, holding a medal, smiling with pride',
-  phone_app: 'standing outdoors after a run, holding a smartphone showing a training app, smiling at the camera',
-  laptop: 'sitting at a modern desk looking at a laptop screen showing training plans, relaxed and focused',
+  phone_app: 'standing outdoors after a run, holding a smartphone towards the camera showing the Viltra Training app on screen — the app has a dark navy blue UI with the VILTRA/TRAINING logo at top, showing fitness stats (CTL, ATL), a wellness score, training recommendation card, and a marathon training plan. The phone screen is clearly visible and in focus, smiling at the camera',
+  laptop: 'sitting at a modern desk looking at a laptop screen showing the Viltra Training web app with dark navy UI, training plans and fitness dashboard visible on screen, relaxed and focused',
   resting: 'sitting on a bench after a run, catching breath, relaxed and satisfied, water bottle nearby',
   drinking_water: 'drinking from a water bottle after an intense run, slightly sweaty, outdoors',
   group_run: 'leading a group of diverse runners on a scenic path, running in front with confidence',
@@ -3012,7 +3014,9 @@ const ANGLES = {
   side: 'shot from the side profile',
   back: 'shot from behind',
   '45deg': 'shot from a 45-degree angle',
-  drone_above: 'aerial drone shot from above at an angle',
+  drone_close: 'aerial drone shot from slightly above at a 45-degree angle, close to the subject, showing the runner and immediate surroundings',
+  drone_mid: 'aerial drone shot from medium height looking down at roughly 60 degrees, showing the runner on the path with surrounding landscape visible',
+  drone_high: 'aerial drone shot from high above looking straight down (bird\'s eye view), the runner appears small on the path with a dramatic top-down perspective showing the full landscape',
   low_angle: 'shot from a low angle near ground level looking up, emphasizing the running shoes and legs with a heroic powerful perspective, dramatic foreshortening',
   shoe_level: 'shot from ground level at shoe height, camera almost on the asphalt, dramatic close-up of the running shoes hitting the ground with the runner towering above, cool dynamic angle with shallow depth of field on the shoes',
   close_up: 'close-up shot'
