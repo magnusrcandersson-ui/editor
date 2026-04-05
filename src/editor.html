@@ -2046,11 +2046,13 @@ async function exportAll() {
 // PRESETS
 // =====================================================
 let activePresetName = null;
+let manualOverrides = new Set(); // tracks which sliders user has manually tweaked
 
 function applyPreset(name) {
   const p = PRESETS[name];
   if (!p) return;
   activePresetName = name;
+  manualOverrides.clear();
   const isNeutral = name === 'neutral';
   if (!isNeutral) {
     $('intensity').value = 20;
@@ -2075,6 +2077,8 @@ function applyIntensity(pct) {
   const n = PRESETS.neutral;
   const t = pct / 100;
   SLIDERS.forEach(id => {
+    // Skip sliders the user has manually adjusted
+    if (manualOverrides.has(id)) return;
     if (p[id] !== undefined && n[id] !== undefined) {
       const val = Math.round(n[id] + (p[id] - n[id]) * t);
       $(id).value = val;
@@ -2090,8 +2094,7 @@ function applyIntensity(pct) {
 SLIDERS.forEach(id => {
   $(id).addEventListener('input', () => {
     $(id + 'Val').textContent = $(id).value;
-    activePresetName = null;
-    document.querySelectorAll('.preset-item').forEach(c => c.classList.remove('active'));
+    manualOverrides.add(id); // mark this slider as manually adjusted
     if (state.videoMode && !state.videoPlaying) renderVideoFrame();
     else debouncedApply();
   });
