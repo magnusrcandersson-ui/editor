@@ -1083,9 +1083,11 @@
       <div class="section-title">AI Bildprompt</div>
       <div class="section-body">
         <select id="aiCharacter" class="prompt-select">
-          <option value="man">Viltra Man</option>
-          <option value="woman">Viltra Kvinna</option>
+          <option value="man">Viltra Man (löparkläder)</option>
+          <option value="woman">Viltra Kvinna (löparkläder)</option>
           <option value="both">Båda tillsammans</option>
+          <option value="promoMan">Promo Man (mörk tröja, dramatisk)</option>
+          <option value="promoWoman">Promo Kvinna (dynamisk, illustrerad)</option>
         </select>
         <select id="aiScenario" class="prompt-select">
           <option value="running_road">Springer på väg</option>
@@ -1107,6 +1109,11 @@
           <option value="gym">Styrketränar i gym</option>
           <option value="yoga">Gör yoga utomhus</option>
           <option value="portrait">Porträtt / headshot</option>
+          <option value="promo_clean">Promo: Ren (utan text)</option>
+          <option value="promo_text">Promo: Med plats för text</option>
+          <option value="promo_tiktok">Promo: TikTok safe zone</option>
+          <option value="promo_ad">Promo: Annons / reklam</option>
+          <option value="promo_feature">Promo: Visa ny funktion</option>
           <option value="custom">Egen beskrivning...</option>
         </select>
         <select id="aiAngle" class="prompt-select">
@@ -2983,7 +2990,9 @@ function updateTrimUI() {
 const VILTRA_CHARACTERS = {
   man: 'A fit athletic Scandinavian man, approximately 30 years old, short brown hair, light stubble, wearing a white Adidas running t-shirt with "VILTRA /TRAINING" printed on it (VILTRA in dark grey, /TRAINING in orange), black running shorts, black Adidas running shoes, black GPS running watch on left wrist. He has a lean muscular runner\'s build, confident natural expression.',
   woman: 'A fit athletic Scandinavian woman, approximately 28 years old, blonde hair in a ponytail, wearing a white Adidas running t-shirt with "VILTRA /TRAINING" printed on it (VILTRA in dark grey, /TRAINING in orange), black running shorts, black and white Adidas running shoes, black GPS running watch on left wrist. She has a lean athletic runner\'s build, determined natural expression.',
-  both: 'Two fit athletic Scandinavian runners side by side — a man (30, short brown hair, light stubble) and a woman (28, blonde ponytail). Both wearing matching white Adidas running t-shirts with "VILTRA /TRAINING" printed on them (VILTRA in dark grey, /TRAINING in orange), black running shorts, black Adidas running shoes, and black GPS running watches.'
+  both: 'Two fit athletic Scandinavian runners side by side — a man (30, short brown hair, light stubble) and a woman (28, blonde ponytail). Both wearing matching white Adidas running t-shirts with "VILTRA /TRAINING" printed on them (VILTRA in dark grey, /TRAINING in orange), black running shorts, black Adidas running shoes, and black GPS running watches.',
+  promoMan: 'A fit athletic Scandinavian man, approximately 30 years old, short brown hair, light stubble, wearing a dark charcoal/black t-shirt with "VILTRA TRAINING" printed on it in orange text, black shorts, showing a Garmin GPS running watch on his left wrist. He has a lean muscular build, intense confident expression. The scene has a dramatic dark background with glowing orange and gold particle effects, light streaks and bokeh. A large smartphone mockup of the Viltra Training app floats beside him showing the dark navy dashboard with Fitness (CTL) and Belastning (ATL) circular gauges in blue and orange, and a Fitness vs Fatigue graph below. Premium advertising look.',
+  promoWoman: 'A fit athletic woman with dark hair in a ponytail, wearing a black t-shirt with "VILTRA TRAINING" in orange text, black running shorts, running shoes. She is in a dynamic running pose with powerful stride. Illustrated/semi-realistic style with dramatic dark background, glowing orange particle effects and light streaks. The Viltra Training app UI elements float around her — showing Dashboard, Fitness score, Belastning gauge, training log, and a Fitness vs Fatigue chart. Dark navy blue and orange color scheme. Energetic promotional poster look.'
 };
 
 const SCENARIOS = {
@@ -3006,6 +3015,11 @@ const SCENARIOS = {
   gym: 'doing strength training exercises in a modern gym, athletic and powerful',
   yoga: 'doing yoga poses outdoors on a mat in a peaceful park setting, calm and balanced',
   portrait: 'professional portrait headshot, looking at camera with a friendly confident smile, blurred outdoor background',
+  promo_clean: 'in a dramatic promotional poster composition with dark background, glowing orange and gold particle effects, light streaks and bokeh. The Viltra Training app mockup on a smartphone is visible beside the person. Clean version without text overlays — designed for adding custom text later in Canva or similar tool',
+  promo_text: 'in a dramatic promotional poster composition with dark background, glowing orange and gold particle effects, light streaks and bokeh. The Viltra Training app mockup is visible. Leave a clear empty area in the upper third of the image for adding headline text, and lower area for call-to-action text. Composition designed for text overlay',
+  promo_tiktok: 'in a dramatic promotional composition with dark background, glowing orange particles. The Viltra Training app is shown. Vertical 9:16 format. Leave safe zones: top 15% empty for TikTok username, bottom 20% empty for TikTok caption area. Main content centered in the middle 65% of the image',
+  promo_ad: 'in a premium advertising poster with dark navy and orange theme, dramatic lighting, particle effects. Include the Viltra Training app dashboard showing Fitness and Belastning gauges. Include text "VILTRA/TRAINING" as logo at top, "viltratraining.com" at bottom. Bullet points area with checkmarks showing features. Professional ad layout',
+  promo_feature: 'in a promotional composition showcasing a new app feature, dark background with orange accents. The person is interacting with a large floating smartphone showing the Viltra Training app. Excited expression pointing at the screen. Space for feature description text. Modern tech product launch aesthetic',
   custom: ''
 };
 
