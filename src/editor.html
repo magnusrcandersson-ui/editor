@@ -1133,8 +1133,12 @@
         <select id="aiFormat" class="prompt-select">
           <option value="landscape">Liggande (16:9)</option>
           <option value="portrait">Stående (9:16)</option>
+          <option value="tiktok">TikTok (9:16)</option>
           <option value="square">Kvadrat (1:1)</option>
           <option value="insta_post">Instagram post (4:5)</option>
+          <option value="insta_square">Instagram feed (1:1)</option>
+          <option value="insta_carousel">Instagram carousel (1:1)</option>
+          <option value="story">Story / Reels (9:16)</option>
         </select>
         <input type="text" id="aiExtra" class="prompt-extra" placeholder="Extra detaljer (valfritt)...">
         <button class="prompt-copy-btn" id="btnGeneratePrompt">Skapa prompt</button>
@@ -3030,8 +3034,12 @@ const STYLES = {
 const AI_FORMATS = {
   landscape: 'horizontal landscape format 16:9',
   portrait: 'vertical portrait format 9:16',
+  tiktok: 'vertical TikTok format 9:16, full-screen mobile framing, leave space at top and bottom for TikTok UI elements',
   square: 'square format 1:1',
-  insta_post: 'Instagram post format 4:5'
+  insta_post: 'Instagram post format 4:5',
+  insta_square: 'square Instagram feed format 1:1',
+  insta_carousel: 'square Instagram carousel format 1:1, designed as part of a swipeable series',
+  story: 'vertical Instagram Story / Reels format 9:16, full-screen mobile framing'
 };
 
 $('btnGeneratePrompt').onclick = () => {
