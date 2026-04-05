@@ -3027,7 +3027,7 @@ const STYLES = {
   lifestyle: 'Lifestyle photography, candid natural moment, warm and inviting, authentic and relatable'
 };
 
-const FORMATS = {
+const AI_FORMATS = {
   landscape: 'horizontal landscape format 16:9',
   portrait: 'vertical portrait format 9:16',
   square: 'square format 1:1',
@@ -3059,7 +3059,7 @@ $('btnGeneratePrompt').onclick = () => {
     prompt += extra + '. ';
   }
 
-  prompt += '\n\n' + STYLES[style] + '. ' + FORMATS[format] + '.';
+  prompt += '\n\n' + STYLES[style] + '. ' + AI_FORMATS[format] + '.';
   prompt += '\n\nIMPORTANT: The text on the shirt must read exactly "VILTRA /TRAINING" — VILTRA in dark grey and /TRAINING in orange. Keep the same person consistent across all images.';
 
   $('promptOutput').value = prompt;
