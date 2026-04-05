@@ -708,6 +708,60 @@
     text-align: right;
   }
 
+  /* ---- AI PROMPT GENERATOR ---- */
+  .prompt-output {
+    width: 100%;
+    min-height: 80px;
+    padding: 8px;
+    font-size: 11px;
+    line-height: 1.5;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid #4a4a4a;
+    border-radius: 6px;
+    color: #ccc;
+    font-family: inherit;
+    resize: vertical;
+    margin-top: 6px;
+  }
+  .prompt-output:focus { outline: none; border-color: var(--accent); }
+  .prompt-copy-btn {
+    width: 100%;
+    margin-top: 6px;
+    padding: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--violet));
+    color: #fff;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .prompt-copy-btn:hover { filter: brightness(1.15); }
+  .prompt-select {
+    width: 100%;
+    padding: 5px 8px;
+    font-size: 11px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid #4a4a4a;
+    border-radius: 5px;
+    color: #ccc;
+    font-family: inherit;
+    margin-bottom: 5px;
+  }
+  .prompt-extra {
+    width: 100%;
+    padding: 5px 8px;
+    font-size: 11px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid #4a4a4a;
+    border-radius: 5px;
+    color: #ccc;
+    font-family: inherit;
+    margin-top: 5px;
+  }
+
   /* ---- LIGHT TOOL CURSOR ---- */
   .preview-area.light-mode { cursor: crosshair; }
   .light-marker {
@@ -1019,6 +1073,74 @@
     </div>
 
     <!-- Trim controls moved to video timeline area -->
+
+    <div class="section collapsed">
+      <div class="section-title">AI Bildprompt</div>
+      <div class="section-body">
+        <select id="aiCharacter" class="prompt-select">
+          <option value="man">Viltra Man</option>
+          <option value="woman">Viltra Kvinna</option>
+          <option value="both">Båda tillsammans</option>
+        </select>
+        <select id="aiScenario" class="prompt-select">
+          <option value="running_road">Springer på väg</option>
+          <option value="running_trail">Springer på skogsstig</option>
+          <option value="running_beach">Springer på strand</option>
+          <option value="running_city">Springer i stad</option>
+          <option value="running_sunset">Springer i solnedgång</option>
+          <option value="running_drone">Springer (drönarperspektiv)</option>
+          <option value="stretching_park">Stretchar i park</option>
+          <option value="warmup">Värmer upp innan löpning</option>
+          <option value="finish_line">Korsar mållinjen</option>
+          <option value="celebrating">Firar efter lopp</option>
+          <option value="phone_app">Visar appen på mobilen</option>
+          <option value="laptop">Sitter vid laptop med appen</option>
+          <option value="resting">Vilar efter träning</option>
+          <option value="drinking_water">Dricker vatten efter löpning</option>
+          <option value="group_run">Leder en grupp löpare</option>
+          <option value="race_start">Står på startlinjen inför lopp</option>
+          <option value="gym">Styrketränar i gym</option>
+          <option value="yoga">Gör yoga utomhus</option>
+          <option value="portrait">Porträtt / headshot</option>
+          <option value="custom">Egen beskrivning...</option>
+        </select>
+        <select id="aiAngle" class="prompt-select">
+          <option value="front">Framifrån</option>
+          <option value="side">Från sidan</option>
+          <option value="back">Bakifrån</option>
+          <option value="45deg">45 grader</option>
+          <option value="drone_above">Drönare snett uppifrån</option>
+          <option value="low_angle">Underifrån (heroisk)</option>
+          <option value="close_up">Närbild</option>
+        </select>
+        <select id="aiTime" class="prompt-select">
+          <option value="golden_hour">Gyllene timmen</option>
+          <option value="morning">Tidig morgon</option>
+          <option value="midday">Mitt på dagen</option>
+          <option value="sunset">Solnedgång</option>
+          <option value="overcast">Mulet / mjukt ljus</option>
+          <option value="blue_hour">Blå timmen</option>
+          <option value="indoor">Inomhus</option>
+        </select>
+        <select id="aiStyle" class="prompt-select">
+          <option value="photo">Fotorealistiskt</option>
+          <option value="cinematic">Filmiskt / cinematic</option>
+          <option value="editorial">Editorial / magasin</option>
+          <option value="action">Action / sport</option>
+          <option value="lifestyle">Lifestyle / avslappnat</option>
+        </select>
+        <select id="aiFormat" class="prompt-select">
+          <option value="landscape">Liggande (16:9)</option>
+          <option value="portrait">Stående (9:16)</option>
+          <option value="square">Kvadrat (1:1)</option>
+          <option value="insta_post">Instagram post (4:5)</option>
+        </select>
+        <input type="text" id="aiExtra" class="prompt-extra" placeholder="Extra detaljer (valfritt)...">
+        <button class="prompt-copy-btn" id="btnGeneratePrompt">Skapa prompt</button>
+        <textarea id="promptOutput" class="prompt-output" readonly placeholder="Prompten visas här..."></textarea>
+        <button class="prompt-copy-btn" id="btnCopyPrompt" style="background:#4a4a4a;margin-top:4px;">Kopiera till urklipp</button>
+      </div>
+    </div>
 
     <div class="section collapsed">
       <div class="section-title">Ljuseffekt</div>
@@ -2842,6 +2964,113 @@ function updateTrimUI() {
   window.addEventListener('mouseup', stopDrag);
   window.addEventListener('touchend', stopDrag);
 })();
+
+// =====================================================
+// AI PROMPT GENERATOR
+// =====================================================
+const VILTRA_CHARACTERS = {
+  man: 'A fit athletic Scandinavian man, approximately 30 years old, short brown hair, light stubble, wearing a white Adidas running t-shirt with "VILTRA /TRAINING" printed on it (VILTRA in dark grey, /TRAINING in orange), black running shorts, black Adidas running shoes, black GPS running watch on left wrist. He has a lean muscular runner\'s build, confident natural expression.',
+  woman: 'A fit athletic Scandinavian woman, approximately 28 years old, blonde hair in a ponytail, wearing a white Adidas running t-shirt with "VILTRA /TRAINING" printed on it (VILTRA in dark grey, /TRAINING in orange), black running shorts, black and white Adidas running shoes, black GPS running watch on left wrist. She has a lean athletic runner\'s build, determined natural expression.',
+  both: 'Two fit athletic Scandinavian runners side by side — a man (30, short brown hair, light stubble) and a woman (28, blonde ponytail). Both wearing matching white Adidas running t-shirts with "VILTRA /TRAINING" printed on them (VILTRA in dark grey, /TRAINING in orange), black running shorts, black Adidas running shoes, and black GPS running watches.'
+};
+
+const SCENARIOS = {
+  running_road: 'running on a scenic gravel road beside a lake, mid-stride with dynamic running form',
+  running_trail: 'running on a forest trail surrounded by lush green trees and dappled sunlight',
+  running_beach: 'running on a sandy beach along the waterline with waves in the background',
+  running_city: 'running through a modern city street with urban architecture',
+  running_sunset: 'running on an open road with a dramatic sunset sky behind',
+  running_drone: 'running on a winding country road seen from a drone perspective, aerial view',
+  stretching_park: 'doing dynamic stretches in a green park, focused and preparing for a run',
+  warmup: 'doing warm-up exercises on a running track, preparing for training',
+  finish_line: 'crossing the finish line of a race with arms raised in triumph, joyful expression',
+  celebrating: 'celebrating after completing a race, holding a medal, smiling with pride',
+  phone_app: 'standing outdoors after a run, holding a smartphone showing a training app, smiling at the camera',
+  laptop: 'sitting at a modern desk looking at a laptop screen showing training plans, relaxed and focused',
+  resting: 'sitting on a bench after a run, catching breath, relaxed and satisfied, water bottle nearby',
+  drinking_water: 'drinking from a water bottle after an intense run, slightly sweaty, outdoors',
+  group_run: 'leading a group of diverse runners on a scenic path, running in front with confidence',
+  race_start: 'standing at the starting line of a race in ready position, focused and determined',
+  gym: 'doing strength training exercises in a modern gym, athletic and powerful',
+  yoga: 'doing yoga poses outdoors on a mat in a peaceful park setting, calm and balanced',
+  portrait: 'professional portrait headshot, looking at camera with a friendly confident smile, blurred outdoor background',
+  custom: ''
+};
+
+const ANGLES = {
+  front: 'shot from the front',
+  side: 'shot from the side profile',
+  back: 'shot from behind',
+  '45deg': 'shot from a 45-degree angle',
+  drone_above: 'aerial drone shot from above at an angle',
+  low_angle: 'shot from a low angle looking up, heroic perspective',
+  close_up: 'close-up shot'
+};
+
+const TIMES = {
+  golden_hour: 'during golden hour with warm golden sunlight',
+  morning: 'in early morning with soft cool morning light',
+  midday: 'in bright midday daylight',
+  sunset: 'at sunset with dramatic orange and pink sky',
+  overcast: 'on an overcast day with soft diffused lighting',
+  blue_hour: 'during blue hour with cool twilight tones',
+  indoor: 'in a well-lit indoor environment'
+};
+
+const STYLES = {
+  photo: 'Photorealistic, shot on Sony A7IV with 85mm f/1.4 lens, shallow depth of field, natural skin tones, high resolution',
+  cinematic: 'Cinematic look, anamorphic lens flare, teal and orange color grading, dramatic lighting, 2.39:1 feel',
+  editorial: 'Editorial magazine style, clean sharp focus, professional studio-quality lighting, fashion-forward',
+  action: 'Dynamic sports photography, fast shutter speed, frozen motion, intense energy, slight motion blur on background',
+  lifestyle: 'Lifestyle photography, candid natural moment, warm and inviting, authentic and relatable'
+};
+
+const FORMATS = {
+  landscape: 'horizontal landscape format 16:9',
+  portrait: 'vertical portrait format 9:16',
+  square: 'square format 1:1',
+  insta_post: 'Instagram post format 4:5'
+};
+
+$('btnGeneratePrompt').onclick = () => {
+  const char = $('aiCharacter').value;
+  const scenario = $('aiScenario').value;
+  const angle = $('aiAngle').value;
+  const time = $('aiTime').value;
+  const style = $('aiStyle').value;
+  const format = $('aiFormat').value;
+  const extra = $('aiExtra').value.trim();
+
+  let prompt = VILTRA_CHARACTERS[char] + '\n\n';
+
+  if (scenario === 'custom' && extra) {
+    prompt += extra + '. ';
+  } else if (scenario === 'custom') {
+    prompt += 'In a professional setting. ';
+  } else {
+    prompt += SCENARIOS[scenario] + '. ';
+  }
+
+  prompt += ANGLES[angle] + ', ' + TIMES[time] + '. ';
+
+  if (extra && scenario !== 'custom') {
+    prompt += extra + '. ';
+  }
+
+  prompt += '\n\n' + STYLES[style] + '. ' + FORMATS[format] + '.';
+  prompt += '\n\nIMPORTANT: The text on the shirt must read exactly "VILTRA /TRAINING" — VILTRA in dark grey and /TRAINING in orange. Keep the same person consistent across all images.';
+
+  $('promptOutput').value = prompt;
+};
+
+$('btnCopyPrompt').onclick = () => {
+  const text = $('promptOutput').value;
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    $('btnCopyPrompt').textContent = 'Kopierad!';
+    setTimeout(() => { $('btnCopyPrompt').textContent = 'Kopiera till urklipp'; }, 1500);
+  });
+};
 
 // =====================================================
 // LIGHT EFFECT (click to place light points)
