@@ -223,15 +223,16 @@
     margin-bottom: 6px;
   }
   .control-row label {
-    font-size: 11.5px;
+    font-size: 11px;
     font-weight: 500;
     color: #bbb;
     flex-shrink: 0;
-    width: 90px;
+    width: 72px;
   }
   .control-row input[type="range"] {
     flex: 1;
-    margin: 0 6px;
+    min-width: 0;
+    margin: 0 3px;
     -webkit-appearance: none;
     appearance: none;
     height: 3px;
@@ -252,11 +253,29 @@
     font-size: 10px;
     color: var(--violet2);
     font-weight: 600;
-    width: 30px;
+    width: 22px;
     text-align: right;
     flex-shrink: 0;
     font-variant-numeric: tabular-nums;
   }
+  .control-row .step-btn {
+    width: 16px; height: 16px;
+    border: 1px solid #4a4a4a;
+    border-radius: 3px;
+    background: transparent;
+    color: #999;
+    font-size: 11px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    transition: all 0.12s;
+  }
+  .control-row .step-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
 
   /* ---- PREVIEW AREA ---- */
   .preview-area {
@@ -3202,6 +3221,42 @@ document.querySelectorAll('.preset-category').forEach(cat => {
 
 // Ensure FX is off (effects section removed)
 activeFx = 'none';
+
+// Add +/- step buttons to all slider rows
+document.querySelectorAll('.control-row').forEach(row => {
+  const range = row.querySelector('input[type="range"]');
+  if (!range) return;
+  const valSpan = row.querySelector('.value');
+
+  const minus = document.createElement('button');
+  minus.className = 'step-btn';
+  minus.textContent = '\u2212';
+  minus.title = '-1';
+
+  const plus = document.createElement('button');
+  plus.className = 'step-btn';
+  plus.textContent = '+';
+  plus.title = '+1';
+
+  function step(dir) {
+    const v = parseInt(range.value) + dir;
+    const min = parseInt(range.min), max = parseInt(range.max);
+    range.value = Math.max(min, Math.min(max, v));
+    range.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  minus.onclick = (e) => { e.preventDefault(); step(-1); };
+  plus.onclick = (e) => { e.preventDefault(); step(1); };
+
+  // Rebuild row order: [label] [−] [range] [+] [value]
+  const label = row.querySelector('label');
+  row.innerHTML = '';
+  if (label) row.appendChild(label);
+  row.appendChild(minus);
+  row.appendChild(range);
+  row.appendChild(plus);
+  if (valSpan) row.appendChild(valSpan);
+});
 
 applyPreset('neutral');
 </script>
