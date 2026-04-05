@@ -708,14 +708,32 @@
     text-align: right;
   }
 
-  /* ---- TEXT OVERLAY ---- */
-  .text-preview {
+  /* ---- LIGHT TOOL CURSOR ---- */
+  .preview-area.light-mode { cursor: crosshair; }
+  .light-marker {
     position: absolute;
-    cursor: move;
-    user-select: none;
-    z-index: 5;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
-    pointer-events: all;
+    width: 12px; height: 12px;
+    border: 2px solid rgba(255,200,50,0.8);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 6;
+    box-shadow: 0 0 8px rgba(255,200,50,0.4);
+  }
+  .light-marker::before, .light-marker::after {
+    content: '';
+    position: absolute;
+    background: rgba(255,200,50,0.5);
+  }
+  .light-marker::before {
+    width: 1px; height: 18px;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .light-marker::after {
+    width: 18px; height: 1px;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
   }
 
   /* ---- EXPORT SETTINGS ---- */
@@ -1017,39 +1035,7 @@
       </div>
     </div>
 
-    <div class="section collapsed">
-      <div class="section-title">Text</div>
-      <div class="section-body">
-        <input type="text" id="overlayText" placeholder="Skriv text här..." style="width:100%;padding:6px 8px;font-size:12px;background:rgba(255,255,255,0.06);border:1px solid #4a4a4a;border-radius:6px;color:#fff;font-family:inherit;margin-bottom:6px;">
-        <div class="control-row"><label>Storlek</label><input type="range" id="textSize" min="12" max="120" value="42"><span class="value" id="textSizeVal">42</span></div>
-        <div class="export-row">
-          <label>Färg</label>
-          <input type="color" id="textColor" value="#ffffff" style="width:28px;height:22px;padding:0;border:1px solid #4a4a4a;border-radius:4px;cursor:pointer;">
-          <label>Font</label>
-          <select id="textFont">
-            <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
-            <option value="'DM Sans', sans-serif">DM Sans</option>
-            <option value="Impact, sans-serif">Impact</option>
-            <option value="Georgia, serif">Georgia</option>
-            <option value="'Courier New', monospace">Courier</option>
-          </select>
-        </div>
-        <div class="export-row">
-          <label>Position</label>
-          <select id="textPosition">
-            <option value="top">Topp</option>
-            <option value="center" selected>Mitt</option>
-            <option value="bottom">Botten</option>
-          </select>
-          <label>Stil</label>
-          <select id="textStyle">
-            <option value="shadow">Skugga</option>
-            <option value="outline">Kontur</option>
-            <option value="box">Bakgrund</option>
-          </select>
-        </div>
-      </div>
-    </div>
+    <!-- Text section removed -->
 
     <div class="section collapsed">
       <div class="section-title">Musik</div>
@@ -1945,7 +1931,6 @@ function renderVideoFrame(fullRes) {
     if (typeof applyFx === 'function') applyFx(ctx, ow, oh);
     // Skip grain during playback — too heavy
     if (typeof drawLightPoints === 'function') drawLightPoints(ctx, ow, oh);
-    if (typeof drawTextOverlay === 'function') drawTextOverlay(ctx, ow, oh);
   }
 
   // Split view: show original on left via overlay canvas
@@ -2166,7 +2151,6 @@ function applyFilter() {
     // Light points
     if (typeof drawLightPoints === 'function') drawLightPoints(ctx, w, h);
     // Text overlay
-    if (typeof drawTextOverlay === 'function') drawTextOverlay(ctx, w, h);
 
     // Update original canvas for split view
     if (state.viewMode === 'split') {
@@ -2898,9 +2882,39 @@ function drawLightPoints(ctx, w, h) {
   });
 }
 
+// Toggle crosshair cursor when light section is open
+function updateLightMode() {
+  const lightSection = $('lightRadius')?.closest('.section');
+  const active = lightSection && !lightSection.classList.contains('collapsed');
+  $('previewArea').classList.toggle('light-mode', active);
+}
+
+// Update light markers on the preview
+function updateLightMarkers() {
+  // Remove old markers
+  document.querySelectorAll('.light-marker').forEach(m => m.remove());
+  const mainCanvas = $('canvas');
+  if (mainCanvas.classList.contains('hidden')) return;
+  const rect = mainCanvas.getBoundingClientRect();
+  const areaRect = $('previewArea').getBoundingClientRect();
+
+  lightPoints.forEach((pt, i) => {
+    const marker = document.createElement('div');
+    marker.className = 'light-marker';
+    marker.style.left = (rect.left - areaRect.left + pt.x * rect.width) + 'px';
+    marker.style.top = (rect.top - areaRect.top + pt.y * rect.height) + 'px';
+    $('previewArea').appendChild(marker);
+  });
+}
+
+function renderAndMark() {
+  if (state.videoMode && !state.videoPlaying) renderVideoFrame(true);
+  else if (state.currentIndex >= 0) applyFilter();
+  updateLightMarkers();
+}
+
 // Click on canvas to place light
 $('previewArea').addEventListener('click', (e) => {
-  // Only when Ljuseffekt section is open
   const lightSection = $('lightRadius')?.closest('.section');
   if (!lightSection || lightSection.classList.contains('collapsed')) return;
   const mainCanvas = $('canvas');
@@ -2912,22 +2926,20 @@ $('previewArea').addEventListener('click', (e) => {
   const x = (e.clientX - rect.left) / rect.width;
   const y = (e.clientY - rect.top) / rect.height;
   lightPoints.push({ x, y });
-
-  if (state.videoMode && !state.videoPlaying) renderVideoFrame(true);
-  else if (state.currentIndex >= 0) applyFilter();
+  renderAndMark();
 });
 
 $('btnLightUndo').onclick = () => {
   lightPoints.pop();
-  if (state.videoMode && !state.videoPlaying) renderVideoFrame(true);
-  else if (state.currentIndex >= 0) applyFilter();
+  renderAndMark();
 };
 
 $('btnLightClear').onclick = () => {
   lightPoints = [];
-  if (state.videoMode && !state.videoPlaying) renderVideoFrame(true);
-  else if (state.currentIndex >= 0) applyFilter();
+  renderAndMark();
 };
+
+window.addEventListener('resize', updateLightMarkers);
 
 ['lightRadius','lightStrength','lightWarmth','lightSoftness'].forEach(id => {
   $(id).addEventListener('input', () => {
@@ -2937,63 +2949,7 @@ $('btnLightClear').onclick = () => {
   });
 });
 
-// =====================================================
-// TEXT OVERLAY
-// =====================================================
-function drawTextOverlay(ctx, w, h) {
-  const text = $('overlayText').value;
-  if (!text) return;
-  const size = parseInt($('textSize').value);
-  const color = $('textColor').value;
-  const font = $('textFont').value;
-  const pos = $('textPosition').value;
-  const style = $('textStyle').value;
-
-  ctx.save();
-  ctx.font = `bold ${size}px ${font}`;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  const metrics = ctx.measureText(text);
-  const textW = metrics.width;
-
-  let y;
-  if (pos === 'top') y = size + 20;
-  else if (pos === 'bottom') y = h - size - 20;
-  else y = h / 2;
-  const x = w / 2;
-
-  if (style === 'outline') {
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = size * 0.12;
-    ctx.lineJoin = 'round';
-    ctx.strokeText(text, x, y);
-    ctx.fillStyle = color;
-    ctx.fillText(text, x, y);
-  } else if (style === 'box') {
-    const pad = size * 0.35;
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    const rh = size * 1.3;
-    ctx.beginPath();
-    ctx.roundRect(x - textW/2 - pad, y - rh/2, textW + pad*2, rh, 8);
-    ctx.fill();
-    ctx.fillStyle = color;
-    ctx.fillText(text, x, y);
-  } else {
-    ctx.shadowColor = 'rgba(0,0,0,0.8)';
-    ctx.shadowBlur = 8;
-    ctx.shadowOffsetY = 2;
-    ctx.fillStyle = color;
-    ctx.fillText(text, x, y);
-  }
-  ctx.restore();
-}
-
-// Re-render on text changes
-['overlayText','textSize','textColor','textFont','textPosition','textStyle'].forEach(id => {
-  $(id).addEventListener('input', () => {
-    if (state.videoMode && !state.videoPlaying) renderVideoFrame(true);
-    else if (state.currentIndex >= 0) applyFilter();
-  });
+// Text overlay removed
 });
 
 // =====================================================
@@ -3170,7 +3126,6 @@ async function exportVideoEnhanced() {
     }
     if (typeof applyFx === 'function') applyFx(ectx, ow, oh);
     if (typeof drawLightPoints === 'function') drawLightPoints(ectx, ow, oh);
-    drawTextOverlay(ectx, ow, oh);
   }
 
   function exportLoop() {
@@ -3209,6 +3164,7 @@ $('btnExportVideo').onclick = exportVideoEnhanced;
 document.querySelectorAll('.section-title').forEach(title => {
   title.addEventListener('click', () => {
     title.parentElement.classList.toggle('collapsed');
+    if (typeof updateLightMode === 'function') updateLightMode();
   });
 });
 
