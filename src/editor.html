@@ -849,6 +849,38 @@
       </div>
     </div>
 
+    <div class="preset-group collapsed">
+      <div class="preset-category">Lucid / Street</div>
+      <div class="preset-group-items">
+        <button class="preset-item" data-preset="lucid1">Lucid Clean</button>
+        <button class="preset-item" data-preset="lucid2">Lucid Matte</button>
+        <button class="preset-item" data-preset="lucid3">Lucid Fade</button>
+        <button class="preset-item" data-preset="lucid4">Street Shadow</button>
+        <button class="preset-item" data-preset="lucid5">London Fog</button>
+      </div>
+    </div>
+
+    <div class="preset-group collapsed">
+      <div class="preset-category">Glow & Holiday</div>
+      <div class="preset-group-items">
+        <button class="preset-item" data-preset="holidayGlow">Holiday Glow</button>
+        <button class="preset-item" data-preset="christmasWarm">Christmas Warm</button>
+        <button class="preset-item" data-preset="bokehNight">Bokeh Night</button>
+        <button class="preset-item" data-preset="festiveGold">Festive Gold</button>
+      </div>
+    </div>
+
+    <div class="preset-group collapsed">
+      <div class="preset-category">Epic Landscape</div>
+      <div class="preset-group-items">
+        <button class="preset-item" data-preset="desertEpic">Desert Epic</button>
+        <button class="preset-item" data-preset="roadTrip">Road Trip</button>
+        <button class="preset-item" data-preset="stormySky">Stormy Sky</button>
+        <button class="preset-item" data-preset="goldenDesert">Golden Desert</button>
+        <button class="preset-item" data-preset="redRock">Red Rock</button>
+      </div>
+    </div>
+
     <div class="preset-group">
       <div class="preset-category">Övrigt</div>
       <div class="preset-group-items">
@@ -950,6 +982,21 @@
     </div>
 
     <!-- Trim controls moved to video timeline area -->
+
+    <div class="section collapsed">
+      <div class="section-title">Ljuseffekt</div>
+      <div class="section-body">
+        <p style="font-size:10px;color:#888;margin-bottom:6px;">Klicka på bilden för att placera ljuspunkt</p>
+        <div class="control-row"><label>Radie</label><input type="range" id="lightRadius" min="5" max="80" value="30"><span class="value" id="lightRadiusVal">30</span></div>
+        <div class="control-row"><label>Styrka</label><input type="range" id="lightStrength" min="0" max="100" value="40"><span class="value" id="lightStrengthVal">40</span></div>
+        <div class="control-row"><label>Värme</label><input type="range" id="lightWarmth" min="-50" max="50" value="15"><span class="value" id="lightWarmthVal">15</span></div>
+        <div class="control-row"><label>Mjukhet</label><input type="range" id="lightSoftness" min="10" max="100" value="60"><span class="value" id="lightSoftnessVal">60</span></div>
+        <div style="display:flex;gap:6px;margin-top:4px;">
+          <button class="btn" id="btnLightUndo" style="flex:1;font-size:10px;">Ångra senaste</button>
+          <button class="btn" id="btnLightClear" style="flex:1;font-size:10px;">Rensa alla</button>
+        </div>
+      </div>
+    </div>
 
     <div class="section collapsed">
       <div class="section-title">Text</div>
@@ -1486,6 +1533,124 @@ const PRESETS = {
     sharpness: 35, vignette: 10, vignetteRadius: 80, grain: 4
   },
 
+  // ---- LUCID / STREET ----
+  lucid1: { // Lucid Clean — desaturated, clean, neutral
+    brightness: -5, contrast: 18, shadows: 15, highlights: -10, fade: 8,
+    temperature: -3, tint: 0,
+    tealIntensity: 5, tealSat: 50,
+    saturation: 48, warmDesat: 30,
+    shadowBlue: 8, shadowTeal: 5, shadowWarm: 5, highlightBlue: 3, highlightWarm: 3,
+    sharpness: 30, vignette: 15, vignetteRadius: 75, grain: 5
+  },
+  lucid2: { // Lucid Matte — lifted blacks, soft matte
+    brightness: -3, contrast: 12, shadows: 20, highlights: -8, fade: 20,
+    temperature: -2, tint: 0,
+    tealIntensity: 3, tealSat: 50,
+    saturation: 45, warmDesat: 25,
+    shadowBlue: 6, shadowTeal: 3, shadowWarm: 8, highlightBlue: 2, highlightWarm: 5,
+    sharpness: 25, vignette: 12, vignetteRadius: 78, grain: 6
+  },
+  lucid3: { // Lucid Fade — heavy fade, pastel
+    brightness: 0, contrast: 8, shadows: 25, highlights: -5, fade: 30,
+    temperature: 0, tint: 0,
+    tealIntensity: 5, tealSat: 45,
+    saturation: 40, warmDesat: 20,
+    shadowBlue: 5, shadowTeal: 3, shadowWarm: 10, highlightBlue: 3, highlightWarm: 5,
+    sharpness: 20, vignette: 10, vignetteRadius: 80, grain: 8
+  },
+  lucid4: { // Street Shadow — dark, contrasty street
+    brightness: -18, contrast: 32, shadows: 8, highlights: -20, fade: 5,
+    temperature: -5, tint: -2,
+    tealIntensity: 10, tealSat: 50,
+    saturation: 42, warmDesat: 40,
+    shadowBlue: 12, shadowTeal: 8, shadowWarm: 5, highlightBlue: 5, highlightWarm: 8,
+    sharpness: 38, vignette: 35, vignetteRadius: 55, grain: 6
+  },
+  lucid5: { // London Fog — cool, desaturated, overcast
+    brightness: -8, contrast: 15, shadows: 18, highlights: -12, fade: 15,
+    temperature: -10, tint: -3,
+    tealIntensity: 8, tealSat: 45,
+    saturation: 35, warmDesat: 45,
+    shadowBlue: 15, shadowTeal: 8, shadowWarm: 0, highlightBlue: 8, highlightWarm: 0,
+    sharpness: 25, vignette: 20, vignetteRadius: 70, grain: 5
+  },
+
+  // ---- GLOW & HOLIDAY ----
+  holidayGlow: {
+    brightness: -8, contrast: 25, shadows: 12, highlights: -10, fade: 5,
+    temperature: 5, tint: 2,
+    tealIntensity: 20, tealSat: 55,
+    saturation: 55, warmDesat: 30,
+    shadowBlue: 15, shadowTeal: 12, shadowWarm: 8, highlightBlue: 5, highlightWarm: 18,
+    sharpness: 22, vignette: 35, vignetteRadius: 58, grain: 4
+  },
+  christmasWarm: {
+    brightness: -5, contrast: 20, shadows: 15, highlights: -8, fade: 8,
+    temperature: 18, tint: 5,
+    tealIntensity: 5, tealSat: 50,
+    saturation: 60, warmDesat: 15,
+    shadowBlue: 5, shadowTeal: 3, shadowWarm: 22, highlightBlue: 0, highlightWarm: 22,
+    sharpness: 20, vignette: 30, vignetteRadius: 60, grain: 5
+  },
+  bokehNight: {
+    brightness: -15, contrast: 30, shadows: 10, highlights: -15, fade: 3,
+    temperature: -8, tint: -2,
+    tealIntensity: 28, tealSat: 60,
+    saturation: 50, warmDesat: 45,
+    shadowBlue: 25, shadowTeal: 18, shadowWarm: 0, highlightBlue: 8, highlightWarm: 20,
+    sharpness: 18, vignette: 40, vignetteRadius: 55, grain: 4
+  },
+  festiveGold: {
+    brightness: -3, contrast: 22, shadows: 12, highlights: -5, fade: 5,
+    temperature: 22, tint: 8,
+    tealIntensity: 0, tealSat: 50,
+    saturation: 65, warmDesat: 10,
+    shadowBlue: 3, shadowTeal: 0, shadowWarm: 25, highlightBlue: 0, highlightWarm: 25,
+    sharpness: 25, vignette: 25, vignetteRadius: 65, grain: 3
+  },
+
+  // ---- EPIC LANDSCAPE ----
+  desertEpic: {
+    brightness: -12, contrast: 38, shadows: 5, highlights: -18, fade: 0,
+    temperature: 8, tint: 3,
+    tealIntensity: 15, tealSat: 55,
+    saturation: 65, warmDesat: 35,
+    shadowBlue: 18, shadowTeal: 10, shadowWarm: 12, highlightBlue: 5, highlightWarm: 15,
+    sharpness: 42, vignette: 30, vignetteRadius: 60, grain: 3
+  },
+  roadTrip: {
+    brightness: -8, contrast: 30, shadows: 8, highlights: -15, fade: 3,
+    temperature: 5, tint: 2,
+    tealIntensity: 12, tealSat: 50,
+    saturation: 60, warmDesat: 25,
+    shadowBlue: 12, shadowTeal: 8, shadowWarm: 10, highlightBlue: 5, highlightWarm: 10,
+    sharpness: 35, vignette: 25, vignetteRadius: 65, grain: 4
+  },
+  stormySky: {
+    brightness: -15, contrast: 42, shadows: 5, highlights: -22, fade: 0,
+    temperature: -12, tint: -5,
+    tealIntensity: 20, tealSat: 55,
+    saturation: 45, warmDesat: 50,
+    shadowBlue: 28, shadowTeal: 15, shadowWarm: 5, highlightBlue: 12, highlightWarm: 5,
+    sharpness: 40, vignette: 35, vignetteRadius: 55, grain: 3
+  },
+  goldenDesert: {
+    brightness: -5, contrast: 32, shadows: 8, highlights: -12, fade: 0,
+    temperature: 20, tint: 8,
+    tealIntensity: 5, tealSat: 50,
+    saturation: 70, warmDesat: 12,
+    shadowBlue: 5, shadowTeal: 3, shadowWarm: 22, highlightBlue: 0, highlightWarm: 20,
+    sharpness: 38, vignette: 20, vignetteRadius: 65, grain: 3
+  },
+  redRock: {
+    brightness: -10, contrast: 35, shadows: 5, highlights: -15, fade: 0,
+    temperature: 12, tint: 5,
+    tealIntensity: 10, tealSat: 50,
+    saturation: 72, warmDesat: 18,
+    shadowBlue: 10, shadowTeal: 5, shadowWarm: 18, highlightBlue: 3, highlightWarm: 15,
+    sharpness: 42, vignette: 28, vignetteRadius: 58, grain: 2
+  },
+
   // ---- OTHER ----
   lifestyle: {
     brightness: -15, contrast: 30, shadows: 10, highlights: -12, fade: 10,
@@ -1760,6 +1925,7 @@ function renderVideoFrame(fullRes) {
     }
     if (typeof applyFx === 'function') applyFx(ctx, ow, oh);
     // Skip grain during playback — too heavy
+    if (typeof drawLightPoints === 'function') drawLightPoints(ctx, ow, oh);
     if (typeof drawTextOverlay === 'function') drawTextOverlay(ctx, ow, oh);
   }
 
@@ -1978,6 +2144,8 @@ function applyFilter() {
 
     // Video effects
     if (typeof applyFx === 'function') applyFx(ctx, w, h);
+    // Light points
+    if (typeof drawLightPoints === 'function') drawLightPoints(ctx, w, h);
     // Text overlay
     if (typeof drawTextOverlay === 'function') drawTextOverlay(ctx, w, h);
 
@@ -2673,6 +2841,84 @@ function updateTrimUI() {
 })();
 
 // =====================================================
+// LIGHT EFFECT (click to place light points)
+// =====================================================
+let lightPoints = [];
+
+function drawLightPoints(ctx, w, h) {
+  if (!lightPoints.length) return;
+  const radius = parseInt($('lightRadius').value) / 100;
+  const strength = parseInt($('lightStrength').value) / 100;
+  const warmth = parseInt($('lightWarmth').value);
+  const softness = parseInt($('lightSoftness').value) / 100;
+
+  lightPoints.forEach(pt => {
+    const cx = pt.x * w;
+    const cy = pt.y * h;
+    const r = radius * Math.max(w, h);
+    const innerR = r * (1 - softness);
+
+    // Warm or cool light color
+    let lr, lg, lb;
+    if (warmth >= 0) {
+      lr = 255; lg = 240 - warmth * 1.2; lb = 200 - warmth * 3;
+    } else {
+      lr = 200 + warmth * 2; lg = 220 + warmth; lb = 255;
+    }
+
+    const grad = ctx.createRadialGradient(cx, cy, innerR, cx, cy, r);
+    grad.addColorStop(0, `rgba(${lr},${lg},${lb},${strength * 0.6})`);
+    grad.addColorStop(0.5, `rgba(${lr},${lg},${lb},${strength * 0.25})`);
+    grad.addColorStop(1, `rgba(${lr},${lg},${lb},0)`);
+
+    ctx.save();
+    ctx.globalCompositeOperation = 'screen';
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, w, h);
+    ctx.restore();
+  });
+}
+
+// Click on canvas to place light
+$('previewArea').addEventListener('click', (e) => {
+  // Only when Ljuseffekt section is open
+  const lightSection = $('lightRadius')?.closest('.section');
+  if (!lightSection || lightSection.classList.contains('collapsed')) return;
+  const mainCanvas = $('canvas');
+  if (mainCanvas.classList.contains('hidden')) return;
+
+  const rect = mainCanvas.getBoundingClientRect();
+  if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) return;
+
+  const x = (e.clientX - rect.left) / rect.width;
+  const y = (e.clientY - rect.top) / rect.height;
+  lightPoints.push({ x, y });
+
+  if (state.videoMode && !state.videoPlaying) renderVideoFrame(true);
+  else if (state.currentIndex >= 0) applyFilter();
+});
+
+$('btnLightUndo').onclick = () => {
+  lightPoints.pop();
+  if (state.videoMode && !state.videoPlaying) renderVideoFrame(true);
+  else if (state.currentIndex >= 0) applyFilter();
+};
+
+$('btnLightClear').onclick = () => {
+  lightPoints = [];
+  if (state.videoMode && !state.videoPlaying) renderVideoFrame(true);
+  else if (state.currentIndex >= 0) applyFilter();
+};
+
+['lightRadius','lightStrength','lightWarmth','lightSoftness'].forEach(id => {
+  $(id).addEventListener('input', () => {
+    $(id + 'Val').textContent = $(id).value;
+    if (state.videoMode && !state.videoPlaying) renderVideoFrame(true);
+    else if (state.currentIndex >= 0) applyFilter();
+  });
+});
+
+// =====================================================
 // TEXT OVERLAY
 // =====================================================
 function drawTextOverlay(ctx, w, h) {
@@ -2904,6 +3150,7 @@ async function exportVideoEnhanced() {
       ectx.putImageData(gd,0,0);
     }
     if (typeof applyFx === 'function') applyFx(ectx, ow, oh);
+    if (typeof drawLightPoints === 'function') drawLightPoints(ectx, ow, oh);
     drawTextOverlay(ectx, ow, oh);
   }
 
