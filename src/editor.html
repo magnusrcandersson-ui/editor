@@ -626,25 +626,68 @@
   }
   .slide-remove:hover { color: #f87171; }
 
-  /* ---- TRIM MARKERS ---- */
-  .trim-row {
+  /* ---- TRIM TIMELINE ---- */
+  .trim-timeline-wrap {
     display: flex;
     align-items: center;
-    gap: 6px;
-    margin-top: 6px;
+    gap: 8px;
+    padding: 6px 14px 4px;
+    background: #2e2e2e;
   }
-  .trim-row label { font-size: 10px; color: #888; font-weight: 600; }
-  .trim-row input {
-    width: 55px; padding: 2px 4px; font-size: 10px; text-align: center;
-    background: rgba(255,255,255,0.06); border: 1px solid #4a4a4a;
-    border-radius: 4px; color: #ccc; font-family: inherit;
+  .trim-timeline-wrap label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: #888;
+    flex-shrink: 0;
   }
-  .trim-row button {
-    padding: 2px 8px; font-size: 10px; border: 1px solid #4a4a4a;
-    border-radius: 4px; background: rgba(255,255,255,0.06); color: #aaa;
-    cursor: pointer; font-family: inherit;
+  .trim-track {
+    flex: 1;
+    position: relative;
+    height: 18px;
   }
-  .trim-row button:hover { color: #fff; background: rgba(255,255,255,0.1); }
+  .trim-range {
+    position: absolute;
+    top: 6px;
+    height: 6px;
+    background: rgba(255,122,0,0.35);
+    border-radius: 3px;
+    pointer-events: none;
+  }
+  .trim-track-bg {
+    position: absolute;
+    top: 6px;
+    left: 0; right: 0;
+    height: 6px;
+    background: #3a3a3a;
+    border-radius: 3px;
+  }
+  .trim-handle {
+    position: absolute;
+    top: 0;
+    width: 10px;
+    height: 18px;
+    border-radius: 3px;
+    cursor: ew-resize;
+    z-index: 2;
+  }
+  .trim-handle-in {
+    background: var(--accent);
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+  .trim-handle-out {
+    background: var(--accent);
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+  .trim-time {
+    font-size: 10px;
+    color: var(--accent2);
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+    min-width: 80px;
+    text-align: right;
+  }
 
   /* ---- TEXT OVERLAY ---- */
   .text-preview {
@@ -739,6 +782,70 @@
         <button class="preset-item" data-preset="bali">Bali</button>
         <button class="preset-item" data-preset="bahamas">Bahamas</button>
         <button class="preset-item" data-preset="tropical">Tropical</button>
+      </div>
+    </div>
+
+    <div class="preset-group collapsed">
+      <div class="preset-category">Moody Film</div>
+      <div class="preset-group-items">
+        <button class="preset-item" data-preset="moodyFilm1">Autumn Haze</button>
+        <button class="preset-item" data-preset="moodyFilm2">Golden Hour</button>
+        <button class="preset-item" data-preset="moodyFilm3">Rustic Fade</button>
+        <button class="preset-item" data-preset="moodyFilm4">Warm Matte</button>
+        <button class="preset-item" data-preset="moodyFilm5">Forest Light</button>
+      </div>
+    </div>
+
+    <div class="preset-group collapsed">
+      <div class="preset-category">Cinematic</div>
+      <div class="preset-group-items">
+        <button class="preset-item" data-preset="cine1">Teal & Orange</button>
+        <button class="preset-item" data-preset="cine2">Blockbuster</button>
+        <button class="preset-item" data-preset="cine3">Neon City</button>
+        <button class="preset-item" data-preset="cine4">Blade Runner</button>
+        <button class="preset-item" data-preset="cine5">Cold Cinema</button>
+      </div>
+    </div>
+
+    <div class="preset-group collapsed">
+      <div class="preset-category">Joker Cine</div>
+      <div class="preset-group-items">
+        <button class="preset-item" data-preset="joker1">Gotham Night</button>
+        <button class="preset-item" data-preset="joker2">Neon Noir</button>
+        <button class="preset-item" data-preset="joker3">Taxi Driver</button>
+        <button class="preset-item" data-preset="joker4">Midnight Teal</button>
+        <button class="preset-item" data-preset="joker5">City Glow</button>
+      </div>
+    </div>
+
+    <div class="preset-group collapsed">
+      <div class="preset-category">Kodak Film</div>
+      <div class="preset-group-items">
+        <button class="preset-item" data-preset="portra400">Portra 400</button>
+        <button class="preset-item" data-preset="portra800">Portra 800</button>
+        <button class="preset-item" data-preset="kodakGold">Gold 200</button>
+        <button class="preset-item" data-preset="ektar100">Ektar 100</button>
+        <button class="preset-item" data-preset="colorplus">ColorPlus 200</button>
+        <button class="preset-item" data-preset="triX">Tri-X 400 (svartvit)</button>
+      </div>
+    </div>
+
+    <div class="preset-group collapsed">
+      <div class="preset-category">Cinestill</div>
+      <div class="preset-group-items">
+        <button class="preset-item" data-preset="cinestill800t">800T Tungsten</button>
+        <button class="preset-item" data-preset="cinestill400d">400D Daylight</button>
+        <button class="preset-item" data-preset="cinestill50d">50D Fine</button>
+      </div>
+    </div>
+
+    <div class="preset-group collapsed">
+      <div class="preset-category">Fujifilm</div>
+      <div class="preset-group-items">
+        <button class="preset-item" data-preset="pro400h">Pro 400H</button>
+        <button class="preset-item" data-preset="superia400">Superia 400</button>
+        <button class="preset-item" data-preset="velvia50">Velvia 50</button>
+        <button class="preset-item" data-preset="provia100">Provia 100F</button>
       </div>
     </div>
 
@@ -842,19 +949,7 @@
       </div>
     </div>
 
-    <div class="section collapsed">
-      <div class="section-title">Klipp & Trim</div>
-      <div class="section-body">
-        <div class="trim-row">
-          <label>Start</label>
-          <input type="text" id="trimStart" value="0:00" placeholder="0:00">
-          <button id="btnTrimStartHere" title="Sätt start till nuvarande position">&#9654;|</button>
-          <label>Slut</label>
-          <input type="text" id="trimEnd" value="0:00" placeholder="0:00">
-          <button id="btnTrimEndHere" title="Sätt slut till nuvarande position">|&#9664;</button>
-        </div>
-      </div>
-    </div>
+    <!-- Trim controls moved to video timeline area -->
 
     <div class="section collapsed">
       <div class="section-title">Text</div>
@@ -949,6 +1044,16 @@
   <button id="btnPlayPause">&#9654; Spela</button>
   <input type="range" class="video-timeline" id="videoTimeline" min="0" max="1000" value="0">
   <span class="video-time" id="videoTime">0:00 / 0:00</span>
+</div>
+<div class="trim-timeline-wrap hidden" id="trimBar">
+  <label>Klipp</label>
+  <div class="trim-track" id="trimTrack">
+    <div class="trim-track-bg"></div>
+    <div class="trim-range" id="trimRange"></div>
+    <div class="trim-handle trim-handle-in" id="trimHandleIn"></div>
+    <div class="trim-handle trim-handle-out" id="trimHandleOut"></div>
+  </div>
+  <span class="trim-time" id="trimTime">0:00 – 0:00</span>
 </div>
 <div class="thumbstrip hidden" id="thumbstrip"></div>
 <div class="status-bar">
@@ -1142,6 +1247,245 @@ const PRESETS = {
     sharpness: 35, vignette: 40, vignetteRadius: 65, grain: 4
   },
 
+  // ---- MOODY FILM ----
+  // Warm skin tones, muted greens, soft fade, autumn/earthy feel
+  moodyFilm1: { // Autumn Haze
+    brightness: -12, contrast: 22, shadows: 18, highlights: -15, fade: 15,
+    temperature: 12, tint: 5,
+    tealIntensity: 0, tealSat: 50,
+    saturation: 52, warmDesat: 18,
+    shadowBlue: 5, shadowTeal: 0, shadowWarm: 22, highlightBlue: 0, highlightWarm: 15,
+    sharpness: 25, vignette: 35, vignetteRadius: 60, grain: 8
+  },
+  moodyFilm2: { // Golden Hour
+    brightness: -5, contrast: 18, shadows: 15, highlights: -8, fade: 10,
+    temperature: 20, tint: 8,
+    tealIntensity: 0, tealSat: 50,
+    saturation: 58, warmDesat: 12,
+    shadowBlue: 3, shadowTeal: 0, shadowWarm: 28, highlightBlue: 0, highlightWarm: 20,
+    sharpness: 20, vignette: 28, vignetteRadius: 65, grain: 6
+  },
+  moodyFilm3: { // Rustic Fade
+    brightness: -8, contrast: 15, shadows: 22, highlights: -12, fade: 22,
+    temperature: 10, tint: 4,
+    tealIntensity: 0, tealSat: 50,
+    saturation: 45, warmDesat: 25,
+    shadowBlue: 8, shadowTeal: 0, shadowWarm: 18, highlightBlue: 0, highlightWarm: 12,
+    sharpness: 18, vignette: 40, vignetteRadius: 55, grain: 12
+  },
+  moodyFilm4: { // Warm Matte
+    brightness: -6, contrast: 12, shadows: 20, highlights: -10, fade: 25,
+    temperature: 15, tint: 6,
+    tealIntensity: 0, tealSat: 50,
+    saturation: 48, warmDesat: 20,
+    shadowBlue: 0, shadowTeal: 0, shadowWarm: 25, highlightBlue: 0, highlightWarm: 18,
+    sharpness: 15, vignette: 32, vignetteRadius: 60, grain: 10
+  },
+  moodyFilm5: { // Forest Light
+    brightness: -10, contrast: 20, shadows: 16, highlights: -18, fade: 12,
+    temperature: 6, tint: 3,
+    tealIntensity: 8, tealSat: 45,
+    saturation: 50, warmDesat: 30,
+    shadowBlue: 8, shadowTeal: 5, shadowWarm: 15, highlightBlue: 0, highlightWarm: 10,
+    sharpness: 22, vignette: 38, vignetteRadius: 58, grain: 8
+  },
+
+  // ---- CINEMATIC ----
+  // Strong teal & orange split, high contrast, saturated highlights, filmic
+  cine1: { // Teal & Orange
+    brightness: -15, contrast: 35, shadows: 8, highlights: -20, fade: 3,
+    temperature: -15, tint: -3,
+    tealIntensity: 45, tealSat: 70,
+    saturation: 55, warmDesat: 55,
+    shadowBlue: 30, shadowTeal: 25, shadowWarm: 0, highlightBlue: 5, highlightWarm: 22,
+    sharpness: 35, vignette: 40, vignetteRadius: 55, grain: 4
+  },
+  cine2: { // Blockbuster
+    brightness: -18, contrast: 40, shadows: 5, highlights: -25, fade: 0,
+    temperature: -10, tint: -2,
+    tealIntensity: 35, tealSat: 65,
+    saturation: 60, warmDesat: 50,
+    shadowBlue: 25, shadowTeal: 20, shadowWarm: 0, highlightBlue: 8, highlightWarm: 18,
+    sharpness: 40, vignette: 50, vignetteRadius: 50, grain: 3
+  },
+  cine3: { // Neon City
+    brightness: -20, contrast: 38, shadows: 10, highlights: -18, fade: 5,
+    temperature: -25, tint: -5,
+    tealIntensity: 55, tealSat: 75,
+    saturation: 50, warmDesat: 60,
+    shadowBlue: 40, shadowTeal: 30, shadowWarm: 0, highlightBlue: 12, highlightWarm: 15,
+    sharpness: 35, vignette: 45, vignetteRadius: 52, grain: 5
+  },
+  cine4: { // Blade Runner
+    brightness: -25, contrast: 42, shadows: 8, highlights: -22, fade: 3,
+    temperature: -30, tint: -8,
+    tealIntensity: 50, tealSat: 72,
+    saturation: 45, warmDesat: 65,
+    shadowBlue: 45, shadowTeal: 28, shadowWarm: 0, highlightBlue: 10, highlightWarm: 20,
+    sharpness: 38, vignette: 55, vignetteRadius: 48, grain: 6
+  },
+  cine5: { // Cold Cinema
+    brightness: -15, contrast: 32, shadows: 10, highlights: -20, fade: 5,
+    temperature: -22, tint: -5,
+    tealIntensity: 30, tealSat: 60,
+    saturation: 40, warmDesat: 55,
+    shadowBlue: 35, shadowTeal: 18, shadowWarm: 0, highlightBlue: 15, highlightWarm: 5,
+    sharpness: 30, vignette: 42, vignetteRadius: 55, grain: 4
+  },
+
+  // ---- JOKER CINE ----
+  // Extreme teal/cyan shadows, golden/amber highlights, dark urban night
+  joker1: { // Gotham Night
+    brightness: -35, contrast: 45, shadows: 5, highlights: -30, fade: 0,
+    temperature: -35, tint: -10,
+    tealIntensity: 65, tealSat: 80,
+    saturation: 38, warmDesat: 75,
+    shadowBlue: 50, shadowTeal: 35, shadowWarm: 0, highlightBlue: 5, highlightWarm: 25,
+    sharpness: 35, vignette: 60, vignetteRadius: 45, grain: 5
+  },
+  joker2: { // Neon Noir
+    brightness: -40, contrast: 48, shadows: 3, highlights: -28, fade: 0,
+    temperature: -38, tint: -12,
+    tealIntensity: 70, tealSat: 85,
+    saturation: 35, warmDesat: 80,
+    shadowBlue: 55, shadowTeal: 38, shadowWarm: 0, highlightBlue: 8, highlightWarm: 28,
+    sharpness: 38, vignette: 65, vignetteRadius: 42, grain: 6
+  },
+  joker3: { // Taxi Driver
+    brightness: -30, contrast: 42, shadows: 8, highlights: -25, fade: 3,
+    temperature: -28, tint: -8,
+    tealIntensity: 55, tealSat: 75,
+    saturation: 42, warmDesat: 70,
+    shadowBlue: 45, shadowTeal: 30, shadowWarm: 0, highlightBlue: 3, highlightWarm: 30,
+    sharpness: 32, vignette: 55, vignetteRadius: 48, grain: 8
+  },
+  joker4: { // Midnight Teal
+    brightness: -38, contrast: 40, shadows: 5, highlights: -32, fade: 0,
+    temperature: -42, tint: -15,
+    tealIntensity: 75, tealSat: 88,
+    saturation: 32, warmDesat: 82,
+    shadowBlue: 55, shadowTeal: 40, shadowWarm: 0, highlightBlue: 10, highlightWarm: 20,
+    sharpness: 30, vignette: 62, vignetteRadius: 44, grain: 5
+  },
+  joker5: { // City Glow
+    brightness: -32, contrast: 38, shadows: 10, highlights: -25, fade: 5,
+    temperature: -30, tint: -10,
+    tealIntensity: 60, tealSat: 78,
+    saturation: 40, warmDesat: 72,
+    shadowBlue: 48, shadowTeal: 32, shadowWarm: 0, highlightBlue: 5, highlightWarm: 32,
+    sharpness: 30, vignette: 50, vignetteRadius: 50, grain: 7
+  },
+
+  // ---- KODAK FILM ----
+  portra400: {
+    brightness: -5, contrast: 15, shadows: 12, highlights: -8, fade: 8,
+    temperature: 8, tint: 3,
+    tealIntensity: 0, tealSat: 50,
+    saturation: 65, warmDesat: 20,
+    shadowBlue: 5, shadowTeal: 3, shadowWarm: 12, highlightBlue: 0, highlightWarm: 10,
+    sharpness: 20, vignette: 15, vignetteRadius: 75, grain: 8
+  },
+  portra800: {
+    brightness: -3, contrast: 18, shadows: 15, highlights: -6, fade: 10,
+    temperature: 10, tint: 5,
+    tealIntensity: 0, tealSat: 50,
+    saturation: 58, warmDesat: 25,
+    shadowBlue: 8, shadowTeal: 0, shadowWarm: 15, highlightBlue: 0, highlightWarm: 14,
+    sharpness: 15, vignette: 18, vignetteRadius: 70, grain: 14
+  },
+  kodakGold: {
+    brightness: 5, contrast: 22, shadows: 8, highlights: -5, fade: 5,
+    temperature: 18, tint: 8,
+    tealIntensity: 0, tealSat: 50,
+    saturation: 75, warmDesat: 10,
+    shadowBlue: 0, shadowTeal: 0, shadowWarm: 20, highlightBlue: 0, highlightWarm: 18,
+    sharpness: 25, vignette: 20, vignetteRadius: 70, grain: 10
+  },
+  ektar100: {
+    brightness: 0, contrast: 30, shadows: 5, highlights: -10, fade: 0,
+    temperature: 5, tint: 2,
+    tealIntensity: 8, tealSat: 55,
+    saturation: 82, warmDesat: 8,
+    shadowBlue: 10, shadowTeal: 5, shadowWarm: 8, highlightBlue: 3, highlightWarm: 5,
+    sharpness: 40, vignette: 12, vignetteRadius: 80, grain: 5
+  },
+  colorplus: {
+    brightness: 5, contrast: 20, shadows: 10, highlights: -3, fade: 8,
+    temperature: 14, tint: 5,
+    tealIntensity: 0, tealSat: 50,
+    saturation: 70, warmDesat: 15,
+    shadowBlue: 3, shadowTeal: 0, shadowWarm: 16, highlightBlue: 0, highlightWarm: 12,
+    sharpness: 20, vignette: 22, vignetteRadius: 65, grain: 12
+  },
+  triX: {
+    brightness: -5, contrast: 35, shadows: 10, highlights: -12, fade: 5,
+    temperature: 0, tint: 0,
+    tealIntensity: 0, tealSat: 50,
+    saturation: 0, warmDesat: 0,
+    shadowBlue: 0, shadowTeal: 0, shadowWarm: 0, highlightBlue: 0, highlightWarm: 0,
+    sharpness: 35, vignette: 30, vignetteRadius: 60, grain: 18
+  },
+
+  // ---- CINESTILL ----
+  cinestill800t: {
+    brightness: -10, contrast: 25, shadows: 15, highlights: -15, fade: 5,
+    temperature: -35, tint: -8,
+    tealIntensity: 40, tealSat: 65,
+    saturation: 55, warmDesat: 60,
+    shadowBlue: 35, shadowTeal: 20, shadowWarm: 0, highlightBlue: 15, highlightWarm: 12,
+    sharpness: 20, vignette: 25, vignetteRadius: 65, grain: 12
+  },
+  cinestill400d: {
+    brightness: -5, contrast: 20, shadows: 12, highlights: -8, fade: 5,
+    temperature: 5, tint: 2,
+    tealIntensity: 10, tealSat: 50,
+    saturation: 62, warmDesat: 25,
+    shadowBlue: 10, shadowTeal: 8, shadowWarm: 8, highlightBlue: 5, highlightWarm: 8,
+    sharpness: 25, vignette: 20, vignetteRadius: 70, grain: 8
+  },
+  cinestill50d: {
+    brightness: 0, contrast: 18, shadows: 8, highlights: -5, fade: 3,
+    temperature: 3, tint: 0,
+    tealIntensity: 5, tealSat: 50,
+    saturation: 70, warmDesat: 15,
+    shadowBlue: 8, shadowTeal: 5, shadowWarm: 5, highlightBlue: 3, highlightWarm: 5,
+    sharpness: 35, vignette: 10, vignetteRadius: 80, grain: 4
+  },
+
+  // ---- FUJIFILM ----
+  pro400h: {
+    brightness: 5, contrast: 12, shadows: 15, highlights: -5, fade: 12,
+    temperature: -8, tint: -5,
+    tealIntensity: 15, tealSat: 45,
+    saturation: 55, warmDesat: 35,
+    shadowBlue: 12, shadowTeal: 10, shadowWarm: 0, highlightBlue: 8, highlightWarm: 3,
+    sharpness: 18, vignette: 12, vignetteRadius: 75, grain: 8
+  },
+  superia400: {
+    brightness: 0, contrast: 25, shadows: 10, highlights: -8, fade: 5,
+    temperature: -5, tint: -8,
+    tealIntensity: 18, tealSat: 55,
+    saturation: 68, warmDesat: 30,
+    shadowBlue: 15, shadowTeal: 12, shadowWarm: 5, highlightBlue: 8, highlightWarm: 0,
+    sharpness: 25, vignette: 20, vignetteRadius: 68, grain: 12
+  },
+  velvia50: {
+    brightness: -5, contrast: 35, shadows: 5, highlights: -10, fade: 0,
+    temperature: 3, tint: 2,
+    tealIntensity: 12, tealSat: 60,
+    saturation: 90, warmDesat: 5,
+    shadowBlue: 15, shadowTeal: 10, shadowWarm: 5, highlightBlue: 5, highlightWarm: 3,
+    sharpness: 40, vignette: 15, vignetteRadius: 75, grain: 3
+  },
+  provia100: {
+    brightness: 0, contrast: 22, shadows: 8, highlights: -5, fade: 3,
+    temperature: 0, tint: 0,
+    tealIntensity: 8, tealSat: 50,
+    saturation: 72, warmDesat: 10,
+    shadowBlue: 8, shadowTeal: 5, shadowWarm: 3, highlightBlue: 3, highlightWarm: 2,
+    sharpness: 35, vignette: 10, vignetteRadius: 80, grain: 4
+  },
+
   // ---- OTHER ----
   lifestyle: {
     brightness: -15, contrast: 30, shadows: 10, highlights: -12, fade: 10,
@@ -1288,8 +1632,8 @@ function loadVideo(file) {
     // Reset trim to full video
     trimStartSec = 0;
     trimEndSec = videoEl.duration;
-    $('trimStart').value = '0:00';
-    $('trimEnd').value = fmtTime(videoEl.duration);
+    $('trimBar').classList.remove('hidden');
+    setTimeout(updateTrimUI, 50);
   };
   videoEl.oncanplay = () => {
     $('statusLeft').textContent = `Video redo: ${file.name}`;
@@ -1316,6 +1660,7 @@ function exitVideoMode() {
   videoEl.pause();
   videoEl.src = '';
   $('videoControls').classList.add('hidden');
+  $('trimBar').classList.add('hidden');
   $('btnExportVideo').style.display = 'none';
   $('btnExportVideo').disabled = true;
 }
@@ -1441,8 +1786,9 @@ function fmtTime(s) {
 
 function videoLoop() {
   if (!state.videoPlaying) return;
-  if (videoEl.ended) {
+  if (videoEl.ended || videoEl.currentTime >= trimEndSec) {
     state.videoPlaying = false;
+    videoEl.pause();
     $('btnPlayPause').innerHTML = '&#9654; Spela';
     return;
   }
@@ -1459,9 +1805,9 @@ function togglePlayPause() {
     $('btnPlayPause').innerHTML = '&#9654; Spela';
     renderVideoFrame(true); // Re-render paused frame at full quality
   } else {
-    // Reset to start if at end
-    if (videoEl.ended || videoEl.currentTime >= videoEl.duration - 0.1) {
-      videoEl.currentTime = 0;
+    // Reset to trim start if at end or outside trim range
+    if (videoEl.ended || videoEl.currentTime >= trimEndSec - 0.1 || videoEl.currentTime < trimStartSec) {
+      videoEl.currentTime = trimStartSec;
     }
     state.videoPlaying = true;
     const playPromise = videoEl.play();
@@ -2258,36 +2604,70 @@ $('btnRenderSlideshow').onclick = async () => {
 };
 
 // =====================================================
-// TRIM / CUT
+// TRIM / CUT (draggable handles)
 // =====================================================
 let trimStartSec = 0, trimEndSec = 0;
-
-function parseTime(str) {
-  const parts = str.split(':');
-  if (parts.length === 2) return parseInt(parts[0]) * 60 + parseFloat(parts[1]);
-  return parseFloat(str) || 0;
-}
-
-$('btnTrimStartHere').onclick = () => {
-  if (!state.videoMode) return;
-  trimStartSec = videoEl.currentTime;
-  $('trimStart').value = fmtTime(trimStartSec);
-};
-
-$('btnTrimEndHere').onclick = () => {
-  if (!state.videoMode) return;
-  trimEndSec = videoEl.currentTime;
-  $('trimEnd').value = fmtTime(trimEndSec);
-};
-
-$('trimStart').onchange = () => { trimStartSec = parseTime($('trimStart').value); };
-$('trimEnd').onchange = () => { trimEndSec = parseTime($('trimEnd').value); };
 
 function getTrimRange() {
   const start = trimStartSec || 0;
   const end = trimEndSec > start ? trimEndSec : (videoEl.duration || 0);
   return { start, end, duration: end - start };
 }
+
+function updateTrimUI() {
+  const dur = videoEl.duration || 1;
+  const track = $('trimTrack');
+  const tw = track.offsetWidth;
+  const inPct = (trimStartSec / dur) * 100;
+  const outPct = (trimEndSec / dur) * 100;
+  $('trimHandleIn').style.left = (inPct / 100 * tw - 5) + 'px';
+  $('trimHandleOut').style.left = (outPct / 100 * tw - 5) + 'px';
+  $('trimRange').style.left = inPct + '%';
+  $('trimRange').style.width = (outPct - inPct) + '%';
+  $('trimTime').textContent = fmtTime(trimStartSec) + ' – ' + fmtTime(trimEndSec);
+}
+
+(function() {
+  let dragging = null;
+  const track = $('trimTrack');
+
+  function pctFromX(clientX) {
+    const rect = track.getBoundingClientRect();
+    return Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+  }
+
+  $('trimHandleIn').addEventListener('mousedown', (e) => { e.preventDefault(); dragging = 'in'; });
+  $('trimHandleOut').addEventListener('mousedown', (e) => { e.preventDefault(); dragging = 'out'; });
+  $('trimHandleIn').addEventListener('touchstart', (e) => { e.preventDefault(); dragging = 'in'; }, { passive: false });
+  $('trimHandleOut').addEventListener('touchstart', (e) => { e.preventDefault(); dragging = 'out'; }, { passive: false });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!dragging || !state.videoMode) return;
+    const dur = videoEl.duration || 1;
+    const sec = pctFromX(e.clientX) * dur;
+    if (dragging === 'in') { trimStartSec = Math.min(sec, trimEndSec - 0.1); if (trimStartSec < 0) trimStartSec = 0; }
+    else { trimEndSec = Math.max(sec, trimStartSec + 0.1); if (trimEndSec > dur) trimEndSec = dur; }
+    updateTrimUI();
+  });
+  window.addEventListener('touchmove', (e) => {
+    if (!dragging || !state.videoMode) return;
+    const dur = videoEl.duration || 1;
+    const sec = pctFromX(e.touches[0].clientX) * dur;
+    if (dragging === 'in') { trimStartSec = Math.min(sec, trimEndSec - 0.1); if (trimStartSec < 0) trimStartSec = 0; }
+    else { trimEndSec = Math.max(sec, trimStartSec + 0.1); if (trimEndSec > dur) trimEndSec = dur; }
+    updateTrimUI();
+  }, { passive: true });
+
+  function stopDrag() {
+    if (dragging && state.videoMode && !state.videoPlaying) {
+      // Jump video to the handle position for preview
+      videoEl.currentTime = dragging === 'in' ? trimStartSec : trimEndSec;
+    }
+    dragging = null;
+  }
+  window.addEventListener('mouseup', stopDrag);
+  window.addEventListener('touchend', stopDrag);
+})();
 
 // =====================================================
 // TEXT OVERLAY
