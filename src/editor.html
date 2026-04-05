@@ -708,6 +708,17 @@
     text-align: right;
   }
 
+  /* ---- TEXT DRAG OVERLAY ---- */
+  .text-drag-overlay {
+    position: absolute;
+    cursor: move;
+    user-select: none;
+    z-index: 6;
+    pointer-events: all;
+    white-space: pre;
+    line-height: 1.1;
+  }
+
   /* ---- AI PROMPT GENERATOR ---- */
   .prompt-output {
     width: 100%;
@@ -1176,7 +1187,39 @@
       </div>
     </div>
 
-    <!-- Text section removed -->
+    <div class="section collapsed">
+      <div class="section-title">Text / Rubrik</div>
+      <div class="section-body">
+        <input type="text" id="textLine1" placeholder="Rad 1 (stor rubrik)..." style="width:100%;padding:6px 8px;font-size:12px;background:#333;border:1px solid #4a4a4a;border-radius:6px;color:#fff;font-family:inherit;margin-bottom:4px;">
+        <input type="text" id="textLine2" placeholder="Rad 2 (underrubrik)..." style="width:100%;padding:6px 8px;font-size:12px;background:#333;border:1px solid #4a4a4a;border-radius:6px;color:#fff;font-family:inherit;margin-bottom:6px;">
+        <div class="control-row"><label>Storlek</label><input type="range" id="textSize" min="16" max="160" value="64"><span class="value" id="textSizeVal">64</span></div>
+        <div class="export-row">
+          <label>Färg 1</label>
+          <input type="color" id="textColor1" value="#ffffff" style="width:28px;height:22px;padding:0;border:1px solid #4a4a4a;border-radius:4px;cursor:pointer;">
+          <label>Färg 2</label>
+          <input type="color" id="textColor2" value="#ff7a00" style="width:28px;height:22px;padding:0;border:1px solid #4a4a4a;border-radius:4px;cursor:pointer;">
+        </div>
+        <div class="export-row">
+          <label>Font</label>
+          <select id="textFont">
+            <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
+            <option value="'DM Sans', sans-serif">DM Sans</option>
+            <option value="Impact, sans-serif">Impact</option>
+            <option value="Georgia, serif">Georgia</option>
+          </select>
+        </div>
+        <div class="export-row">
+          <label>Stil</label>
+          <select id="textStyle">
+            <option value="bold-outline">Fet kontur</option>
+            <option value="shadow">Skugga</option>
+            <option value="box">Bakgrundsruta</option>
+            <option value="neon">Neon glow</option>
+          </select>
+        </div>
+        <p style="font-size:10px;color:#888;margin-top:6px;">Dra texten direkt på bilden för att placera den</p>
+      </div>
+    </div>
 
     <div class="section collapsed">
       <div class="section-title">Musik</div>
@@ -2072,6 +2115,7 @@ function renderVideoFrame(fullRes) {
     if (typeof applyFx === 'function') applyFx(ctx, ow, oh);
     // Skip grain during playback — too heavy
     if (typeof drawLightPoints === 'function') drawLightPoints(ctx, ow, oh);
+    if (typeof drawTextOverlay === 'function') drawTextOverlay(ctx, ow, oh);
   }
 
   // Split view: show original on left via overlay canvas
@@ -2292,6 +2336,7 @@ function applyFilter() {
     // Light points
     if (typeof drawLightPoints === 'function') drawLightPoints(ctx, w, h);
     // Text overlay
+    if (typeof drawTextOverlay === 'function') drawTextOverlay(ctx, w, h);
 
     // Update original canvas for split view
     if (state.viewMode === 'split') {
@@ -3106,6 +3151,195 @@ $('btnCopyPrompt').onclick = () => {
 };
 
 // =====================================================
+// DRAGGABLE TEXT OVERLAY
+// =====================================================
+let textPos = { x: 0.5, y: 0.3 }; // normalized 0-1
+let textDragEl = null;
+
+function createTextDragEl() {
+  if (textDragEl) textDragEl.remove();
+  textDragEl = document.createElement('div');
+  textDragEl.className = 'text-drag-overlay';
+  $('previewArea').appendChild(textDragEl);
+
+  let dragging = false, startX, startY, startLeft, startTop;
+
+  textDragEl.addEventListener('mousedown', (e) => {
+    e.preventDefault(); e.stopPropagation();
+    dragging = true;
+    startX = e.clientX; startY = e.clientY;
+    startLeft = textDragEl.offsetLeft; startTop = textDragEl.offsetTop;
+  });
+  textDragEl.addEventListener('touchstart', (e) => {
+    e.preventDefault(); e.stopPropagation();
+    dragging = true;
+    startX = e.touches[0].clientX; startY = e.touches[0].clientY;
+    startLeft = textDragEl.offsetLeft; startTop = textDragEl.offsetTop;
+  }, { passive: false });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!dragging) return;
+    textDragEl.style.left = (startLeft + e.clientX - startX) + 'px';
+    textDragEl.style.top = (startTop + e.clientY - startY) + 'px';
+    syncTextPos();
+  });
+  window.addEventListener('touchmove', (e) => {
+    if (!dragging) return;
+    textDragEl.style.left = (startLeft + e.touches[0].clientX - startX) + 'px';
+    textDragEl.style.top = (startTop + e.touches[0].clientY - startY) + 'px';
+    syncTextPos();
+  }, { passive: true });
+
+  function stopDrag() {
+    if (!dragging) return;
+    dragging = false;
+    syncTextPos();
+    rerender();
+  }
+  window.addEventListener('mouseup', stopDrag);
+  window.addEventListener('touchend', stopDrag);
+}
+
+function syncTextPos() {
+  if (!textDragEl) return;
+  const mainCanvas = $('canvas');
+  const rect = mainCanvas.getBoundingClientRect();
+  const areaRect = $('previewArea').getBoundingClientRect();
+  const elRect = textDragEl.getBoundingClientRect();
+  textPos.x = (elRect.left + elRect.width/2 - rect.left) / rect.width;
+  textPos.y = (elRect.top + elRect.height/2 - rect.top) / rect.height;
+}
+
+function updateTextPreview() {
+  const line1 = $('textLine1').value;
+  const line2 = $('textLine2').value;
+  if (!line1 && !line2) {
+    if (textDragEl) { textDragEl.style.display = 'none'; }
+    return;
+  }
+  if (!textDragEl) createTextDragEl();
+  textDragEl.style.display = '';
+
+  const size = parseInt($('textSize').value);
+  const font = $('textFont').value;
+  const color1 = $('textColor1').value;
+  const color2 = $('textColor2').value;
+  const style = $('textStyle').value;
+
+  const previewScale = 0.4; // scale down for overlay
+  const sz1 = Math.round(size * previewScale);
+  const sz2 = Math.round(size * 0.6 * previewScale);
+
+  let html = '';
+  if (line1) html += `<div style="font:900 ${sz1}px ${font};color:${color1};${getTextEffect(style, color1, sz1)}">${line1}</div>`;
+  if (line2) html += `<div style="font:900 ${sz2}px ${font};color:${color2};${getTextEffect(style, color2, sz2)}">${line2}</div>`;
+  textDragEl.innerHTML = html;
+
+  // Position on canvas
+  const mainCanvas = $('canvas');
+  if (mainCanvas.classList.contains('hidden')) return;
+  const rect = mainCanvas.getBoundingClientRect();
+  const areaRect = $('previewArea').getBoundingClientRect();
+  const cx = rect.left - areaRect.left + rect.width * textPos.x;
+  const cy = rect.top - areaRect.top + rect.height * textPos.y;
+  textDragEl.style.left = (cx - textDragEl.offsetWidth/2) + 'px';
+  textDragEl.style.top = (cy - textDragEl.offsetHeight/2) + 'px';
+}
+
+function getTextEffect(style, color, size) {
+  if (style === 'bold-outline') return `text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0 4px 8px rgba(0,0,0,0.6);`;
+  if (style === 'shadow') return `text-shadow: 0 3px 12px rgba(0,0,0,0.8), 0 1px 3px rgba(0,0,0,0.5);`;
+  if (style === 'box') return `background:rgba(0,0,0,0.6);padding:2px 8px;border-radius:4px;display:inline-block;`;
+  if (style === 'neon') return `text-shadow: 0 0 10px ${color}, 0 0 20px ${color}, 0 0 40px ${color};`;
+  return '';
+}
+
+function drawTextOverlay(ctx, w, h) {
+  const line1 = $('textLine1').value;
+  const line2 = $('textLine2').value;
+  if (!line1 && !line2) return;
+
+  const size = parseInt($('textSize').value);
+  const font = $('textFont').value;
+  const color1 = $('textColor1').value;
+  const color2 = $('textColor2').value;
+  const style = $('textStyle').value;
+
+  const cx = textPos.x * w;
+  const cy = textPos.y * h;
+  const sz2 = Math.round(size * 0.6);
+
+  ctx.save();
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  function applyStyle(ctx, style, color, size) {
+    if (style === 'bold-outline') {
+      ctx.strokeStyle = '#000';
+      ctx.lineWidth = size * 0.1;
+      ctx.lineJoin = 'round';
+    }
+    if (style === 'shadow' || style === 'bold-outline') {
+      ctx.shadowColor = 'rgba(0,0,0,0.7)';
+      ctx.shadowBlur = size * 0.3;
+      ctx.shadowOffsetY = size * 0.05;
+    }
+    if (style === 'neon') {
+      ctx.shadowColor = color;
+      ctx.shadowBlur = size * 0.4;
+    }
+  }
+
+  function drawLine(text, y, fontSize, color, style) {
+    ctx.font = `900 ${fontSize}px ${font}`;
+    ctx.fillStyle = color;
+    applyStyle(ctx, style, color, fontSize);
+
+    if (style === 'box') {
+      const metrics = ctx.measureText(text);
+      const pad = fontSize * 0.25;
+      ctx.fillStyle = 'rgba(0,0,0,0.6)';
+      ctx.beginPath();
+      ctx.roundRect(cx - metrics.width/2 - pad, y - fontSize/2 - pad*0.5, metrics.width + pad*2, fontSize + pad, 8);
+      ctx.fill();
+      ctx.fillStyle = color;
+    }
+
+    if (style === 'bold-outline') {
+      ctx.strokeText(text, cx, y);
+    }
+    ctx.fillText(text, cx, y);
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+  }
+
+  const gap = size * 0.15;
+  let totalH = 0;
+  if (line1) totalH += size;
+  if (line1 && line2) totalH += gap;
+  if (line2) totalH += sz2;
+
+  let y = cy - totalH/2;
+  if (line1) { drawLine(line1, y + size/2, size, color1, style); y += size + gap; }
+  if (line2) { drawLine(line2, y + sz2/2, sz2, color2, style); }
+
+  ctx.restore();
+}
+
+function rerender() {
+  if (state.videoMode && !state.videoPlaying) renderVideoFrame(true);
+  else if (state.currentIndex >= 0) applyFilter();
+}
+
+// Wire up text inputs
+['textLine1','textLine2','textSize','textColor1','textColor2','textFont','textStyle'].forEach(id => {
+  $(id).addEventListener('input', () => {
+    updateTextPreview();
+    rerender();
+  });
+});
+
+// =====================================================
 // LIGHT EFFECT (click to place light points)
 // =====================================================
 let lightPoints = [];
@@ -3385,6 +3619,7 @@ async function exportVideoEnhanced() {
     }
     if (typeof applyFx === 'function') applyFx(ectx, ow, oh);
     if (typeof drawLightPoints === 'function') drawLightPoints(ectx, ow, oh);
+    if (typeof drawTextOverlay === 'function') drawTextOverlay(ectx, ow, oh);
   }
 
   function exportLoop() {
