@@ -708,20 +708,26 @@
     text-align: right;
   }
 
-  /* ---- TEXT DRAG OVERLAY ---- */
-  .text-drag-overlay {
+  /* ---- TEXT DRAG HANDLES ---- */
+  .text-handle {
     position: absolute;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.8);
     cursor: move;
-    user-select: none;
-    z-index: 6;
+    z-index: 7;
     pointer-events: all;
-    white-space: pre;
-    line-height: 1.1;
-    opacity: 0.35;
-    border: 1px dashed rgba(255,255,255,0.3);
-    border-radius: 4px;
-    padding: 2px;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    user-select: none;
   }
+  .text-handle-1 { background: rgba(255,122,0,0.8); }
+  .text-handle-2 { background: rgba(167,139,250,0.8); }
 
   /* ---- AI PROMPT GENERATOR ---- */
   .prompt-output {
@@ -3155,179 +3161,128 @@ $('btnCopyPrompt').onclick = () => {
 };
 
 // =====================================================
-// DRAGGABLE TEXT OVERLAY
+// TWO INDEPENDENT DRAGGABLE TEXT BLOCKS
 // =====================================================
-let textPos = { x: 0.5, y: 0.3 }; // normalized 0-1
-let textDragEl = null;
+const textBlocks = [
+  { x: 0.5, y: 0.25, handle: null },
+  { x: 0.5, y: 0.55, handle: null }
+];
 
-function createTextDragEl() {
-  if (textDragEl) textDragEl.remove();
-  textDragEl = document.createElement('div');
-  textDragEl.className = 'text-drag-overlay';
-  $('previewArea').appendChild(textDragEl);
+function createTextHandles() {
+  textBlocks.forEach((block, i) => {
+    if (block.handle) return;
+    const el = document.createElement('div');
+    el.className = 'text-handle text-handle-' + (i + 1);
+    el.textContent = (i + 1);
+    el.style.display = 'none';
+    $('previewArea').appendChild(el);
+    block.handle = el;
 
-  let dragging = false, startX, startY, startLeft, startTop;
+    let dragging = false, startX, startY, startLeft, startTop;
+    el.addEventListener('mousedown', (e) => {
+      e.preventDefault(); e.stopPropagation();
+      dragging = true;
+      startX = e.clientX; startY = e.clientY;
+      startLeft = el.offsetLeft; startTop = el.offsetTop;
+    });
+    el.addEventListener('touchstart', (e) => {
+      e.preventDefault(); e.stopPropagation();
+      dragging = true;
+      startX = e.touches[0].clientX; startY = e.touches[0].clientY;
+      startLeft = el.offsetLeft; startTop = el.offsetTop;
+    }, { passive: false });
 
-  textDragEl.addEventListener('mousedown', (e) => {
-    e.preventDefault(); e.stopPropagation();
-    dragging = true;
-    startX = e.clientX; startY = e.clientY;
-    startLeft = textDragEl.offsetLeft; startTop = textDragEl.offsetTop;
+    function onMove(cx, cy) {
+      if (!dragging) return;
+      el.style.left = (startLeft + cx - startX) + 'px';
+      el.style.top = (startTop + cy - startY) + 'px';
+      syncHandlePos(i);
+    }
+    window.addEventListener('mousemove', (e) => onMove(e.clientX, e.clientY));
+    window.addEventListener('touchmove', (e) => onMove(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+    window.addEventListener('mouseup', () => { if (dragging) { dragging = false; syncHandlePos(i); rerender(); } });
+    window.addEventListener('touchend', () => { if (dragging) { dragging = false; syncHandlePos(i); rerender(); } });
   });
-  textDragEl.addEventListener('touchstart', (e) => {
-    e.preventDefault(); e.stopPropagation();
-    dragging = true;
-    startX = e.touches[0].clientX; startY = e.touches[0].clientY;
-    startLeft = textDragEl.offsetLeft; startTop = textDragEl.offsetTop;
-  }, { passive: false });
-
-  window.addEventListener('mousemove', (e) => {
-    if (!dragging) return;
-    textDragEl.style.left = (startLeft + e.clientX - startX) + 'px';
-    textDragEl.style.top = (startTop + e.clientY - startY) + 'px';
-    syncTextPos();
-  });
-  window.addEventListener('touchmove', (e) => {
-    if (!dragging) return;
-    textDragEl.style.left = (startLeft + e.touches[0].clientX - startX) + 'px';
-    textDragEl.style.top = (startTop + e.touches[0].clientY - startY) + 'px';
-    syncTextPos();
-  }, { passive: true });
-
-  function stopDrag() {
-    if (!dragging) return;
-    dragging = false;
-    syncTextPos();
-    rerender();
-  }
-  window.addEventListener('mouseup', stopDrag);
-  window.addEventListener('touchend', stopDrag);
 }
 
-function syncTextPos() {
-  if (!textDragEl) return;
+function syncHandlePos(i) {
+  const block = textBlocks[i];
+  if (!block.handle) return;
   const mainCanvas = $('canvas');
   const rect = mainCanvas.getBoundingClientRect();
   const areaRect = $('previewArea').getBoundingClientRect();
-  const elRect = textDragEl.getBoundingClientRect();
-  textPos.x = (elRect.left + elRect.width/2 - rect.left) / rect.width;
-  textPos.y = (elRect.top + elRect.height/2 - rect.top) / rect.height;
+  block.x = (block.handle.offsetLeft - (rect.left - areaRect.left)) / rect.width;
+  block.y = (block.handle.offsetTop - (rect.top - areaRect.top)) / rect.height;
 }
 
-function updateTextPreview() {
-  const line1 = $('textLine1').value;
-  const line2 = $('textLine2').value;
-  if (!line1 && !line2) {
-    if (textDragEl) { textDragEl.style.display = 'none'; }
-    return;
-  }
-  if (!textDragEl) createTextDragEl();
-  textDragEl.style.display = '';
-
-  const size = parseInt($('textSize').value);
-  const font = $('textFont').value;
-  const color1 = $('textColor1').value;
-  const color2 = $('textColor2').value;
-  const style = $('textStyle').value;
-
-  const previewScale = 0.4; // scale down for overlay
-  const sz1 = Math.round(size * previewScale);
-  const sz2 = Math.round(size * 0.6 * previewScale);
-
-  let html = '';
-  if (line1) html += `<div style="font:900 ${sz1}px ${font};color:${color1};${getTextEffect(style, color1, sz1)}">${line1}</div>`;
-  if (line2) html += `<div style="font:900 ${sz2}px ${font};color:${color2};${getTextEffect(style, color2, sz2)}">${line2}</div>`;
-  textDragEl.innerHTML = html;
-
-  // Position on canvas
+function updateTextHandles() {
   const mainCanvas = $('canvas');
   if (mainCanvas.classList.contains('hidden')) return;
   const rect = mainCanvas.getBoundingClientRect();
   const areaRect = $('previewArea').getBoundingClientRect();
-  const cx = rect.left - areaRect.left + rect.width * textPos.x;
-  const cy = rect.top - areaRect.top + rect.height * textPos.y;
-  textDragEl.style.left = (cx - textDragEl.offsetWidth/2) + 'px';
-  textDragEl.style.top = (cy - textDragEl.offsetHeight/2) + 'px';
-}
+  const lines = [$('textLine1').value, $('textLine2').value];
 
-function getTextEffect(style, color, size) {
-  if (style === 'bold-outline') return `text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0 4px 8px rgba(0,0,0,0.6);`;
-  if (style === 'shadow') return `text-shadow: 0 3px 12px rgba(0,0,0,0.8), 0 1px 3px rgba(0,0,0,0.5);`;
-  if (style === 'box') return `background:rgba(0,0,0,0.6);padding:2px 8px;border-radius:4px;display:inline-block;`;
-  if (style === 'neon') return `text-shadow: 0 0 10px ${color}, 0 0 20px ${color}, 0 0 40px ${color};`;
-  return '';
+  textBlocks.forEach((block, i) => {
+    if (!block.handle) return;
+    if (!lines[i]) { block.handle.style.display = 'none'; return; }
+    block.handle.style.display = 'flex';
+    block.handle.style.left = (rect.left - areaRect.left + rect.width * block.x) + 'px';
+    block.handle.style.top = (rect.top - areaRect.top + rect.height * block.y) + 'px';
+  });
 }
 
 function drawTextOverlay(ctx, w, h) {
-  const line1 = $('textLine1').value;
-  const line2 = $('textLine2').value;
-  if (!line1 && !line2) return;
-
+  const lines = [$('textLine1').value, $('textLine2').value];
   const size = parseInt($('textSize').value);
   const font = $('textFont').value;
-  const color1 = $('textColor1').value;
-  const color2 = $('textColor2').value;
+  const colors = [$('textColor1').value, $('textColor2').value];
   const style = $('textStyle').value;
+  const sizes = [size, Math.round(size * 0.7)];
 
-  const cx = textPos.x * w;
-  const cy = textPos.y * h;
-  const sz2 = Math.round(size * 0.6);
+  lines.forEach((text, i) => {
+    if (!text) return;
+    const block = textBlocks[i];
+    const cx = block.x * w;
+    const cy = block.y * h;
+    const fs = sizes[i];
 
-  ctx.save();
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
+    ctx.save();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = `900 ${fs}px ${font}`;
+    ctx.fillStyle = colors[i];
 
-  function applyStyle(ctx, style, color, size) {
     if (style === 'bold-outline') {
       ctx.strokeStyle = '#000';
-      ctx.lineWidth = size * 0.1;
+      ctx.lineWidth = fs * 0.1;
       ctx.lineJoin = 'round';
-    }
-    if (style === 'shadow' || style === 'bold-outline') {
       ctx.shadowColor = 'rgba(0,0,0,0.7)';
-      ctx.shadowBlur = size * 0.3;
-      ctx.shadowOffsetY = size * 0.05;
-    }
-    if (style === 'neon') {
-      ctx.shadowColor = color;
-      ctx.shadowBlur = size * 0.4;
-    }
-  }
-
-  function drawLine(text, y, fontSize, color, style) {
-    ctx.font = `900 ${fontSize}px ${font}`;
-    ctx.fillStyle = color;
-    applyStyle(ctx, style, color, fontSize);
-
-    if (style === 'box') {
-      const metrics = ctx.measureText(text);
-      const pad = fontSize * 0.25;
+      ctx.shadowBlur = fs * 0.3;
+      ctx.shadowOffsetY = fs * 0.05;
+      ctx.strokeText(text, cx, cy);
+      ctx.shadowColor = 'transparent';
+      ctx.fillText(text, cx, cy);
+    } else if (style === 'shadow') {
+      ctx.shadowColor = 'rgba(0,0,0,0.7)';
+      ctx.shadowBlur = fs * 0.3;
+      ctx.shadowOffsetY = fs * 0.05;
+      ctx.fillText(text, cx, cy);
+    } else if (style === 'box') {
+      const m = ctx.measureText(text);
+      const pad = fs * 0.25;
       ctx.fillStyle = 'rgba(0,0,0,0.6)';
       ctx.beginPath();
-      ctx.roundRect(cx - metrics.width/2 - pad, y - fontSize/2 - pad*0.5, metrics.width + pad*2, fontSize + pad, 8);
+      ctx.roundRect(cx - m.width/2 - pad, cy - fs/2 - pad*0.5, m.width + pad*2, fs + pad, 8);
       ctx.fill();
-      ctx.fillStyle = color;
+      ctx.fillStyle = colors[i];
+      ctx.fillText(text, cx, cy);
+    } else if (style === 'neon') {
+      ctx.shadowColor = colors[i];
+      ctx.shadowBlur = fs * 0.4;
+      ctx.fillText(text, cx, cy);
     }
-
-    if (style === 'bold-outline') {
-      ctx.strokeText(text, cx, y);
-    }
-    ctx.fillText(text, cx, y);
-    ctx.shadowColor = 'transparent';
-    ctx.shadowBlur = 0;
-  }
-
-  const gap = size * 0.15;
-  let totalH = 0;
-  if (line1) totalH += size;
-  if (line1 && line2) totalH += gap;
-  if (line2) totalH += sz2;
-
-  let y = cy - totalH/2;
-  if (line1) { drawLine(line1, y + size/2, size, color1, style); y += size + gap; }
-  if (line2) { drawLine(line2, y + sz2/2, sz2, color2, style); }
-
-  ctx.restore();
+    ctx.restore();
+  });
 }
 
 function rerender() {
@@ -3335,13 +3290,16 @@ function rerender() {
   else if (state.currentIndex >= 0) applyFilter();
 }
 
+createTextHandles();
+
 // Wire up text inputs
 ['textLine1','textLine2','textSize','textColor1','textColor2','textFont','textStyle'].forEach(id => {
   $(id).addEventListener('input', () => {
-    updateTextPreview();
+    updateTextHandles();
     rerender();
   });
 });
+window.addEventListener('resize', updateTextHandles);
 
 // =====================================================
 // LIGHT EFFECT (click to place light points)
