@@ -1,0 +1,12 @@
+import html from './editor.html';
+
+export default {
+  async fetch(request) {
+    return new Response(html, {
+      headers: {
+        'content-type': 'text/html;charset=UTF-8',
+        'cache-control': 'public, max-age=3600',
+      },
+    });
+  },
+};

@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dark & Moody Editor</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0e1117;
+    --panel: #161b22;
+    --panel2: #1c2129;
+    --border: #21262d;
+    --text: #e6edf3;
+    --text-dim: #8b949e;
+    --accent: #58a6ff;
+    --accent-teal: #3fb9a2;
+    --accent-warm: #d4926a;
+    --slider-track: #30363d;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .header h1 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent-teal);
+    letter-spacing: 1px;
+  }
+  .header-actions { display: flex; gap: 8px; }
+
+  .btn {
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--panel);
+    color: var(--text);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .btn:hover { background: #1f2937; border-color: var(--accent); }
+  .btn-primary {
+    background: var(--accent-teal);
+    color: #000;
+    border-color: var(--accent-teal);
+    font-weight: 600;
+  }
+  .btn-primary:hover { background: #34d399; }
+
+  .main { display: flex; flex: 1; overflow: hidden; }
+
+  /* Left panel: presets */
+  .preset-panel {
+    width: 200px;
+    min-width: 200px;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 12px;
+    flex-shrink: 0;
+  }
+  .preset-panel::-webkit-scrollbar { width: 5px; }
+  .preset-panel::-webkit-scrollbar-track { background: transparent; }
+  .preset-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  .preset-category {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--text-dim);
+    margin: 12px 0 6px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+  }
+  .preset-category:first-child { margin-top: 0; }
+
+  .preset-item {
+    display: block;
+    width: 100%;
+    padding: 7px 10px;
+    margin: 2px 0;
+    font-size: 12px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    background: transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-family: inherit;
+    text-align: left;
+    transition: all 0.12s;
+  }
+  .preset-item:hover { background: var(--panel2); color: var(--text); }
+  .preset-item.active {
+    border-color: var(--accent-teal);
+    color: var(--accent-teal);
+    background: rgba(63, 185, 162, 0.07);
+  }
+
+  /* Right panel: controls */
+  .controls {
+    width: 280px;
+    min-width: 280px;
+    background: var(--panel);
+    border-left: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 12px 14px;
+    flex-shrink: 0;
+  }
+  .controls::-webkit-scrollbar { width: 5px; }
+  .controls::-webkit-scrollbar-track { background: transparent; }
+  .controls::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  .section { margin-bottom: 14px; }
+  .section-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .control-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .control-row label {
+    font-size: 11.5px;
+    color: var(--text);
+    flex-shrink: 0;
+    width: 88px;
+  }
+  .control-row input[type="range"] {
+    flex: 1;
+    margin: 0 6px;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 3px;
+    background: var(--slider-track);
+    border-radius: 2px;
+    outline: none;
+  }
+  .control-row input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--accent-teal);
+    cursor: pointer;
+    border: 2px solid var(--bg);
+  }
+  .control-row .value {
+    font-size: 10px;
+    color: var(--accent-teal);
+    font-weight: 600;
+    width: 30px;
+    text-align: right;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Preview area */
+  .preview-area {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: #0a0d12;
+  }
+
+  .drop-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--text-dim);
+    cursor: pointer;
+  }
+  .drop-zone svg { opacity: 0.4; }
+  .drop-zone p { font-size: 14px; }
+  .drop-zone span { font-size: 11px; opacity: 0.5; }
+  .drop-zone.drag-over {
+    border: 2px dashed var(--accent-teal);
+    border-radius: 12px;
+    padding: 50px;
+  }
+
+  canvas {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  .hidden { display: none !important; }
+
+  .compare-bar {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 4px;
+    background: rgba(22, 27, 34, 0.92);
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    backdrop-filter: blur(8px);
+  }
+  .compare-btn {
+    padding: 3px 10px;
+    font-size: 10px;
+    border: none;
+    background: transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    border-radius: 3px;
+    font-family: inherit;
+  }
+  .compare-btn.active {
+    background: var(--accent-teal);
+    color: #000;
+    font-weight: 600;
+  }
+
+  .thumbstrip {
+    display: flex;
+    gap: 5px;
+    padding: 6px 14px;
+    background: var(--panel);
+    border-top: 1px solid var(--border);
+    overflow-x: auto;
+    flex-shrink: 0;
+  }
+  .thumb {
+    width: 56px; height: 42px;
+    object-fit: cover;
+    border-radius: 3px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    opacity: 0.5;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .thumb:hover { opacity: 0.85; }
+  .thumb.active { border-color: var(--accent-teal); opacity: 1; }
+
+  .status-bar {
+    padding: 3px 14px;
+    font-size: 10px;
+    color: var(--text-dim);
+    background: var(--panel);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+  }
+  .modal {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    min-width: 340px;
+  }
+  .modal h2 { font-size: 15px; margin-bottom: 12px; }
+  .modal .progress-bar {
+    height: 5px;
+    background: var(--slider-track);
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 10px 0;
+  }
+  .modal .progress-fill {
+    height: 100%;
+    background: var(--accent-teal);
+    border-radius: 3px;
+    transition: width 0.3s;
+  }
+  .modal p { font-size: 12px; color: var(--text-dim); }
+
+  .shortcut-hint {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 10px;
+    color: var(--text-dim);
+    opacity: 0.6;
+    background: rgba(22,27,34,0.85);
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>DARK & MOODY EDITOR</h1>
+  <div class="header-actions">
+    <button class="btn" id="btnLoadImages">Ladda bilder</button>
+    <button class="btn" id="btnReset">Återställ</button>
+    <button class="btn" id="btnExportCurrent" disabled>Exportera bild</button>
+    <button class="btn btn-primary" id="btnExportAll" disabled>Exportera alla</button>
+    <input type="file" id="fileInput" multiple accept="image/jpeg,image/png,image/webp" style="display:none">
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- PRESET PANEL -->
+  <div class="preset-panel">
+    <div class="preset-category">Dark & Moody</div>
+    <button class="preset-item active" data-preset="darkGym">Dark Gym</button>
+    <button class="preset-item" data-preset="darkMoody">Dark & Moody</button>
+    <button class="preset-item" data-preset="blackMoody">Black Moody</button>
+    <button class="preset-item" data-preset="luxuryBlack">Luxury Black</button>
+    <button class="preset-item" data-preset="matteBlack">Matte Black</button>
+    <button class="preset-item" data-preset="charcoal">Charcoal</button>
+
+    <div class="preset-category">Moody Tones</div>
+    <button class="preset-item" data-preset="moody">Moody</button>
+    <button class="preset-item" data-preset="moodyUrban">Moody Urban</button>
+    <button class="preset-item" data-preset="moodyAdventure">Moody Adventure</button>
+    <button class="preset-item" data-preset="moodyTravel">Moody Travel</button>
+    <button class="preset-item" data-preset="wildSoul">Wild Soul</button>
+
+    <div class="preset-category">Cold Tones</div>
+    <button class="preset-item" data-preset="coldTeal">Kall Teal</button>
+    <button class="preset-item" data-preset="arctic">Arktisk</button>
+    <button class="preset-item" data-preset="underwater">Underwater</button>
+    <button class="preset-item" data-preset="minimalGrey">Minimal Grey</button>
+
+    <div class="preset-category">Warm Moody</div>
+    <button class="preset-item" data-preset="cocoa">Cocoa</button>
+    <button class="preset-item" data-preset="bali">Bali</button>
+    <button class="preset-item" data-preset="bahamas">Bahamas</button>
+    <button class="preset-item" data-preset="tropical">Tropical</button>
+
+    <div class="preset-category">Övrigt</div>
+    <button class="preset-item" data-preset="lifestyle">Lifestyle</button>
+    <button class="preset-item" data-preset="neutral">Neutral (av)</button>
+  </div>
+
+  <!-- PREVIEW -->
+  <div class="preview-area" id="previewArea">
+    <div class="drop-zone" id="dropZone">
+      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+        <circle cx="8.5" cy="8.5" r="1.5"/>
+        <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+      </svg>
+      <p>Dra och släpp bilder här</p>
+      <span>eller klicka "Ladda bilder" — piltangenter bläddrar, mellanslag jämför</span>
+    </div>
+    <canvas id="canvas" class="hidden"></canvas>
+    <div class="compare-bar hidden" id="compareBar">
+      <button class="compare-btn active" data-view="edited">Redigerad</button>
+      <button class="compare-btn" data-view="original">Original</button>
+      <button class="compare-btn" data-view="split">Delad</button>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <div class="section">
+      <div class="section-title">Ljus & Kontrast</div>
+      <div class="control-row"><label>Ljusstyrka</label><input type="range" id="brightness" min="-80" max="60" value="-55"><span class="value" id="brightnessVal">-55</span></div>
+      <div class="control-row"><label>Kontrast</label><input type="range" id="contrast" min="-50" max="100" value="65"><span class="value" id="contrastVal">65</span></div>
+      <div class="control-row"><label>Skuggor</label><input type="range" id="shadows" min="0" max="50" value="8"><span class="value" id="shadowsVal">8</span></div>
+      <div class="control-row"><label>Högdagrar</label><input type="range" id="highlights" min="-50" max="20" value="-45"><span class="value" id="highlightsVal">-45</span></div>
+      <div class="control-row"><label>Fade/Matte</label><input type="range" id="fade" min="0" max="60" value="0"><span class="value" id="fadeVal">0</span></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Temperatur & Tint</div>
+      <div class="control-row"><label>Temperatur</label><input type="range" id="temperature" min="-50" max="50" value="-40"><span class="value" id="temperatureVal">-40</span></div>
+      <div class="control-row"><label>Tint</label><input type="range" id="tint" min="-30" max="30" value="-12"><span class="value" id="tintVal">-12</span></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Teal / Cyan</div>
+      <div class="control-row"><label>Teal styrka</label><input type="range" id="tealIntensity" min="0" max="100" value="75"><span class="value" id="tealIntensityVal">75</span></div>
+      <div class="control-row"><label>Teal mättnad</label><input type="range" id="tealSat" min="0" max="100" value="80"><span class="value" id="tealSatVal">80</span></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Mättnad</div>
+      <div class="control-row"><label>Global</label><input type="range" id="saturation" min="0" max="100" value="25"><span class="value" id="saturationVal">25</span></div>
+      <div class="control-row"><label>Varma toner</label><input type="range" id="warmDesat" min="0" max="100" value="90"><span class="value" id="warmDesatVal">90</span></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Färggradering</div>
+      <div class="control-row"><label>Skugg-blå</label><input type="range" id="shadowBlue" min="0" max="60" value="50"><span class="value" id="shadowBlueVal">50</span></div>
+      <div class="control-row"><label>Skugg-teal</label><input type="range" id="shadowTeal" min="0" max="50" value="30"><span class="value" id="shadowTealVal">30</span></div>
+      <div class="control-row"><label>Skugg-varm</label><input type="range" id="shadowWarm" min="0" max="50" value="0"><span class="value" id="shadowWarmVal">0</span></div>
+      <div class="control-row"><label>Högdager-blå</label><input type="range" id="highlightBlue" min="0" max="40" value="25"><span class="value" id="highlightBlueVal">25</span></div>
+      <div class="control-row"><label>Högdager-varm</label><input type="range" id="highlightWarm" min="0" max="40" value="0"><span class="value" id="highlightWarmVal">0</span></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Skärpa & Effekter</div>
+      <div class="control-row"><label>Skärpa</label><input type="range" id="sharpness" min="0" max="100" value="40"><span class="value" id="sharpnessVal">40</span></div>
+      <div class="control-row"><label>Vinjett</label><input type="range" id="vignette" min="0" max="100" value="75"><span class="value" id="vignetteVal">75</span></div>
+      <div class="control-row"><label>Vinjett radie</label><input type="range" id="vignetteRadius" min="30" max="100" value="50"><span class="value" id="vignetteRadiusVal">50</span></div>
+      <div class="control-row"><label>Filmkorn</label><input type="range" id="grain" min="0" max="50" value="5"><span class="value" id="grainVal">5</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="thumbstrip hidden" id="thumbstrip"></div>
+<div class="status-bar">
+  <span id="statusLeft">Ingen bild laddad</span>
+  <span id="statusRight"></span>
+</div>
+
+<div class="modal-overlay hidden" id="exportModal">
+  <div class="modal">
+    <h2>Exporterar bilder...</h2>
+    <div class="progress-bar"><div class="progress-fill" id="exportProgress" style="width:0%"></div></div>
+    <p id="exportStatus">Förbereder...</p>
+  </div>
+</div>
+
+<script>
+// =====================================================
+// STATE
+// =====================================================
+const state = {
+  images: [],
+  currentIndex: -1,
+  viewMode: 'edited',
+  processing: false
+};
+
+// =====================================================
+// PRESETS — Inspired by Flourish Presets Dark/Moody
+// =====================================================
+const PRESETS = {
+  // ---- DARK & MOODY ----
+  darkGym: {
+    brightness: -55, contrast: 65, shadows: 8, highlights: -45, fade: 0,
+    temperature: -40, tint: -12,
+    tealIntensity: 75, tealSat: 80,
+    saturation: 25, warmDesat: 90,
+    shadowBlue: 50, shadowTeal: 30, shadowWarm: 0, highlightBlue: 25, highlightWarm: 0,
+    sharpness: 40, vignette: 75, vignetteRadius: 50, grain: 5
+  },
+  darkMoody: {
+    brightness: -45, contrast: 55, shadows: 10, highlights: -35, fade: 5,
+    temperature: -25, tint: -6,
+    tealIntensity: 50, tealSat: 55,
+    saturation: 35, warmDesat: 65,
+    shadowBlue: 35, shadowTeal: 20, shadowWarm: 8, highlightBlue: 12, highlightWarm: 0,
+    sharpness: 35, vignette: 60, vignetteRadius: 55, grain: 6
+  },
+  blackMoody: {
+    brightness: -60, contrast: 70, shadows: 5, highlights: -40, fade: 0,
+    temperature: -20, tint: -5,
+    tealIntensity: 35, tealSat: 40,
+    saturation: 20, warmDesat: 80,
+    shadowBlue: 30, shadowTeal: 15, shadowWarm: 5, highlightBlue: 10, highlightWarm: 0,
+    sharpness: 45, vignette: 80, vignetteRadius: 45, grain: 4
+  },
+  luxuryBlack: {
+    brightness: -50, contrast: 60, shadows: 3, highlights: -35, fade: 0,
+    temperature: -15, tint: -3,
+    tealIntensity: 20, tealSat: 30,
+    saturation: 18, warmDesat: 75,
+    shadowBlue: 20, shadowTeal: 10, shadowWarm: 10, highlightBlue: 8, highlightWarm: 5,
+    sharpness: 50, vignette: 70, vignetteRadius: 50, grain: 3
+  },
+  matteBlack: {
+    brightness: -40, contrast: 35, shadows: 25, highlights: -30, fade: 30,
+    temperature: -18, tint: -4,
+    tealIntensity: 25, tealSat: 35,
+    saturation: 22, warmDesat: 70,
+    shadowBlue: 22, shadowTeal: 12, shadowWarm: 8, highlightBlue: 10, highlightWarm: 0,
+    sharpness: 30, vignette: 50, vignetteRadius: 60, grain: 8
+  },
+  charcoal: {
+    brightness: -35, contrast: 40, shadows: 15, highlights: -25, fade: 15,
+    temperature: -10, tint: -2,
+    tealIntensity: 12, tealSat: 25,
+    saturation: 12, warmDesat: 85,
+    shadowBlue: 15, shadowTeal: 8, shadowWarm: 5, highlightBlue: 8, highlightWarm: 0,
+    sharpness: 35, vignette: 45, vignetteRadius: 65, grain: 6
+  },
+
+  // ---- MOODY TONES ----
+  moody: {
+    brightness: -35, contrast: 50, shadows: 12, highlights: -30, fade: 8,
+    temperature: -22, tint: -5,
+    tealIntensity: 40, tealSat: 50,
+    saturation: 35, warmDesat: 60,
+    shadowBlue: 28, shadowTeal: 18, shadowWarm: 10, highlightBlue: 10, highlightWarm: 3,
+    sharpness: 35, vignette: 55, vignetteRadius: 60, grain: 5
+  },
+  moodyUrban: {
+    brightness: -42, contrast: 55, shadows: 8, highlights: -35, fade: 10,
+    temperature: -30, tint: -8,
+    tealIntensity: 55, tealSat: 60,
+    saturation: 28, warmDesat: 75,
+    shadowBlue: 40, shadowTeal: 25, shadowWarm: 0, highlightBlue: 18, highlightWarm: 0,
+    sharpness: 45, vignette: 65, vignetteRadius: 50, grain: 10
+  },
+  moodyAdventure: {
+    brightness: -30, contrast: 45, shadows: 15, highlights: -25, fade: 5,
+    temperature: -20, tint: -8,
+    tealIntensity: 45, tealSat: 65,
+    saturation: 40, warmDesat: 55,
+    shadowBlue: 25, shadowTeal: 22, shadowWarm: 5, highlightBlue: 10, highlightWarm: 0,
+    sharpness: 40, vignette: 50, vignetteRadius: 60, grain: 4
+  },
+  moodyTravel: {
+    brightness: -25, contrast: 40, shadows: 12, highlights: -20, fade: 10,
+    temperature: -15, tint: -5,
+    tealIntensity: 30, tealSat: 45,
+    saturation: 40, warmDesat: 50,
+    shadowBlue: 20, shadowTeal: 15, shadowWarm: 12, highlightBlue: 8, highlightWarm: 5,
+    sharpness: 30, vignette: 40, vignetteRadius: 65, grain: 6
+  },
+  wildSoul: {
+    brightness: -30, contrast: 45, shadows: 18, highlights: -25, fade: 12,
+    temperature: -8, tint: -3,
+    tealIntensity: 20, tealSat: 40,
+    saturation: 38, warmDesat: 45,
+    shadowBlue: 12, shadowTeal: 10, shadowWarm: 18, highlightBlue: 5, highlightWarm: 8,
+    sharpness: 35, vignette: 55, vignetteRadius: 55, grain: 10
+  },
+
+  // ---- COLD TONES ----
+  coldTeal: {
+    brightness: -35, contrast: 42, shadows: 12, highlights: -30, fade: 3,
+    temperature: -38, tint: -10,
+    tealIntensity: 60, tealSat: 70,
+    saturation: 32, warmDesat: 80,
+    shadowBlue: 42, shadowTeal: 25, shadowWarm: 0, highlightBlue: 20, highlightWarm: 0,
+    sharpness: 35, vignette: 50, vignetteRadius: 60, grain: 3
+  },
+  arctic: {
+    brightness: -12, contrast: 25, shadows: 10, highlights: -12, fade: 8,
+    temperature: -48, tint: -5,
+    tealIntensity: 22, tealSat: 30,
+    saturation: 28, warmDesat: 85,
+    shadowBlue: 48, shadowTeal: 12, shadowWarm: 0, highlightBlue: 30, highlightWarm: 0,
+    sharpness: 30, vignette: 25, vignetteRadius: 80, grain: 5
+  },
+  underwater: {
+    brightness: -30, contrast: 35, shadows: 15, highlights: -20, fade: 8,
+    temperature: -45, tint: -15,
+    tealIntensity: 80, tealSat: 85,
+    saturation: 35, warmDesat: 90,
+    shadowBlue: 50, shadowTeal: 35, shadowWarm: 0, highlightBlue: 25, highlightWarm: 0,
+    sharpness: 25, vignette: 55, vignetteRadius: 55, grain: 3
+  },
+  minimalGrey: {
+    brightness: -15, contrast: 20, shadows: 12, highlights: -10, fade: 15,
+    temperature: -12, tint: -2,
+    tealIntensity: 8, tealSat: 20,
+    saturation: 8, warmDesat: 90,
+    shadowBlue: 10, shadowTeal: 5, shadowWarm: 3, highlightBlue: 5, highlightWarm: 0,
+    sharpness: 25, vignette: 30, vignetteRadius: 75, grain: 4
+  },
+
+  // ---- WARM MOODY ----
+  cocoa: {
+    brightness: -30, contrast: 40, shadows: 15, highlights: -22, fade: 12,
+    temperature: 15, tint: 5,
+    tealIntensity: 5, tealSat: 20,
+    saturation: 35, warmDesat: 15,
+    shadowBlue: 5, shadowTeal: 3, shadowWarm: 30, highlightBlue: 0, highlightWarm: 18,
+    sharpness: 30, vignette: 50, vignetteRadius: 60, grain: 8
+  },
+  bali: {
+    brightness: -22, contrast: 38, shadows: 12, highlights: -18, fade: 8,
+    temperature: 12, tint: 3,
+    tealIntensity: 15, tealSat: 35,
+    saturation: 42, warmDesat: 20,
+    shadowBlue: 8, shadowTeal: 10, shadowWarm: 22, highlightBlue: 5, highlightWarm: 15,
+    sharpness: 30, vignette: 40, vignetteRadius: 65, grain: 5
+  },
+  bahamas: {
+    brightness: -18, contrast: 35, shadows: 10, highlights: -15, fade: 5,
+    temperature: -5, tint: -5,
+    tealIntensity: 35, tealSat: 55,
+    saturation: 45, warmDesat: 30,
+    shadowBlue: 18, shadowTeal: 20, shadowWarm: 10, highlightBlue: 12, highlightWarm: 8,
+    sharpness: 30, vignette: 35, vignetteRadius: 70, grain: 3
+  },
+  tropical: {
+    brightness: -20, contrast: 38, shadows: 10, highlights: -18, fade: 5,
+    temperature: 8, tint: 2,
+    tealIntensity: 20, tealSat: 45,
+    saturation: 50, warmDesat: 25,
+    shadowBlue: 10, shadowTeal: 12, shadowWarm: 18, highlightBlue: 5, highlightWarm: 12,
+    sharpness: 35, vignette: 40, vignetteRadius: 65, grain: 4
+  },
+
+  // ---- OTHER ----
+  lifestyle: {
+    brightness: -15, contrast: 30, shadows: 10, highlights: -12, fade: 10,
+    temperature: -8, tint: -2,
+    tealIntensity: 15, tealSat: 35,
+    saturation: 45, warmDesat: 40,
+    shadowBlue: 12, shadowTeal: 8, shadowWarm: 10, highlightBlue: 5, highlightWarm: 5,
+    sharpness: 30, vignette: 30, vignetteRadius: 70, grain: 3
+  },
+  neutral: {
+    brightness: 0, contrast: 0, shadows: 0, highlights: 0, fade: 0,
+    temperature: 0, tint: 0,
+    tealIntensity: 0, tealSat: 50,
+    saturation: 100, warmDesat: 0,
+    shadowBlue: 0, shadowTeal: 0, shadowWarm: 0, highlightBlue: 0, highlightWarm: 0,
+    sharpness: 0, vignette: 0, vignetteRadius: 80, grain: 0
+  }
+};
+
+// =====================================================
+// DOM
+// =====================================================
+const $ = id => document.getElementById(id);
+const canvas = $('canvas');
+const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+const SLIDERS = [
+  'brightness','contrast','shadows','highlights','fade',
+  'temperature','tint',
+  'tealIntensity','tealSat',
+  'saturation','warmDesat',
+  'shadowBlue','shadowTeal','shadowWarm','highlightBlue','highlightWarm',
+  'sharpness','vignette','vignetteRadius','grain'
+];
+
+// =====================================================
+// IMAGE LOADING
+// =====================================================
+function loadFiles(files) {
+  const validFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
+  if (!validFiles.length) return;
+
+  state.images = [];
+  const thumbstrip = $('thumbstrip');
+  thumbstrip.innerHTML = '';
+  thumbstrip.classList.remove('hidden');
+
+  let loaded = 0;
+  validFiles.forEach((file, i) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const offscreen = document.createElement('canvas');
+        offscreen.width = img.width;
+        offscreen.height = img.height;
+        const octx = offscreen.getContext('2d');
+        octx.drawImage(img, 0, 0);
+        const originalData = octx.getImageData(0, 0, img.width, img.height);
+
+        state.images[i] = { file, name: file.name, width: img.width, height: img.height, original: originalData };
+
+        const thumb = document.createElement('img');
+        thumb.src = e.target.result;
+        thumb.className = 'thumb' + (i === 0 ? ' active' : '');
+        thumb.dataset.index = i;
+        thumb.onclick = () => selectImage(i);
+        thumbstrip.appendChild(thumb);
+
+        loaded++;
+        if (loaded === validFiles.length) {
+          selectImage(0);
+          $('btnExportCurrent').disabled = false;
+          $('btnExportAll').disabled = false;
+          $('statusLeft').textContent = `${validFiles.length} bild(er) laddade`;
+        }
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function selectImage(index) {
+  state.currentIndex = index;
+  document.querySelectorAll('.thumb').forEach((t, i) => t.classList.toggle('active', i === index));
+  const entry = state.images[index];
+  if (!entry) return;
+  canvas.width = entry.width;
+  canvas.height = entry.height;
+  canvas.classList.remove('hidden');
+  $('dropZone').classList.add('hidden');
+  $('compareBar').classList.remove('hidden');
+  $('statusRight').textContent = `${entry.width} x ${entry.height} — ${entry.name}`;
+  applyFilter();
+}
+
+// =====================================================
+// PIXEL PROCESSING
+// =====================================================
+function getSettings() {
+  const s = {};
+  SLIDERS.forEach(id => { s[id] = parseInt($(id).value); });
+  return s;
+}
+
+function applyFilter() {
+  if (state.currentIndex < 0 || state.processing) return;
+  const entry = state.images[state.currentIndex];
+  if (!entry) return;
+  state.processing = true;
+
+  requestAnimationFrame(() => {
+    const s = getSettings();
+
+    if (state.viewMode === 'original') {
+      ctx.putImageData(entry.original, 0, 0);
+      state.processing = false;
+      return;
+    }
+
+    const src = entry.original.data;
+    const out = ctx.createImageData(entry.width, entry.height);
+    const dst = out.data;
+    const len = src.length;
+    const w = entry.width, h = entry.height;
+
+    // Pre-compute LUT
+    const lut = new Uint8ClampedArray(256);
+    const cf = (259 * (s.contrast * 2.55 + 255)) / (255 * (259 - s.contrast * 2.55));
+    for (let i = 0; i < 256; i++) {
+      let v = i + s.brightness;
+      v = cf * (v - 128) + 128;
+      // Shadow lift
+      v = s.shadows + (v / 255) * (255 - s.shadows);
+      // Highlight pull
+      v = v + s.highlights * (v / 255) * (v / 255) * 0.5;
+      // Fade/matte: lift blacks further, compress range
+      if (s.fade > 0) {
+        const fadeAmt = s.fade * 0.5;
+        v = fadeAmt + (v / 255) * (255 - fadeAmt * 2);
+      }
+      lut[i] = Math.max(0, Math.min(255, v));
+    }
+
+    const tempR = s.temperature * 0.5;
+    const tempB = -s.temperature * 0.7;
+    const tintG = s.tint * 0.3;
+    const tealI = s.tealIntensity / 100;
+    const satF = s.saturation / 100;
+    const warmD = s.warmDesat / 100;
+    const tealSB = s.tealSat / 50;
+    const sB = s.shadowBlue, sT = s.shadowTeal, sW = s.shadowWarm;
+    const hB = s.highlightBlue, hW = s.highlightWarm;
+
+    for (let i = 0; i < len; i += 4) {
+      let r = src[i], g = src[i+1], b = src[i+2];
+
+      // Temperature
+      r += tempR; g += tintG; b += tempB;
+      r = r < 0 ? 0 : r > 255 ? 255 : r;
+      g = g < 0 ? 0 : g > 255 ? 255 : g;
+      b = b < 0 ? 0 : b > 255 ? 255 : b;
+
+      // Teal cast
+      const lum = 0.299*r + 0.587*g + 0.114*b;
+      const sw = Math.max(0.12, Math.min(1, 1 - lum/180));
+      r -= tealI * 35 * sw;
+      g += tealI * 15 * sw;
+      b += tealI * 30 * sw;
+      r = r < 0 ? 0 : r > 255 ? 255 : r;
+      g = g < 0 ? 0 : g > 255 ? 255 : g;
+      b = b < 0 ? 0 : b > 255 ? 255 : b;
+
+      // Tone curve via LUT
+      r = lut[Math.round(r)];
+      g = lut[Math.round(g)];
+      b = lut[Math.round(b)];
+
+      // Color grading
+      const l2 = 0.299*r + 0.587*g + 0.114*b;
+      const sm = Math.pow(Math.max(0, Math.min(1, 1 - l2/85)), 1.3);
+      const hm = Math.pow(Math.max(0, Math.min(1, (l2 - 170)/85)), 1.3);
+
+      // Shadow tints
+      g += sm * sT;
+      b += sm * sB;
+      r += sm * sW * 0.8;
+      g += sm * sW * 0.3;
+
+      // Highlight tints
+      b += hm * hB;
+      r -= hm * (hB > 0 ? 6 : 0);
+      r += hm * hW * 0.8;
+      g += hm * hW * 0.3;
+
+      // Saturation
+      const gray = 0.299*r + 0.587*g + 0.114*b;
+      const maxC = Math.max(r,g,b), minC = Math.min(r,g,b);
+      const chroma = maxC - minC;
+      let ls = satF;
+      if (chroma > 10) {
+        if (r === maxC && g > b && (r-g) < 100) ls *= (1 - warmD);
+        else if (r === maxC && g <= b*1.2) ls *= (1 - warmD*0.7);
+        if ((b > r || g > r) && Math.abs(g-b) < 80 && g > 60) ls *= tealSB;
+      }
+      r = gray + (r - gray) * ls;
+      g = gray + (g - gray) * ls;
+      b = gray + (b - gray) * ls;
+
+      dst[i]   = Math.max(0, Math.min(255, r));
+      dst[i+1] = Math.max(0, Math.min(255, g));
+      dst[i+2] = Math.max(0, Math.min(255, b));
+      dst[i+3] = 255;
+    }
+
+    ctx.putImageData(out, 0, 0);
+
+    // Vignette
+    if (s.vignette > 0) {
+      const cx = w/2, cy = h/2;
+      const maxDist = Math.sqrt(cx*cx + cy*cy);
+      const rad = (s.vignetteRadius/100) * maxDist;
+      const grad = ctx.createRadialGradient(cx, cy, rad, cx, cy, maxDist);
+      grad.addColorStop(0, 'rgba(0,0,0,0)');
+      grad.addColorStop(1, `rgba(0,0,0,${s.vignette/100})`);
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, w, h);
+    }
+
+    // Grain
+    if (s.grain > 0) {
+      const gd = ctx.getImageData(0, 0, w, h);
+      const gp = gd.data;
+      const ga = s.grain * 0.6;
+      for (let i = 0; i < gp.length; i += 4) {
+        const n = (Math.random() - 0.5) * ga;
+        gp[i] = Math.max(0, Math.min(255, gp[i]+n));
+        gp[i+1] = Math.max(0, Math.min(255, gp[i+1]+n));
+        gp[i+2] = Math.max(0, Math.min(255, gp[i+2]+n));
+      }
+      ctx.putImageData(gd, 0, 0);
+    }
+
+    // Split view
+    if (state.viewMode === 'split') {
+      const halfW = Math.floor(w/2);
+      const tc = document.createElement('canvas');
+      tc.width = w; tc.height = h;
+      tc.getContext('2d').putImageData(entry.original, 0, 0);
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(0, 0, halfW, h);
+      ctx.clip();
+      ctx.drawImage(tc, 0, 0);
+      ctx.restore();
+      ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(halfW, 0); ctx.lineTo(halfW, h); ctx.stroke();
+      ctx.font = '13px sans-serif';
+      ctx.fillStyle = 'rgba(255,255,255,0.6)';
+      ctx.fillText('ORIGINAL', 10, 22);
+      ctx.fillText('REDIGERAD', halfW + 10, 22);
+    }
+
+    state.processing = false;
+  });
+}
+
+let applyTimeout;
+function debouncedApply() { clearTimeout(applyTimeout); applyTimeout = setTimeout(applyFilter, 16); }
+
+// =====================================================
+// EXPORT
+// =====================================================
+function exportCurrent() {
+  if (state.currentIndex < 0) return;
+  const entry = state.images[state.currentIndex];
+  const prev = state.viewMode;
+  state.viewMode = 'edited';
+  applyFilter();
+  setTimeout(() => {
+    canvas.toBlob(blob => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = entry.name.replace(/\.[^.]+$/, '') + '_edited.jpg';
+      a.click();
+      state.viewMode = prev;
+    }, 'image/jpeg', 0.95);
+  }, 80);
+}
+
+async function exportAll() {
+  if (!state.images.length) return;
+  $('exportModal').classList.remove('hidden');
+  const prev = state.currentIndex;
+  state.viewMode = 'edited';
+
+  for (let i = 0; i < state.images.length; i++) {
+    $('exportStatus').textContent = `${state.images[i].name} (${i+1}/${state.images.length})`;
+    $('exportProgress').style.width = `${(i/state.images.length)*100}%`;
+    selectImage(i);
+    await new Promise(r => setTimeout(r, 120));
+    await new Promise(resolve => {
+      canvas.toBlob(blob => {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = state.images[i].name.replace(/\.[^.]+$/, '') + '_edited.jpg';
+        a.click();
+        resolve();
+      }, 'image/jpeg', 0.95);
+    });
+    $('exportProgress').style.width = `${((i+1)/state.images.length)*100}%`;
+  }
+  $('exportStatus').textContent = 'Klart!';
+  setTimeout(() => { $('exportModal').classList.add('hidden'); selectImage(prev); }, 800);
+}
+
+// =====================================================
+// PRESETS
+// =====================================================
+function applyPreset(name) {
+  const p = PRESETS[name];
+  if (!p) return;
+  SLIDERS.forEach(id => {
+    if (p[id] !== undefined) {
+      $(id).value = p[id];
+      $(id + 'Val').textContent = p[id];
+    }
+  });
+  document.querySelectorAll('.preset-item').forEach(c => c.classList.toggle('active', c.dataset.preset === name));
+  applyFilter();
+}
+
+// =====================================================
+// EVENTS
+// =====================================================
+SLIDERS.forEach(id => {
+  $(id).addEventListener('input', () => {
+    $(id + 'Val').textContent = $(id).value;
+    document.querySelectorAll('.preset-item').forEach(c => c.classList.remove('active'));
+    debouncedApply();
+  });
+});
+
+$('btnLoadImages').onclick = () => $('fileInput').click();
+$('fileInput').onchange = (e) => loadFiles(e.target.files);
+$('btnReset').onclick = () => applyPreset('darkGym');
+$('btnExportCurrent').onclick = exportCurrent;
+$('btnExportAll').onclick = exportAll;
+
+document.querySelectorAll('.preset-item').forEach(btn => {
+  btn.onclick = () => applyPreset(btn.dataset.preset);
+});
+
+document.querySelectorAll('.compare-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.compare-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.viewMode = btn.dataset.view;
+    applyFilter();
+  };
+});
+
+const previewArea = $('previewArea');
+previewArea.addEventListener('dragover', (e) => { e.preventDefault(); $('dropZone').classList.add('drag-over'); });
+previewArea.addEventListener('dragleave', () => { $('dropZone').classList.remove('drag-over'); });
+previewArea.addEventListener('drop', (e) => { e.preventDefault(); $('dropZone').classList.remove('drag-over'); loadFiles(e.dataTransfer.files); });
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowLeft' && state.currentIndex > 0) selectImage(state.currentIndex - 1);
+  else if (e.key === 'ArrowRight' && state.currentIndex < state.images.length - 1) selectImage(state.currentIndex + 1);
+  else if (e.key === ' ') {
+    e.preventDefault();
+    state.viewMode = state.viewMode === 'original' ? 'edited' : 'original';
+    document.querySelectorAll('.compare-btn').forEach(b => b.classList.toggle('active', b.dataset.view === state.viewMode));
+    applyFilter();
+  }
+});
+
+applyPreset('darkGym');
+</script>
+</body>
+</html>
