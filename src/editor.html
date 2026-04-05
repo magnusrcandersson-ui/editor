@@ -343,7 +343,7 @@
   <!-- PRESET PANEL -->
   <div class="preset-panel">
     <div class="preset-category">Dark & Moody</div>
-    <button class="preset-item active" data-preset="darkGym">Dark Gym</button>
+    <button class="preset-item" data-preset="darkGym">Dark Gym</button>
     <button class="preset-item" data-preset="darkMoody">Dark & Moody</button>
     <button class="preset-item" data-preset="blackMoody">Black Moody</button>
     <button class="preset-item" data-preset="luxuryBlack">Luxury Black</button>
@@ -371,7 +371,7 @@
 
     <div class="preset-category">Övrigt</div>
     <button class="preset-item" data-preset="lifestyle">Lifestyle</button>
-    <button class="preset-item" data-preset="neutral">Neutral (av)</button>
+    <button class="preset-item active" data-preset="neutral">Neutral (av)</button>
   </div>
 
   <!-- PREVIEW -->
@@ -977,7 +977,7 @@ SLIDERS.forEach(id => {
 
 $('btnLoadImages').onclick = () => $('fileInput').click();
 $('fileInput').onchange = (e) => loadFiles(e.target.files);
-$('btnReset').onclick = () => applyPreset('darkGym');
+$('btnReset').onclick = () => applyPreset('neutral');
 $('btnExportCurrent').onclick = exportCurrent;
 $('btnExportAll').onclick = exportAll;
 
@@ -1010,7 +1010,7 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-applyPreset('darkGym');
+applyPreset('neutral');
 </script>
 </body>
 </html>
