@@ -1169,25 +1169,63 @@
           <option value="promoWoman">Promo Kvinna (dynamisk, illustrerad)</option>
         </select>
         <select id="aiScenario" class="prompt-select">
+          <optgroup label="Löpning">
           <option value="running_road">Springer på väg</option>
           <option value="running_trail">Springer på skogsstig</option>
           <option value="running_beach">Springer på strand</option>
           <option value="running_city">Springer i stad</option>
           <option value="running_sunset">Springer i solnedgång</option>
+          <option value="running_bridge">Springer över bro</option>
+          <option value="running_waterfront">Springer längs vattnet</option>
+          <option value="running_park">Springer i stadspark</option>
+          <option value="running_harbor">Springer vid hamnen</option>
+          <option value="running_oldtown">Springer i gammelstad</option>
           <option value="running_drone">Springer (drönarperspektiv)</option>
+          </optgroup>
+          <optgroup label="Svenska städer">
+          <option value="stockholm_gamla">Stockholm — Gamla stan</option>
+          <option value="stockholm_strandvagen">Stockholm — Strandvägen</option>
+          <option value="stockholm_djurgarden">Stockholm — Djurgården</option>
+          <option value="stockholm_sodermalm">Stockholm — Södermalm skyline</option>
+          <option value="goteborg_kanalen">Göteborg — Längs kanalen</option>
+          <option value="goteborg_haga">Göteborg — Haga</option>
+          <option value="goteborg_alvsborg">Göteborg — Älvsborgsbron</option>
+          <option value="malmo_vastra">Malmö — Västra hamnen</option>
+          <option value="malmo_turning">Malmö — Turning Torso</option>
+          <option value="malmo_oresund">Malmö — Öresundsbron i bakgrunden</option>
+          <option value="kalmar_slott">Kalmar — Vid slottet</option>
+          <option value="kalmar_kvarnholmen">Kalmar — Kvarnholmen</option>
+          <option value="kalmar_bron">Kalmar — Ölandsbron</option>
+          <option value="visby">Visby — Ringmuren</option>
+          <option value="uppsala">Uppsala — Längs Fyrisån</option>
+          <option value="lund">Lund — Universitetsmiljö</option>
+          </optgroup>
+          <optgroup label="Natur & landskap">
+          <option value="swedish_forest">Svensk skogsväg</option>
+          <option value="swedish_lake">Vid en svensk sjö</option>
+          <option value="mountain_trail">Fjällstig</option>
+          <option value="country_road">Småländsk grusväg</option>
+          <option value="coastal_path">Kustig</option>
+          <option value="autumn_path">Höstfärgad allé</option>
+          <option value="winter_run">Vinterlöpning i snö</option>
+          </optgroup>
+          <optgroup label="Aktivitet">
           <option value="stretching_park">Stretchar i park</option>
           <option value="warmup">Värmer upp innan löpning</option>
           <option value="finish_line">Korsar mållinjen</option>
           <option value="celebrating">Firar efter lopp</option>
-          <option value="phone_app">Visar appen på mobilen</option>
-          <option value="laptop">Sitter vid laptop med appen</option>
           <option value="resting">Vilar efter träning</option>
           <option value="drinking_water">Dricker vatten efter löpning</option>
           <option value="group_run">Leder en grupp löpare</option>
           <option value="race_start">Står på startlinjen inför lopp</option>
           <option value="gym">Styrketränar i gym</option>
           <option value="yoga">Gör yoga utomhus</option>
+          </optgroup>
+          <optgroup label="App & teknik">
+          <option value="phone_app">Visar appen på mobilen</option>
+          <option value="laptop">Sitter vid laptop med appen</option>
           <option value="portrait">Porträtt / headshot</option>
+          </optgroup>
           <option value="promo_clean">Promo: Ren (utan text)</option>
           <option value="promo_text">Promo: Med plats för text</option>
           <option value="promo_tiktok">Promo: TikTok safe zone</option>
@@ -3156,7 +3194,40 @@ const SCENARIOS = {
   running_beach: 'running on a sandy beach along the waterline with waves in the background',
   running_city: 'running through a modern city street with urban architecture',
   running_sunset: 'running on an open road with a dramatic sunset sky behind',
+  running_bridge: 'running across a scenic bridge over water, wide open view, wind in hair',
+  running_waterfront: 'running along a waterfront promenade beside a calm river or sea, boats and reflections in water',
+  running_park: 'running through a beautiful urban park with large old trees, green lawns, and gravel paths',
+  running_harbor: 'running along a harbor with sailboats, docks, and maritime atmosphere',
+  running_oldtown: 'running through charming cobblestone streets of a historic old town with colorful buildings',
   running_drone: 'running on a winding country road seen from a drone perspective, aerial view',
+
+  // Swedish cities
+  stockholm_gamla: 'running through Gamla Stan (Old Town) in Stockholm, narrow cobblestone streets, colorful 17th century buildings in ochre and red, glimpses of the Royal Palace, morning light',
+  stockholm_strandvagen: 'running along Strandvägen boulevard in Stockholm, elegant Art Nouveau buildings on one side, boats in Nybroviken harbor on the other, wide tree-lined avenue',
+  stockholm_djurgarden: 'running on Djurgården island in Stockholm, lush green parkland, oak trees, water views of Stockholm skyline across the bay',
+  stockholm_sodermalm: 'running with the Södermalm skyline of Stockholm in the background, view from Monteliusvägen, city rooftops and water visible below',
+  goteborg_kanalen: 'running along Kungsportsavenyn and the canals of Gothenburg, tree-lined canal with bridges, European city atmosphere',
+  goteborg_haga: 'running through Haga district in Gothenburg, charming wooden houses, cozy café-lined cobblestone streets',
+  goteborg_alvsborg: 'running with Älvsborgsbron (bridge) in Gothenburg visible in the background, dramatic suspension bridge over the Göta Älv river',
+  malmo_vastra: 'running in Västra Hamnen (Western Harbor) district of Malmö, modern sustainable architecture, waterfront boardwalk, Turning Torso tower visible',
+  malmo_turning: 'running with the iconic Turning Torso skyscraper in Malmö prominently in the background, modern waterfront area',
+  malmo_oresund: 'running along the coast in Malmö with the Öresund Bridge stretching across to Denmark visible in the background, dramatic wide view',
+  kalmar_slott: 'running near Kalmar Castle (Kalmar slott), the magnificent medieval castle reflected in water, historic Swedish fortress, beautiful morning light',
+  kalmar_kvarnholmen: 'running through Kvarnholmen in central Kalmar, the charming historic city center with the cathedral, Baroque buildings and squares',
+  kalmar_bron: 'running with Ölandsbron (the Öland Bridge) stretching across Kalmarsund visible in the background, one of Europe\'s longest bridges, dramatic perspective',
+  visby: 'running along the medieval ring wall (Ringmuren) of Visby on Gotland, UNESCO World Heritage site, ancient limestone walls and towers, roses climbing the walls',
+  uppsala: 'running along Fyrisån river in Uppsala, Uppsala Cathedral spires visible, university town atmosphere, willows along the riverbank',
+  lund: 'running through Lund university campus area, Lundagård park, historic brick university buildings, Lund Cathedral in background',
+
+  // Nature
+  swedish_forest: 'running on a quiet Swedish forest road, tall pine and birch trees, mossy ground, dappled sunlight filtering through',
+  swedish_lake: 'running beside a still Swedish lake at dawn, mirror-like water reflecting the sky, birch trees and reeds along the shore',
+  mountain_trail: 'running on a mountain trail in the Swedish fells (fjällen), above the tree line, vast open landscape, dramatic clouds',
+  country_road: 'running on a quiet Småland country gravel road through rolling green farmland, red wooden barns, wildflower meadows',
+  coastal_path: 'running along a rugged Swedish west coast path, smooth granite rocks, the sea stretching to the horizon, salty wind',
+  autumn_path: 'running through a stunning autumn-colored tree-lined avenue, golden and red leaves covering the path, warm soft light',
+  winter_run: 'running on a snowy Swedish winter road, frosted trees, crisp cold air, breath visible, pristine white landscape',
+
   stretching_park: 'doing dynamic stretches in a green park, focused and preparing for a run',
   warmup: 'doing warm-up exercises on a running track, preparing for training',
   finish_line: 'crossing the finish line of a race with arms raised in triumph, joyful expression',
