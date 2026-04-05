@@ -726,8 +726,66 @@
     color: #fff;
     user-select: none;
   }
-  .text-handle-1 { background: rgba(255,122,0,0.8); }
-  .text-handle-2 { background: rgba(167,139,250,0.8); }
+  .text-line-row {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    margin-bottom: 3px;
+  }
+  .text-line-num {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .text-line-input {
+    flex: 1;
+    min-width: 0;
+    padding: 4px 6px;
+    font-size: 11px;
+    background: #333;
+    border: 1px solid #4a4a4a;
+    border-radius: 4px;
+    color: #fff;
+    font-family: inherit;
+  }
+  .text-line-size {
+    width: 50px;
+    flex-shrink: 0;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 3px;
+    background: #4a4a4a;
+    border-radius: 2px;
+    outline: none;
+  }
+  .text-line-size::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #888;
+    cursor: pointer;
+  }
+  .text-line-size-val {
+    font-size: 9px;
+    color: #888;
+    width: 18px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .text-line-color {
+    width: 20px; height: 20px;
+    padding: 0;
+    border: 1px solid #4a4a4a;
+    border-radius: 3px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
 
   /* ---- AI PROMPT GENERATOR ---- */
   .prompt-output {
@@ -1200,16 +1258,7 @@
     <div class="section collapsed">
       <div class="section-title">Text / Rubrik</div>
       <div class="section-body">
-        <input type="text" id="textLine1" placeholder="Rad 1 (stor rubrik)..." style="width:100%;padding:6px 8px;font-size:12px;background:#333;border:1px solid #4a4a4a;border-radius:6px;color:#fff;font-family:inherit;margin-bottom:4px;">
-        <input type="text" id="textLine2" placeholder="Rad 2 (underrubrik)..." style="width:100%;padding:6px 8px;font-size:12px;background:#333;border:1px solid #4a4a4a;border-radius:6px;color:#fff;font-family:inherit;margin-bottom:6px;">
-        <div class="control-row"><label>Storlek</label><input type="range" id="textSize" min="16" max="160" value="64"><span class="value" id="textSizeVal">64</span></div>
-        <div class="export-row">
-          <label>Färg 1</label>
-          <input type="color" id="textColor1" value="#ffffff" style="width:28px;height:22px;padding:0;border:1px solid #4a4a4a;border-radius:4px;cursor:pointer;">
-          <label>Färg 2</label>
-          <input type="color" id="textColor2" value="#ff7a00" style="width:28px;height:22px;padding:0;border:1px solid #4a4a4a;border-radius:4px;cursor:pointer;">
-        </div>
-        <div class="export-row">
+        <div class="export-row" style="margin-bottom:6px;">
           <label>Font</label>
           <select id="textFont">
             <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
@@ -1217,8 +1266,6 @@
             <option value="Impact, sans-serif">Impact</option>
             <option value="Georgia, serif">Georgia</option>
           </select>
-        </div>
-        <div class="export-row">
           <label>Stil</label>
           <select id="textStyle">
             <option value="bold-outline">Fet kontur</option>
@@ -1227,7 +1274,56 @@
             <option value="neon">Neon glow</option>
           </select>
         </div>
-        <p style="font-size:10px;color:#888;margin-top:6px;">Dra texten direkt på bilden för att placera den</p>
+        <div class="text-line-row" data-line="0">
+          <span class="text-line-num" style="background:rgba(255,122,0,0.8);">1</span>
+          <input type="text" class="text-line-input" placeholder="Rad 1...">
+          <input type="range" class="text-line-size" min="12" max="160" value="64" title="Storlek">
+          <span class="text-line-size-val">64</span>
+          <input type="color" class="text-line-color" value="#ffffff" title="Färg">
+        </div>
+        <div class="text-line-row" data-line="1">
+          <span class="text-line-num" style="background:rgba(167,139,250,0.8);">2</span>
+          <input type="text" class="text-line-input" placeholder="Rad 2...">
+          <input type="range" class="text-line-size" min="12" max="160" value="48" title="Storlek">
+          <span class="text-line-size-val">48</span>
+          <input type="color" class="text-line-color" value="#ff7a00" title="Färg">
+        </div>
+        <div class="text-line-row" data-line="2">
+          <span class="text-line-num" style="background:rgba(59,130,246,0.8);">3</span>
+          <input type="text" class="text-line-input" placeholder="Rad 3...">
+          <input type="range" class="text-line-size" min="12" max="160" value="36" title="Storlek">
+          <span class="text-line-size-val">36</span>
+          <input type="color" class="text-line-color" value="#ffffff" title="Färg">
+        </div>
+        <div class="text-line-row" data-line="3">
+          <span class="text-line-num" style="background:rgba(52,211,153,0.8);">4</span>
+          <input type="text" class="text-line-input" placeholder="Rad 4...">
+          <input type="range" class="text-line-size" min="12" max="160" value="36" title="Storlek">
+          <span class="text-line-size-val">36</span>
+          <input type="color" class="text-line-color" value="#ff7a00" title="Färg">
+        </div>
+        <div class="text-line-row" data-line="4">
+          <span class="text-line-num" style="background:rgba(248,113,113,0.8);">5</span>
+          <input type="text" class="text-line-input" placeholder="Rad 5...">
+          <input type="range" class="text-line-size" min="12" max="160" value="28" title="Storlek">
+          <span class="text-line-size-val">28</span>
+          <input type="color" class="text-line-color" value="#ffffff" title="Färg">
+        </div>
+        <div class="text-line-row" data-line="5">
+          <span class="text-line-num" style="background:rgba(250,204,21,0.8);">6</span>
+          <input type="text" class="text-line-input" placeholder="Rad 6...">
+          <input type="range" class="text-line-size" min="12" max="160" value="28" title="Storlek">
+          <span class="text-line-size-val">28</span>
+          <input type="color" class="text-line-color" value="#ff7a00" title="Färg">
+        </div>
+        <div class="text-line-row" data-line="6">
+          <span class="text-line-num" style="background:rgba(255,255,255,0.5);">W</span>
+          <input type="text" class="text-line-input" value="viltratraining.com" placeholder="Webbadress...">
+          <input type="range" class="text-line-size" min="12" max="160" value="22" title="Storlek">
+          <span class="text-line-size-val">22</span>
+          <input type="color" class="text-line-color" value="#ff7a00" title="Färg">
+        </div>
+        <p style="font-size:10px;color:#888;margin-top:6px;">Dra numret på bilden för att placera varje rad</p>
       </div>
     </div>
 
@@ -3165,18 +3261,34 @@ $('btnCopyPrompt').onclick = () => {
 };
 
 // =====================================================
-// TWO INDEPENDENT DRAGGABLE TEXT BLOCKS
+// 6 INDEPENDENT DRAGGABLE TEXT BLOCKS
 // =====================================================
-const textBlocks = [
-  { x: 0.5, y: 0.25, handle: null },
-  { x: 0.5, y: 0.55, handle: null }
-];
+const TEXT_COUNT = 7;
+const TEXT_COLORS = ['rgba(255,122,0,0.8)','rgba(167,139,250,0.8)','rgba(59,130,246,0.8)','rgba(52,211,153,0.8)','rgba(248,113,113,0.8)','rgba(250,204,21,0.8)','rgba(255,255,255,0.5)'];
+const textBlocks = [];
+for (let i = 0; i < TEXT_COUNT; i++) {
+  textBlocks.push({ x: 0.5, y: 0.12 + i * 0.11, handle: null });
+}
+
+function getTextRows() {
+  return document.querySelectorAll('.text-line-row');
+}
+
+function getLineData(i) {
+  const row = getTextRows()[i];
+  if (!row) return null;
+  const text = row.querySelector('.text-line-input').value;
+  const size = parseInt(row.querySelector('.text-line-size').value);
+  const color = row.querySelector('.text-line-color').value;
+  return { text, size, color };
+}
 
 function createTextHandles() {
   textBlocks.forEach((block, i) => {
     if (block.handle) return;
     const el = document.createElement('div');
-    el.className = 'text-handle text-handle-' + (i + 1);
+    el.className = 'text-handle';
+    el.style.background = TEXT_COLORS[i];
     el.textContent = (i + 1);
     el.style.display = 'none';
     $('previewArea').appendChild(el);
@@ -3224,11 +3336,11 @@ function updateTextHandles() {
   if (mainCanvas.classList.contains('hidden')) return;
   const rect = mainCanvas.getBoundingClientRect();
   const areaRect = $('previewArea').getBoundingClientRect();
-  const lines = [$('textLine1').value, $('textLine2').value];
 
   textBlocks.forEach((block, i) => {
     if (!block.handle) return;
-    if (!lines[i]) { block.handle.style.display = 'none'; return; }
+    const data = getLineData(i);
+    if (!data || !data.text) { block.handle.style.display = 'none'; return; }
     block.handle.style.display = 'flex';
     block.handle.style.left = (rect.left - areaRect.left + rect.width * block.x) + 'px';
     block.handle.style.top = (rect.top - areaRect.top + rect.height * block.y) + 'px';
@@ -3236,25 +3348,22 @@ function updateTextHandles() {
 }
 
 function drawTextOverlay(ctx, w, h) {
-  const lines = [$('textLine1').value, $('textLine2').value];
-  const size = parseInt($('textSize').value);
   const font = $('textFont').value;
-  const colors = [$('textColor1').value, $('textColor2').value];
   const style = $('textStyle').value;
-  const sizes = [size, Math.round(size * 0.7)];
 
-  lines.forEach((text, i) => {
-    if (!text) return;
+  for (let i = 0; i < TEXT_COUNT; i++) {
+    const data = getLineData(i);
+    if (!data || !data.text) continue;
     const block = textBlocks[i];
     const cx = block.x * w;
     const cy = block.y * h;
-    const fs = sizes[i];
+    const fs = data.size;
 
     ctx.save();
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.font = `900 ${fs}px ${font}`;
-    ctx.fillStyle = colors[i];
+    ctx.fillStyle = data.color;
 
     if (style === 'bold-outline') {
       ctx.strokeStyle = '#000';
@@ -3263,30 +3372,30 @@ function drawTextOverlay(ctx, w, h) {
       ctx.shadowColor = 'rgba(0,0,0,0.7)';
       ctx.shadowBlur = fs * 0.3;
       ctx.shadowOffsetY = fs * 0.05;
-      ctx.strokeText(text, cx, cy);
+      ctx.strokeText(data.text, cx, cy);
       ctx.shadowColor = 'transparent';
-      ctx.fillText(text, cx, cy);
+      ctx.fillText(data.text, cx, cy);
     } else if (style === 'shadow') {
       ctx.shadowColor = 'rgba(0,0,0,0.7)';
       ctx.shadowBlur = fs * 0.3;
       ctx.shadowOffsetY = fs * 0.05;
-      ctx.fillText(text, cx, cy);
+      ctx.fillText(data.text, cx, cy);
     } else if (style === 'box') {
-      const m = ctx.measureText(text);
+      const m = ctx.measureText(data.text);
       const pad = fs * 0.25;
       ctx.fillStyle = 'rgba(0,0,0,0.6)';
       ctx.beginPath();
       ctx.roundRect(cx - m.width/2 - pad, cy - fs/2 - pad*0.5, m.width + pad*2, fs + pad, 8);
       ctx.fill();
-      ctx.fillStyle = colors[i];
-      ctx.fillText(text, cx, cy);
+      ctx.fillStyle = data.color;
+      ctx.fillText(data.text, cx, cy);
     } else if (style === 'neon') {
-      ctx.shadowColor = colors[i];
+      ctx.shadowColor = data.color;
       ctx.shadowBlur = fs * 0.4;
-      ctx.fillText(text, cx, cy);
+      ctx.fillText(data.text, cx, cy);
     }
     ctx.restore();
-  });
+  }
 }
 
 function rerender() {
@@ -3296,13 +3405,17 @@ function rerender() {
 
 createTextHandles();
 
-// Wire up text inputs
-['textLine1','textLine2','textSize','textColor1','textColor2','textFont','textStyle'].forEach(id => {
-  $(id).addEventListener('input', () => {
-    updateTextHandles();
+// Wire up all text row inputs
+document.querySelectorAll('.text-line-row').forEach(row => {
+  row.querySelector('.text-line-input').addEventListener('input', () => { updateTextHandles(); rerender(); });
+  row.querySelector('.text-line-size').addEventListener('input', function() {
+    row.querySelector('.text-line-size-val').textContent = this.value;
     rerender();
   });
+  row.querySelector('.text-line-color').addEventListener('input', () => rerender());
 });
+$('textFont').addEventListener('change', () => rerender());
+$('textStyle').addEventListener('change', () => rerender());
 window.addEventListener('resize', updateTextHandles);
 
 // =====================================================
