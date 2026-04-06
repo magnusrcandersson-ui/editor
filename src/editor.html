@@ -3510,7 +3510,10 @@ async function exportVideoEnhanced() {
   const wasPlaying = state.videoPlaying;
   if (wasPlaying) togglePlayPause();
 
+  const fps = 30;
+  const frameDuration = 1 / fps;
   const trim = getTrimRange();
+  const totalFrames = Math.ceil(trim.duration * fps);
   const targetRes = parseInt($('exportRes').value);
   const bitrate = parseInt($('exportBitrate').value);
 
@@ -3578,10 +3581,6 @@ async function exportVideoEnhanced() {
     if (audioSource) { try { audioSource.stop(); } catch(e) {} }
     if (audioCtx) audioCtx.close();
   };
-
-  const fps = 30;
-  const frameDuration = 1 / fps;
-  const totalFrames = Math.ceil(trim.duration * fps);
 
   const exportScratch = document.createElement('canvas');
   exportScratch.width = ow; exportScratch.height = oh;
