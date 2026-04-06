@@ -864,6 +864,8 @@
     flex-shrink: 0;
     background: #2e2e2e;
     border-top: 1px solid #3a3a3a;
+    position: relative;
+    z-index: 60;
   }
   .mobile-tab-bar {
     display: flex;
@@ -871,9 +873,9 @@
   }
   .mobile-tab {
     flex: 1;
-    padding: 10px 4px;
-    font-size: 10px;
-    font-weight: 600;
+    padding: 12px 4px;
+    font-size: 13px;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: .05em;
     text-align: center;
@@ -899,10 +901,11 @@
   .mob-adjust-bar {
     display: none;
     position: fixed;
-    bottom: 0; left: 0; right: 0;
+    bottom: 44px; left: 0; right: 0;
     z-index: 50;
-    background: rgba(30,30,30,0.92);
+    background: rgba(30,30,30,0.95);
     backdrop-filter: blur(12px);
+    border-top: 1px solid #4a4a4a;
   }
   .mob-adjust-bar.active { display: block; }
   .mob-adjust-picks {
@@ -1002,7 +1005,7 @@
   /* ==============================
      MOBILE RESPONSIVE (<768px)
      ============================== */
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     .header { height: 44px; padding: 0 10px; }
     .header h1 { font-size: 18px; }
     .header-actions { gap: 4px; }
@@ -4161,7 +4164,7 @@ document.querySelectorAll('.mobile-tab').forEach(tab => {
 });
 
 // Show filter overlay by default on mobile
-if (window.innerWidth <= 768) {
+if (window.innerWidth <= 1024) {
   setTimeout(() => $('mobFilterBar').classList.add('active'), 100);
 }
 
