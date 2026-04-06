@@ -2079,7 +2079,8 @@ function loadVideo(file) {
     trimStartSec = 0;
     trimEndSec = videoEl.duration;
     $('trimBar').classList.remove('hidden');
-    setTimeout(updateTrimUI, 50);
+    setTimeout(updateTrimUI, 100);
+    setTimeout(updateTrimUI, 300);
   };
   videoEl.oncanplay = () => {
     $('statusLeft').textContent = `Video redo: ${file.name}`;
