@@ -3035,16 +3035,19 @@ $('btnRenderSlideshow').onclick = async () => {
 
   const stream = canvas.captureStream(fps);
   const recorder = new MediaRecorder(stream, {
-    mimeType: MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm',
+    mimeType: MediaRecorder.isTypeSupported('video/mp4;codecs=avc1') ? 'video/mp4;codecs=avc1'
+            : MediaRecorder.isTypeSupported('video/mp4') ? 'video/mp4'
+            : MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm',
     videoBitsPerSecond: 8000000
   });
+  const ssIsMP4 = recorder.mimeType.includes('mp4');
   const chunks = [];
   recorder.ondataavailable = (e) => { if (e.data.size) chunks.push(e.data); };
   recorder.onstop = () => {
-    const blob = new Blob(chunks, { type: 'video/webm' });
+    const blob = new Blob(chunks, { type: ssIsMP4 ? 'video/mp4' : 'video/webm' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'viltra_slideshow.webm';
+    a.download = `viltra_slideshow.${ssIsMP4 ? 'mp4' : 'webm'}`;
     a.click();
     $('exportModal').classList.add('hidden');
   };
@@ -3594,17 +3597,21 @@ async function exportVideoEnhanced() {
   }
 
   const recorder = new MediaRecorder(stream, {
-    mimeType: MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus') ? 'video/webm;codecs=vp9,opus'
+    mimeType: MediaRecorder.isTypeSupported('video/mp4;codecs=avc1') ? 'video/mp4;codecs=avc1'
+            : MediaRecorder.isTypeSupported('video/mp4') ? 'video/mp4'
+            : MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus') ? 'video/webm;codecs=vp9,opus'
             : MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm',
     videoBitsPerSecond: bitrate
   });
+  const isMP4 = recorder.mimeType.includes('mp4');
+  const ext = isMP4 ? 'mp4' : 'webm';
   const chunks = [];
   recorder.ondataavailable = (e) => { if (e.data.size) chunks.push(e.data); };
   recorder.onstop = () => {
-    const blob = new Blob(chunks, { type: 'video/webm' });
+    const blob = new Blob(chunks, { type: isMP4 ? 'video/mp4' : 'video/webm' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'viltra_edited.webm';
+    a.download = `viltra_edited.${ext}`;
     a.click();
     $('exportModal').classList.add('hidden');
     if (audioSource) { try { audioSource.stop(); } catch(e) {} }
