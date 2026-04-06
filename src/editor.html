@@ -1714,29 +1714,29 @@ const PRESETS = {
 
   // ---- JOKER CINE ----
   // Extreme teal/cyan shadows, golden/amber highlights, dark urban night
-  joker1: { // Gotham Night
-    brightness: -35, contrast: 45, shadows: 5, highlights: -30, fade: 0,
-    temperature: -35, tint: -10,
-    tealIntensity: 65, tealSat: 80,
-    saturation: 38, warmDesat: 75,
-    shadowBlue: 50, shadowTeal: 35, shadowWarm: 0, highlightBlue: 5, highlightWarm: 25,
-    sharpness: 35, vignette: 60, vignetteRadius: 45, grain: 5
+  joker1: { // Gotham Night — extreme dark, green-teal shadows, sickly gold highlights
+    brightness: -40, contrast: 48, shadows: 3, highlights: -32, fade: 0,
+    temperature: -40, tint: -15,
+    tealIntensity: 75, tealSat: 85,
+    saturation: 30, warmDesat: 82,
+    shadowBlue: 45, shadowTeal: 45, shadowWarm: 0, highlightBlue: 0, highlightWarm: 20,
+    sharpness: 35, vignette: 65, vignetteRadius: 42, grain: 8
   },
-  joker2: { // Neon Noir
-    brightness: -40, contrast: 48, shadows: 3, highlights: -28, fade: 0,
-    temperature: -38, tint: -12,
-    tealIntensity: 70, tealSat: 85,
-    saturation: 35, warmDesat: 80,
-    shadowBlue: 55, shadowTeal: 38, shadowWarm: 0, highlightBlue: 8, highlightWarm: 28,
-    sharpness: 38, vignette: 65, vignetteRadius: 42, grain: 6
+  joker2: { // Neon Noir — darkest, most extreme teal, toxic gold
+    brightness: -48, contrast: 52, shadows: 2, highlights: -30, fade: 0,
+    temperature: -45, tint: -18,
+    tealIntensity: 85, tealSat: 90,
+    saturation: 25, warmDesat: 88,
+    shadowBlue: 50, shadowTeal: 50, shadowWarm: 0, highlightBlue: 0, highlightWarm: 22,
+    sharpness: 38, vignette: 70, vignetteRadius: 38, grain: 8
   },
-  joker3: { // Taxi Driver
-    brightness: -30, contrast: 42, shadows: 8, highlights: -25, fade: 3,
-    temperature: -28, tint: -8,
-    tealIntensity: 55, tealSat: 75,
-    saturation: 42, warmDesat: 70,
-    shadowBlue: 45, shadowTeal: 30, shadowWarm: 0, highlightBlue: 3, highlightWarm: 30,
-    sharpness: 32, vignette: 55, vignetteRadius: 48, grain: 8
+  joker3: { // Taxi Driver — gritty, dirty gold, green-teal, sodium vapor look
+    brightness: -35, contrast: 45, shadows: 5, highlights: -28, fade: 3,
+    temperature: -32, tint: -12,
+    tealIntensity: 60, tealSat: 78,
+    saturation: 35, warmDesat: 75,
+    shadowBlue: 38, shadowTeal: 38, shadowWarm: 0, highlightBlue: 0, highlightWarm: 35,
+    sharpness: 32, vignette: 58, vignetteRadius: 45, grain: 12
   },
   joker4: { // Midnight Teal
     brightness: -38, contrast: 40, shadows: 5, highlights: -32, fade: 0,
@@ -1756,29 +1756,29 @@ const PRESETS = {
   },
 
   // ---- KODAK FILM ---- (strong, authentic film emulation)
-  portra400: { // Soft warm skin, lifted shadows, gentle fade, muted greens
-    brightness: -10, contrast: 25, shadows: 25, highlights: -15, fade: 15,
-    temperature: 18, tint: 8,
+  portra400: { // Low contrast, lifted warm-brown shadows, muted olive greens, peach skin
+    brightness: -8, contrast: 18, shadows: 28, highlights: -12, fade: 12,
+    temperature: 12, tint: 5,
     tealIntensity: 0, tealSat: 50,
-    saturation: 55, warmDesat: 35,
-    shadowBlue: 8, shadowTeal: 5, shadowWarm: 25, highlightBlue: 0, highlightWarm: 18,
-    sharpness: 20, vignette: 25, vignetteRadius: 65, grain: 12
+    saturation: 48, warmDesat: 45,
+    shadowBlue: 5, shadowTeal: 0, shadowWarm: 22, highlightBlue: 0, highlightWarm: 12,
+    sharpness: 18, vignette: 20, vignetteRadius: 70, grain: 8
   },
-  portra800: { // Warmer, grainier, more lifted, dreamier
-    brightness: -8, contrast: 20, shadows: 30, highlights: -10, fade: 20,
-    temperature: 22, tint: 10,
+  portra800: { // Warmer than 400, more grain, slight magenta in highlights, muddy blended
+    brightness: -6, contrast: 22, shadows: 25, highlights: -8, fade: 15,
+    temperature: 18, tint: 12,
     tealIntensity: 0, tealSat: 50,
-    saturation: 48, warmDesat: 40,
-    shadowBlue: 12, shadowTeal: 0, shadowWarm: 30, highlightBlue: 0, highlightWarm: 22,
-    sharpness: 12, vignette: 30, vignetteRadius: 60, grain: 22
+    saturation: 42, warmDesat: 42,
+    shadowBlue: 8, shadowTeal: 0, shadowWarm: 28, highlightBlue: 0, highlightWarm: 18,
+    sharpness: 12, vignette: 25, vignetteRadius: 62, grain: 20
   },
-  kodakGold: { // Punchy warm yellow/orange, saturated, nostalgic summer
-    brightness: 8, contrast: 35, shadows: 12, highlights: -8, fade: 8,
-    temperature: 35, tint: 15,
+  kodakGold: { // Strong golden/amber cast everywhere, saturated warm, yellow highlights
+    brightness: 10, contrast: 30, shadows: 10, highlights: -5, fade: 5,
+    temperature: 42, tint: 18,
     tealIntensity: 0, tealSat: 50,
-    saturation: 80, warmDesat: 5,
-    shadowBlue: 0, shadowTeal: 0, shadowWarm: 35, highlightBlue: 0, highlightWarm: 30,
-    sharpness: 25, vignette: 30, vignetteRadius: 60, grain: 15
+    saturation: 78, warmDesat: 5,
+    shadowBlue: 0, shadowTeal: 0, shadowWarm: 40, highlightBlue: 0, highlightWarm: 35,
+    sharpness: 22, vignette: 28, vignetteRadius: 58, grain: 14
   },
   ektar100: { // Ultra saturated, punchy contrast, vivid reds/greens/blues
     brightness: -5, contrast: 45, shadows: 5, highlights: -15, fade: 0,
@@ -1806,13 +1806,13 @@ const PRESETS = {
   },
 
   // ---- CINESTILL ---- (strong, distinctive tungsten/daylight looks)
-  cinestill800t: { // Iconic blue/teal shadows, warm halation highlights, neon glow
-    brightness: -20, contrast: 35, shadows: 18, highlights: -20, fade: 5,
-    temperature: -45, tint: -12,
-    tealIntensity: 70, tealSat: 85,
-    saturation: 50, warmDesat: 75,
-    shadowBlue: 50, shadowTeal: 35, shadowWarm: 0, highlightBlue: 10, highlightWarm: 25,
-    sharpness: 18, vignette: 35, vignetteRadius: 55, grain: 15
+  cinestill800t: { // EXTREME teal/cyan cast (tungsten), halation warm glow on highlights
+    brightness: -18, contrast: 28, shadows: 20, highlights: -18, fade: 5,
+    temperature: -50, tint: -15,
+    tealIntensity: 85, tealSat: 90,
+    saturation: 45, warmDesat: 80,
+    shadowBlue: 55, shadowTeal: 45, shadowWarm: 0, highlightBlue: 8, highlightWarm: 30,
+    sharpness: 15, vignette: 32, vignetteRadius: 55, grain: 14
   },
   cinestill400d: { // Warm daylight, slightly muted, organic color
     brightness: -8, contrast: 30, shadows: 18, highlights: -12, fade: 8,
@@ -1832,21 +1832,21 @@ const PRESETS = {
   },
 
   // ---- FUJIFILM ---- (strong, distinctive Japanese film looks)
-  pro400h: { // Cool pastel, lifted milky shadows, dreamy overexposed feel
-    brightness: 10, contrast: 15, shadows: 30, highlights: -5, fade: 25,
-    temperature: -15, tint: -8,
-    tealIntensity: 25, tealSat: 55,
-    saturation: 42, warmDesat: 45,
-    shadowBlue: 20, shadowTeal: 15, shadowWarm: 0, highlightBlue: 12, highlightWarm: 5,
-    sharpness: 15, vignette: 15, vignetteRadius: 75, grain: 10
+  pro400h: { // Cool mint/blue-green pastel, very lifted airy shadows, soft overexposed
+    brightness: 15, contrast: 10, shadows: 38, highlights: -3, fade: 30,
+    temperature: -22, tint: -12,
+    tealIntensity: 35, tealSat: 60,
+    saturation: 35, warmDesat: 50,
+    shadowBlue: 25, shadowTeal: 22, shadowWarm: 0, highlightBlue: 15, highlightWarm: 3,
+    sharpness: 12, vignette: 12, vignetteRadius: 78, grain: 8
   },
-  superia400: { // Green/cyan cast, punchy, slightly gritty consumer film
-    brightness: -5, contrast: 35, shadows: 12, highlights: -12, fade: 5,
-    temperature: -12, tint: -15,
-    tealIntensity: 30, tealSat: 65,
-    saturation: 65, warmDesat: 45,
-    shadowBlue: 20, shadowTeal: 22, shadowWarm: 0, highlightBlue: 12, highlightWarm: 0,
-    sharpness: 28, vignette: 28, vignetteRadius: 60, grain: 16
+  superia400: { // Iconic Fuji GREEN cast in shadows/mids, punchy, gritty consumer
+    brightness: -5, contrast: 38, shadows: 10, highlights: -12, fade: 3,
+    temperature: -15, tint: -22,
+    tealIntensity: 40, tealSat: 70,
+    saturation: 62, warmDesat: 50,
+    shadowBlue: 15, shadowTeal: 35, shadowWarm: 0, highlightBlue: 10, highlightWarm: 0,
+    sharpness: 28, vignette: 28, vignetteRadius: 58, grain: 18
   },
   velvia50: { // EXTREME saturation, vivid punchy colors, high contrast landscape film
     brightness: -8, contrast: 50, shadows: 3, highlights: -15, fade: 0,
