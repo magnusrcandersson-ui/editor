@@ -3535,7 +3535,7 @@ async function exportVideoEnhanced() {
 
   // Set up audio
   let audioDestination = null, audioCtx = null, audioSource = null, audioGain = null;
-  const stream = exportCanvas.captureStream(30);
+  const stream = exportCanvas.captureStream(fps);
 
   if (audioBuffer) {
     audioCtx = new AudioContext();
@@ -3650,26 +3650,41 @@ async function exportVideoEnhanced() {
     if (typeof drawTextOverlay === 'function') drawTextOverlay(ectx, ow, oh);
   }
 
-  // Frame-by-frame export: seek to each frame, wait, render, repeat
-  recorder.start();
+  // Phase 1: Render all frames to image buffers
   videoEl.pause();
+  $('exportStatus').textContent = 'Renderar frames...';
+  const frameBlobs = [];
 
   for (let frame = 0; frame < totalFrames; frame++) {
     const time = trim.start + frame * frameDuration;
     videoEl.currentTime = time;
     await new Promise(r => { videoEl.onseeked = r; });
-    // Small delay to ensure frame is decoded
-    await new Promise(r => setTimeout(r, 10));
+    await new Promise(r => setTimeout(r, 5));
 
     renderExportFrame();
+
+    // Store rendered frame as ImageData
+    frameBlobs.push(ectx.getImageData(0, 0, ow, oh));
+
+    const pct = Math.round((frame / totalFrames) * 50);
+    $('exportProgress').style.width = pct + '%';
+    $('exportStatus').textContent = `Renderar frame ${frame + 1}/${totalFrames}...`;
+  }
+
+  // Phase 2: Play back frames at correct speed into recorder
+  $('exportStatus').textContent = 'Skapar video...';
+  recorder.start();
+
+  for (let frame = 0; frame < frameBlobs.length; frame++) {
+    ectx.putImageData(frameBlobs[frame], 0, 0);
     ctx.drawImage(exportCanvas, 0, 0, canvas.width, canvas.height);
 
-    // Hold frame for recorder (captureStream needs time to grab it)
-    await new Promise(r => setTimeout(r, 1000 / fps));
+    // Wait exactly one frame duration — this is real-time playback for the recorder
+    await new Promise(r => setTimeout(r, frameDuration * 1000));
 
-    const pct = Math.round((frame / totalFrames) * 100);
+    const pct = 50 + Math.round((frame / frameBlobs.length) * 50);
     $('exportProgress').style.width = pct + '%';
-    $('exportStatus').textContent = `Exporterar ${targetRes}p... frame ${frame + 1}/${totalFrames} (${pct}%)`;
+    $('exportStatus').textContent = `Skapar video... ${Math.round((frame / frameBlobs.length) * 100)}%`;
   }
 
   // Fade out audio
