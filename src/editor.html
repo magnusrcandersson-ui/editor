@@ -2206,7 +2206,8 @@ function renderVideoFrame(fullRes) {
       ctx.fillStyle = grad; ctx.fillRect(0, 0, ow, oh);
     }
     if (typeof applyFx === 'function') applyFx(ctx, ow, oh);
-    // Skip grain during playback — too heavy
+    // Skip sharpness and grain during playback — too heavy
+    if (!state.videoPlaying && s.sharpness > 0) applySharpen(ctx, ow, oh, s.sharpness);
 
     if (typeof drawTextOverlay === 'function') drawTextOverlay(ctx, ow, oh);
   }
@@ -2280,6 +2281,31 @@ function togglePlayPause() {
 // =====================================================
 // PIXEL PROCESSING
 // =====================================================
+function applySharpen(ctx, w, h, amount) {
+  if (amount <= 0) return;
+  const strength = amount / 100;
+  const imgData = ctx.getImageData(0, 0, w, h);
+  const src = new Uint8ClampedArray(imgData.data);
+  const dst = imgData.data;
+  // Simple unsharp mask: sharpen = original + (original - blur) * strength
+  for (let y = 1; y < h - 1; y++) {
+    for (let x = 1; x < w - 1; x++) {
+      const i = (y * w + x) * 4;
+      for (let c = 0; c < 3; c++) {
+        // 3x3 box blur approximation for the pixel
+        const blur = (
+          src[((y-1)*w+(x-1))*4+c] + src[((y-1)*w+x)*4+c] + src[((y-1)*w+(x+1))*4+c] +
+          src[(y*w+(x-1))*4+c]     + src[(y*w+x)*4+c]       + src[(y*w+(x+1))*4+c] +
+          src[((y+1)*w+(x-1))*4+c] + src[((y+1)*w+x)*4+c] + src[((y+1)*w+(x+1))*4+c]
+        ) / 9;
+        const sharp = src[i+c] + (src[i+c] - blur) * strength * 2;
+        dst[i+c] = sharp < 0 ? 0 : sharp > 255 ? 255 : sharp;
+      }
+    }
+  }
+  ctx.putImageData(imgData, 0, 0);
+}
+
 function getSettings() {
   const s = {};
   SLIDERS.forEach(id => { s[id] = parseInt($(id).value); });
@@ -2409,6 +2435,9 @@ function applyFilter() {
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
     }
+
+    // Sharpness
+    if (s.sharpness > 0) applySharpen(ctx, w, h, s.sharpness);
 
     // Grain
     if (s.grain > 0) {
@@ -3641,6 +3670,7 @@ async function exportVideoEnhanced() {
       grad.addColorStop(0,'rgba(0,0,0,0)'); grad.addColorStop(1,`rgba(0,0,0,${s.vignette/100})`);
       ectx.fillStyle=grad; ectx.fillRect(0,0,ow,oh);
     }
+    if (s.sharpness > 0) applySharpen(ectx, ow, oh, s.sharpness);
     if (s.grain > 0) {
       const gd=ectx.getImageData(0,0,ow,oh),gp=gd.data,ga=s.grain*0.6;
       for(let i2=0;i2<gp.length;i2+=4){const n=(Math.random()-0.5)*ga;gp[i2]+=n;gp[i2+1]+=n;gp[i2+2]+=n;}
