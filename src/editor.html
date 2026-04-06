@@ -169,8 +169,8 @@
 
   /* ---- RIGHT PANEL: CONTROLS ---- */
   .controls {
-    width: 280px;
-    min-width: 280px;
+    width: 320px;
+    min-width: 320px;
     background: #2e2e2e;
     border-left: 1px solid #3a3a3a;
     overflow-y: auto;
@@ -1296,20 +1296,19 @@
     <div class="section collapsed">
       <div class="section-title">Text / Rubrik</div>
       <div class="section-body">
-        <div class="export-row" style="margin-bottom:6px;">
-          <label>Font</label>
-          <select id="textFont">
+        <div style="display:flex;gap:4px;margin-bottom:6px;">
+          <button class="btn" id="btnInsertLogo" style="flex:1;font-size:10px;padding:5px;">VILTRA /TRAINING .com</button>
+          <select id="textFont" class="prompt-select" style="flex:1;margin:0;">
             <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
             <option value="'DM Sans', sans-serif">DM Sans</option>
             <option value="Impact, sans-serif">Impact</option>
             <option value="Georgia, serif">Georgia</option>
           </select>
-          <label>Stil</label>
-          <select id="textStyle">
-            <option value="bold-outline">Fet kontur</option>
+          <select id="textStyle" class="prompt-select" style="flex:1;margin:0;">
+            <option value="bold-outline">Kontur</option>
             <option value="shadow">Skugga</option>
-            <option value="box">Bakgrundsruta</option>
-            <option value="neon">Neon glow</option>
+            <option value="box">Ruta</option>
+            <option value="neon">Neon</option>
           </select>
         </div>
         <div class="text-line-row" data-line="0">
@@ -1361,7 +1360,7 @@
           <span class="text-line-size-val">22</span>
           <input type="color" class="text-line-color" value="#ff7a00" title="Färg">
         </div>
-        <p style="font-size:10px;color:#888;margin-top:6px;">Dra numret på bilden för att placera varje rad</p>
+        <p style="font-size:10px;color:#888;margin-top:6px;">Dra siffran direkt på bilden</p>
       </div>
     </div>
 
@@ -3421,6 +3420,35 @@ function drawTextOverlay(ctx, w, h) {
   const font = $('textFont').value;
   const style = $('textStyle').value;
 
+  function applyTextStyle(ctx, style, color, fs) {
+    if (style === 'bold-outline') {
+      ctx.strokeStyle = '#000'; ctx.lineWidth = fs * 0.1; ctx.lineJoin = 'round';
+      ctx.shadowColor = 'rgba(0,0,0,0.7)'; ctx.shadowBlur = fs * 0.3; ctx.shadowOffsetY = fs * 0.05;
+    } else if (style === 'shadow') {
+      ctx.shadowColor = 'rgba(0,0,0,0.7)'; ctx.shadowBlur = fs * 0.3; ctx.shadowOffsetY = fs * 0.05;
+    } else if (style === 'neon') {
+      ctx.shadowColor = color; ctx.shadowBlur = fs * 0.4;
+    }
+  }
+
+  function drawStyledText(text, x, y, fs, color) {
+    ctx.font = `900 ${fs}px ${font}`;
+    ctx.fillStyle = color;
+    applyTextStyle(ctx, style, color, fs);
+    if (style === 'box') {
+      const m = ctx.measureText(text);
+      const pad = fs * 0.25;
+      ctx.fillStyle = 'rgba(0,0,0,0.6)';
+      ctx.beginPath();
+      ctx.roundRect(x - m.width/2 - pad, y - fs/2 - pad*0.5, m.width + pad*2, fs + pad, 8);
+      ctx.fill();
+      ctx.fillStyle = color;
+    }
+    if (style === 'bold-outline') ctx.strokeText(text, x, y);
+    ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0;
+    ctx.fillText(text, x, y);
+  }
+
   for (let i = 0; i < TEXT_COUNT; i++) {
     const data = getLineData(i);
     if (!data || !data.text) continue;
@@ -3428,42 +3456,32 @@ function drawTextOverlay(ctx, w, h) {
     const cx = block.x * w;
     const cy = block.y * h;
     const fs = data.size;
+    const row = getTextRows()[i];
+    const isLogo = row && row.dataset.logo === 'true';
 
     ctx.save();
-    ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.font = `900 ${fs}px ${font}`;
-    ctx.fillStyle = data.color;
 
-    if (style === 'bold-outline') {
-      ctx.strokeStyle = '#000';
-      ctx.lineWidth = fs * 0.1;
-      ctx.lineJoin = 'round';
-      ctx.shadowColor = 'rgba(0,0,0,0.7)';
-      ctx.shadowBlur = fs * 0.3;
-      ctx.shadowOffsetY = fs * 0.05;
-      ctx.strokeText(data.text, cx, cy);
-      ctx.shadowColor = 'transparent';
-      ctx.fillText(data.text, cx, cy);
-    } else if (style === 'shadow') {
-      ctx.shadowColor = 'rgba(0,0,0,0.7)';
-      ctx.shadowBlur = fs * 0.3;
-      ctx.shadowOffsetY = fs * 0.05;
-      ctx.fillText(data.text, cx, cy);
-    } else if (style === 'box') {
-      const m = ctx.measureText(data.text);
-      const pad = fs * 0.25;
-      ctx.fillStyle = 'rgba(0,0,0,0.6)';
-      ctx.beginPath();
-      ctx.roundRect(cx - m.width/2 - pad, cy - fs/2 - pad*0.5, m.width + pad*2, fs + pad, 8);
-      ctx.fill();
-      ctx.fillStyle = data.color;
-      ctx.fillText(data.text, cx, cy);
-    } else if (style === 'neon') {
-      ctx.shadowColor = data.color;
-      ctx.shadowBlur = fs * 0.4;
-      ctx.fillText(data.text, cx, cy);
+    if (isLogo && data.text.includes('/TRAINING')) {
+      // Special Viltra logo rendering: VILTRA in white, /TRAINING in orange
+      ctx.textAlign = 'center';
+      ctx.font = `900 ${fs}px ${font}`;
+      const parts = data.text.split('/TRAINING');
+      const viltraText = parts[0]; // "VILTRA "
+      const trainingText = '/TRAINING';
+      const viltraW = ctx.measureText(viltraText).width;
+      const trainingW = ctx.measureText(trainingText).width;
+      const totalW = viltraW + trainingW;
+      const startX = cx - totalW / 2;
+
+      ctx.textAlign = 'left';
+      drawStyledText(viltraText, startX, cy, fs, '#ffffff');
+      drawStyledText(trainingText, startX + viltraW, cy, fs, '#ff7a00');
+    } else {
+      ctx.textAlign = 'center';
+      drawStyledText(data.text, cx, cy, fs, data.color);
     }
+
     ctx.restore();
   }
 }
@@ -3487,6 +3505,25 @@ document.querySelectorAll('.text-line-row').forEach(row => {
 $('textFont').addEventListener('change', () => rerender());
 $('textStyle').addEventListener('change', () => rerender());
 window.addEventListener('resize', updateTextHandles);
+
+// Insert Viltra logo text
+$('btnInsertLogo').onclick = () => {
+  const rows = getTextRows();
+  // Find first empty row, or use row 0
+  let target = 0;
+  for (let i = 0; i < rows.length; i++) {
+    if (!rows[i].querySelector('.text-line-input').value) { target = i; break; }
+  }
+  const row = rows[target];
+  row.querySelector('.text-line-input').value = 'VILTRA /TRAINING';
+  row.querySelector('.text-line-color').value = '#ffffff';
+  row.querySelector('.text-line-size').value = 52;
+  row.querySelector('.text-line-size-val').textContent = '52';
+  // Mark this as logo line for special rendering
+  row.dataset.logo = 'true';
+  updateTextHandles();
+  rerender();
+};
 
 // =====================================================
 // LIGHT EFFECT (click to place light points)
