@@ -1380,11 +1380,24 @@
       <div class="section-title">AI Bildprompt</div>
       <div class="section-body">
         <select id="aiCharacter" class="prompt-select">
+          <optgroup label="Löpning">
           <option value="man">Viltra Man (löparkläder)</option>
           <option value="woman">Viltra Kvinna (löparkläder)</option>
           <option value="both">Båda tillsammans</option>
+          </optgroup>
+          <optgroup label="Cykel — Linjecykel">
+          <option value="cycleManRoad">Viltra Man (linjecykel)</option>
+          <option value="cycleWomanRoad">Viltra Kvinna (linjecykel)</option>
+          <option value="cycleBothRoad">Båda (linjecykel)</option>
+          </optgroup>
+          <optgroup label="Cykel — Tempocykel">
+          <option value="cycleManTT">Viltra Man (tempocykel)</option>
+          <option value="cycleWomanTT">Viltra Kvinna (tempocykel)</option>
+          </optgroup>
+          <optgroup label="Promo">
           <option value="promoMan">Promo Man (mörk tröja, dramatisk)</option>
           <option value="promoWoman">Promo Kvinna (dynamisk, illustrerad)</option>
+          </optgroup>
         </select>
         <select id="aiScenario" class="prompt-select">
           <optgroup label="Löpning">
@@ -1426,6 +1439,19 @@
           <option value="coastal_path">Kustig</option>
           <option value="autumn_path">Höstfärgad allé</option>
           <option value="winter_run">Vinterlöpning i snö</option>
+          </optgroup>
+          <optgroup label="Cykling">
+          <option value="cycling_road">Cyklar på landsväg</option>
+          <option value="cycling_mountain">Cyklar i kuperad terräng</option>
+          <option value="cycling_city">Cyklar genom stad</option>
+          <option value="cycling_coast">Cyklar längs kusten</option>
+          <option value="cycling_bridge">Cyklar över bro</option>
+          <option value="cycling_peloton">Cyklar i peloton/grupp</option>
+          <option value="cycling_climb">Klättrar uppför berg</option>
+          <option value="cycling_tt">Tempo — enskilt mot klockan</option>
+          <option value="cycling_sprint">Sprint — full fart</option>
+          <option value="cycling_sunset">Cyklar i solnedgång</option>
+          <option value="cycling_drone">Cyklar (drönarperspektiv)</option>
           </optgroup>
           <optgroup label="Aktivitet">
           <option value="stretching_park">Stretchar i park</option>
@@ -3511,6 +3537,15 @@ const VILTRA_CHARACTERS = {
   man: 'A fit athletic Scandinavian man, approximately 30 years old, short brown hair, light stubble, wearing a white Adidas running t-shirt with "VILTRA /TRAINING" printed on it (VILTRA in dark grey, /TRAINING in orange), black running shorts, black Adidas running shoes, black GPS running watch on left wrist. He has a lean muscular runner\'s build, confident natural expression.',
   woman: 'A fit athletic Scandinavian woman, approximately 28 years old, blonde hair in a ponytail, wearing a white Adidas running t-shirt with "VILTRA /TRAINING" printed on it (VILTRA in dark grey, /TRAINING in orange), black running shorts, black and white Adidas running shoes, black GPS running watch on left wrist. She has a lean athletic runner\'s build, determined natural expression.',
   both: 'Two fit athletic Scandinavian runners side by side — a man (30, short brown hair, light stubble) and a woman (28, blonde ponytail). Both wearing matching white Adidas running t-shirts with "VILTRA /TRAINING" printed on them (VILTRA in dark grey, /TRAINING in orange), black running shorts, black Adidas running shoes, and black GPS running watches.',
+  // ---- CYCLING: ROAD BIKE ----
+  cycleManRoad: 'A fit athletic Scandinavian man, approximately 30 years old, short brown hair, riding a sleek road bicycle (drop handlebars, thin tires). Wearing tight-fitting cycling jersey with "VILTRA /TRAINING" printed on it (VILTRA in dark grey, /TRAINING in orange), black cycling bib shorts, cycling shoes clipped into pedals, aero cycling helmet, sport sunglasses, cycling gloves, and a Garmin GPS cycling computer mounted on the handlebars. Lean muscular cyclist build.',
+  cycleWomanRoad: 'A fit athletic Scandinavian woman, approximately 28 years old, blonde hair tucked under an aero cycling helmet, riding a sleek road bicycle (drop handlebars, thin tires). Wearing tight-fitting cycling jersey with "VILTRA /TRAINING" printed on it (VILTRA in dark grey, /TRAINING in orange), black cycling bib shorts, cycling shoes clipped into pedals, sport sunglasses, cycling gloves, and a Garmin GPS cycling computer mounted on the handlebars. Lean athletic cyclist build.',
+  cycleBothRoad: 'Two fit athletic Scandinavian cyclists riding side by side on road bicycles — a man (30, short brown hair) and a woman (28, blonde hair under helmet). Both wearing matching tight-fitting cycling jerseys with "VILTRA /TRAINING" printed on them (VILTRA in dark grey, /TRAINING in orange), black cycling bib shorts, aero helmets, sport sunglasses, cycling shoes clipped into pedals. Garmin GPS computers on handlebars.',
+
+  // ---- CYCLING: TIME TRIAL ----
+  cycleManTT: 'A fit athletic Scandinavian man, approximately 30 years old, in an aggressive time trial position on a time trial / triathlon bicycle with aero bars, disc wheel on rear, deep-section front wheel. Wearing a one-piece VILTRA /TRAINING skinsuit (VILTRA in dark grey, /TRAINING in orange on the chest), aero time trial helmet with visor, aero shoe covers, no sunglasses (visor on helmet). Extremely aerodynamic tucked position. Muscular legs pushing hard.',
+  cycleWomanTT: 'A fit athletic Scandinavian woman, approximately 28 years old, blonde hair hidden under aero TT helmet, in aggressive time trial position on a time trial / triathlon bicycle with aero bars, disc wheel, deep-section front wheel. Wearing a one-piece VILTRA /TRAINING skinsuit (VILTRA in dark grey, /TRAINING in orange on the chest), aero time trial helmet with visor, aero shoe covers. Extremely aerodynamic tucked position.',
+
   promoMan: 'A fit athletic Scandinavian man, approximately 30 years old, short brown hair, light stubble, wearing a dark charcoal/black t-shirt with "VILTRA TRAINING" printed on it in orange text, black shorts, showing a Garmin GPS running watch on his left wrist. He has a lean muscular build, intense confident expression. The scene has a dramatic dark background with glowing orange and gold particle effects, light streaks and bokeh. A large smartphone mockup of the Viltra Training app floats beside him showing the dark navy dashboard with Fitness (CTL) and Belastning (ATL) circular gauges in blue and orange, and a Fitness vs Fatigue graph below. Premium advertising look.',
   promoWoman: 'A fit athletic woman with dark hair in a ponytail, wearing a black t-shirt with "VILTRA TRAINING" in orange text, black running shorts, running shoes. She is in a dynamic running pose with powerful stride. Illustrated/semi-realistic style with dramatic dark background, glowing orange particle effects and light streaks. The Viltra Training app UI elements float around her — showing Dashboard, Fitness score, Belastning gauge, training log, and a Fitness vs Fatigue chart. Dark navy blue and orange color scheme. Energetic promotional poster look.'
 };
@@ -3554,6 +3589,19 @@ const SCENARIOS = {
   coastal_path: 'running along a rugged Swedish west coast path, smooth granite rocks, the sea stretching to the horizon, salty wind',
   autumn_path: 'running through a stunning autumn-colored tree-lined avenue, golden and red leaves covering the path, warm soft light',
   winter_run: 'running on a snowy Swedish winter road, frosted trees, crisp cold air, breath visible, pristine white landscape',
+
+  // ---- CYCLING SCENARIOS ----
+  cycling_road: 'cycling on a smooth tarmac road through beautiful open countryside, rolling green hills, fields of wheat, perfect road cycling conditions, dynamic riding position with hands on the drops',
+  cycling_mountain: 'cycling through dramatic mountain roads with hairpin turns, steep gradients, alpine scenery with snow-capped peaks in the distance, climbing out of the saddle',
+  cycling_city: 'cycling through a modern European city street, urban architecture, traffic-free boulevard, smooth asphalt, confident riding through the cityscape',
+  cycling_coast: 'cycling along a stunning coastal road with the ocean on one side, cliffs and blue water, sea breeze, wide open coastal landscape stretching to the horizon',
+  cycling_bridge: 'cycling across a long dramatic bridge over water, wide open sky, bridge stretching into the distance, powerful riding position',
+  cycling_peloton: 'riding in a group of cyclists (peloton) on a road, drafting closely behind other riders, colorful jerseys around, competitive group riding formation',
+  cycling_climb: 'climbing a steep mountain road out of the saddle, grimacing with effort, sweat visible, dramatic switchback road behind, mountain landscape',
+  cycling_tt: 'racing alone on a flat time trial course in full aero tuck position on aero bars, disc wheel spinning, extreme speed, focused determined expression, flat road stretching ahead',
+  cycling_sprint: 'sprinting at full power on a road, out of the saddle, bike swaying side to side with effort, explosive power, blurred background showing extreme speed',
+  cycling_sunset: 'cycling on an open road with a dramatic golden sunset behind, silhouette-style with warm golden light catching the rider, epic wide landscape',
+  cycling_drone: 'a normal-sized cyclist on a winding road, photographed from a drone above. The cyclist appears small on the road, realistic aerial drone photograph showing the road curves through beautiful landscape',
 
   stretching_park: 'doing dynamic stretches in a green park, focused and preparing for a run',
   warmup: 'doing warm-up exercises on a running track, preparing for training',
