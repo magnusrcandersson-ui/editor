@@ -4148,17 +4148,15 @@ document.querySelectorAll('.mobile-tab').forEach(tab => {
     document.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
     closeMobileOverlays();
+    document.querySelectorAll('.mobile-panel').forEach(p => p.classList.remove('active'));
 
     if (tab.dataset.panel === 'mobileFilters') {
       $('mobFilterBar').classList.add('active');
     } else if (tab.dataset.panel === 'mobileAdjust') {
       $('mobAdjustBar').classList.add('active');
       mobAdjustSelectTarget(mobAdjustTarget);
-    } else {
-      // Export panel — show normally
-      document.querySelectorAll('.mobile-panel').forEach(p => p.classList.remove('active'));
-      const panel = $(tab.dataset.panel);
-      if (panel) panel.classList.add('active');
+    } else if (tab.dataset.panel === 'mobileExport') {
+      $('mobileExport').classList.add('active');
     }
   });
 });
