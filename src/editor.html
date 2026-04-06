@@ -2595,11 +2595,39 @@ function getSettings() {
   return s;
 }
 
-function applyFilter() {
+const MOBILE_MAX_PX = 800; // max dimension for mobile preview
+let mobileScaledEntry = null;
+
+function getMobileEntry(entry) {
+  if (window.innerWidth > 1024) return entry; // desktop — full res
+  const maxDim = Math.max(entry.width, entry.height);
+  if (maxDim <= MOBILE_MAX_PX) return entry;
+  // Downscale for mobile preview
+  if (mobileScaledEntry && mobileScaledEntry._srcW === entry.width && mobileScaledEntry._srcH === entry.height) return mobileScaledEntry;
+  const scale = MOBILE_MAX_PX / maxDim;
+  const nw = Math.round(entry.width * scale);
+  const nh = Math.round(entry.height * scale);
+  const tc = document.createElement('canvas');
+  tc.width = nw; tc.height = nh;
+  const tctx = tc.getContext('2d');
+  // Draw original imagedata to temp full-size canvas first
+  const fc = document.createElement('canvas');
+  fc.width = entry.width; fc.height = entry.height;
+  fc.getContext('2d').putImageData(entry.original, 0, 0);
+  tctx.drawImage(fc, 0, 0, nw, nh);
+  mobileScaledEntry = { width: nw, height: nh, original: tctx.getImageData(0, 0, nw, nh), _srcW: entry.width, _srcH: entry.height };
+  return mobileScaledEntry;
+}
+
+function applyFilter(fullRes) {
   if (state.currentIndex < 0 || state.processing) return;
-  const entry = state.images[state.currentIndex];
-  if (!entry) return;
+  const rawEntry = state.images[state.currentIndex];
+  if (!rawEntry) return;
+  const entry = fullRes ? rawEntry : getMobileEntry(rawEntry);
   state.processing = true;
+
+  canvas.width = entry.width;
+  canvas.height = entry.height;
 
   requestAnimationFrame(() => {
     const s = getSettings();
@@ -2755,34 +2783,34 @@ function applyFilter() {
 }
 
 let applyTimeout;
-function debouncedApply() { clearTimeout(applyTimeout); applyTimeout = setTimeout(applyFilter, 16); }
+const debounceMs = window.innerWidth <= 1024 ? 50 : 16;
+function debouncedApply() { clearTimeout(applyTimeout); applyTimeout = setTimeout(applyFilter, debounceMs); }
 
 // =====================================================
 // EXPORT
 // =====================================================
 function saveBlob(blob, filename) {
-  // Try download link first (works on desktop)
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-
-  // On iOS Safari, download doesn't work — open image in new tab
-  // User can then long-press to save
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
   if (isIOS) {
-    setTimeout(() => {
-      const url = URL.createObjectURL(blob);
-      const w = window.open(url, '_blank');
-      if (!w) {
-        // Popup blocked — show inline
-        $('statusLeft').textContent = 'Håll in bilden för att spara';
-        canvas.style.cursor = 'pointer';
-        canvas.onclick = () => { canvas.style.cursor = ''; canvas.onclick = null; };
-      }
-    }, 100);
+    // Show full-screen save overlay with the image
+    const url = URL.createObjectURL(blob);
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.95);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;';
+    overlay.innerHTML = `
+      <p style="color:#fff;font-size:16px;font-weight:600;margin-bottom:16px;text-align:center;">Håll in bilden → Spara bild</p>
+      <img src="${url}" style="max-width:90%;max-height:70vh;border-radius:8px;object-fit:contain;">
+      <button style="margin-top:20px;padding:12px 32px;font-size:15px;font-weight:600;background:var(--accent);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:inherit;">Stäng</button>
+    `;
+    overlay.querySelector('button').onclick = () => { overlay.remove(); URL.revokeObjectURL(url); };
+    document.body.appendChild(overlay);
+  } else {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 }
 
@@ -2802,7 +2830,7 @@ function exportCurrent() {
   const prev = state.viewMode;
   state.viewMode = 'edited';
   state.processing = false;
-  applyFilter();
+  applyFilter(true); // full resolution for export
   setTimeout(() => {
     canvas.toBlob(blob => {
       if (!blob) return;
