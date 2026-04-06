@@ -3579,45 +3579,44 @@ async function exportVideoEnhanced() {
     if (audioCtx) audioCtx.close();
   };
 
-  recorder.start();
-  videoEl.currentTime = trim.start;
-  await new Promise(r => { videoEl.onseeked = r; });
-  videoEl.play();
+  const fps = 30;
+  const frameDuration = 1 / fps;
+  const totalFrames = Math.ceil(trim.duration * fps);
 
   const exportScratch = document.createElement('canvas');
   exportScratch.width = ow; exportScratch.height = oh;
   const esCtx = exportScratch.getContext('2d', { willReadFrequently: true });
 
+  // Pre-compute settings once (they don't change during export)
+  const s = getSettings();
+  const lut = new Uint8ClampedArray(256);
+  const cf = (259 * (s.contrast * 2.55 + 255)) / (255 * (259 - s.contrast * 2.55));
+  for (let i = 0; i < 256; i++) {
+    let v = i + s.brightness;
+    v = cf * (v - 128) + 128;
+    v = s.shadows + (v / 255) * (255 - s.shadows);
+    v = v + s.highlights * (v / 255) * (v / 255) * 0.5;
+    if (s.fade > 0) { const fadeAmt = s.fade * 0.5; v = fadeAmt + (v / 255) * (255 - fadeAmt * 2); }
+    lut[i] = Math.max(0, Math.min(255, v));
+  }
+  const tempR = s.temperature * 0.5, tempB = -s.temperature * 0.7, tintG = s.tint * 0.3;
+  const tealI = s.tealIntensity / 100, satF = s.saturation / 100, warmD = s.warmDesat / 100;
+  const tealSB = s.tealSat / 50;
+  const sB = s.shadowBlue, sT = s.shadowTeal, sW = s.shadowWarm, hB = s.highlightBlue, hW = s.highlightWarm;
+
   function renderExportFrame() {
     esCtx.drawImage(videoEl, crop.x, crop.y, crop.w, crop.h, 0, 0, ow, oh);
-    const s = getSettings();
     const frameData = esCtx.getImageData(0, 0, ow, oh);
     const src = frameData.data;
     const out = ectx.createImageData(ow, oh);
     const dst = out.data;
     const len = src.length;
 
-    const lut = new Uint8ClampedArray(256);
-    const cf = (259 * (s.contrast * 2.55 + 255)) / (255 * (259 - s.contrast * 2.55));
-    for (let i = 0; i < 256; i++) {
-      let v = i + s.brightness;
-      v = cf * (v - 128) + 128;
-      v = s.shadows + (v / 255) * (255 - s.shadows);
-      v = v + s.highlights * (v / 255) * (v / 255) * 0.5;
-      if (s.fade > 0) { const fadeAmt = s.fade * 0.5; v = fadeAmt + (v / 255) * (255 - fadeAmt * 2); }
-      lut[i] = Math.max(0, Math.min(255, v));
-    }
-
-    const tempR = s.temperature * 0.5, tempB = -s.temperature * 0.7, tintG = s.tint * 0.3;
-    const tealI = s.tealIntensity / 100, satF = s.saturation / 100, warmD = s.warmDesat / 100;
-    const tealSB = s.tealSat / 50;
-    const sB = s.shadowBlue, sT = s.shadowTeal, sW = s.shadowWarm, hB = s.highlightBlue, hW = s.highlightWarm;
-
     for (let i = 0; i < len; i += 4) {
       let r = src[i], g = src[i+1], b = src[i+2];
       r += tempR; g += tintG; b += tempB;
-      r = r < 0 ? 0 : r > 255 ? 255 : r; g = g < 0 ? 0 : g > 255 ? 255 : g; b = b < 0 ? 0 : b > 255 ? 255 : b;
-      const lum = 0.299*r + 0.587*g + 0.114*b;
+      r = r<0?0:r>255?255:r; g = g<0?0:g>255?255:g; b = b<0?0:b>255?255:b;
+      const lum = 0.299*r+0.587*g+0.114*b;
       const sw = Math.max(0.12, Math.min(1, 1 - lum/180));
       r -= tealI*35*sw; g += tealI*15*sw; b += tealI*30*sw;
       r = r<0?0:r>255?255:r; g = g<0?0:g>255?255:g; b = b<0?0:b>255?255:b;
@@ -3637,45 +3636,54 @@ async function exportVideoEnhanced() {
 
     ectx.putImageData(out, 0, 0);
     if (s.vignette > 0) {
-      const cx=ow/2,cy=oh/2,maxDist=Math.sqrt(cx*cx+cy*cy);
+      const cx2=ow/2,cy2=oh/2,maxDist=Math.sqrt(cx2*cx2+cy2*cy2);
       const rad=(s.vignetteRadius/100)*maxDist;
-      const grad=ectx.createRadialGradient(cx,cy,rad,cx,cy,maxDist);
+      const grad=ectx.createRadialGradient(cx2,cy2,rad,cx2,cy2,maxDist);
       grad.addColorStop(0,'rgba(0,0,0,0)'); grad.addColorStop(1,`rgba(0,0,0,${s.vignette/100})`);
       ectx.fillStyle=grad; ectx.fillRect(0,0,ow,oh);
     }
     if (s.grain > 0) {
       const gd=ectx.getImageData(0,0,ow,oh),gp=gd.data,ga=s.grain*0.6;
-      for(let i=0;i<gp.length;i+=4){const n=(Math.random()-0.5)*ga;gp[i]+=n;gp[i+1]+=n;gp[i+2]+=n;}
+      for(let i2=0;i2<gp.length;i2+=4){const n=(Math.random()-0.5)*ga;gp[i2]+=n;gp[i2+1]+=n;gp[i2+2]+=n;}
       ectx.putImageData(gd,0,0);
     }
-    if (typeof applyFx === 'function') applyFx(ectx, ow, oh);
     if (typeof drawTextOverlay === 'function') drawTextOverlay(ectx, ow, oh);
   }
 
-  function exportLoop() {
-    if (videoEl.ended || videoEl.currentTime >= trim.end) {
-      videoEl.pause();
-      // Fade out audio
-      if (audioGain) {
-        const fadeOut = parseFloat($('audioFadeOut').value);
-        if (fadeOut > 0) {
-          audioGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + fadeOut);
-          setTimeout(() => recorder.stop(), fadeOut * 1000);
-          return;
-        }
-      }
-      recorder.stop();
-      return;
-    }
+  // Frame-by-frame export: seek to each frame, wait, render, repeat
+  recorder.start();
+  videoEl.pause();
+
+  for (let frame = 0; frame < totalFrames; frame++) {
+    const time = trim.start + frame * frameDuration;
+    videoEl.currentTime = time;
+    await new Promise(r => { videoEl.onseeked = r; });
+    // Small delay to ensure frame is decoded
+    await new Promise(r => setTimeout(r, 10));
+
     renderExportFrame();
-    // Also show on main canvas
     ctx.drawImage(exportCanvas, 0, 0, canvas.width, canvas.height);
-    const pct = Math.round(((videoEl.currentTime - trim.start) / trim.duration) * 100);
+
+    // Hold frame for recorder (captureStream needs time to grab it)
+    await new Promise(r => setTimeout(r, 1000 / fps));
+
+    const pct = Math.round((frame / totalFrames) * 100);
     $('exportProgress').style.width = pct + '%';
-    $('exportStatus').textContent = `Exporterar ${targetRes}p... ${fmtTime(videoEl.currentTime - trim.start)} / ${fmtTime(trim.duration)}`;
-    requestAnimationFrame(exportLoop);
+    $('exportStatus').textContent = `Exporterar ${targetRes}p... frame ${frame + 1}/${totalFrames} (${pct}%)`;
   }
-  exportLoop();
+
+  // Fade out audio
+  if (audioGain) {
+    const fadeOut = parseFloat($('audioFadeOut').value);
+    if (fadeOut > 0) {
+      audioGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + fadeOut);
+      await new Promise(r => setTimeout(r, fadeOut * 1000));
+    }
+  }
+
+  recorder.stop();
+  if (audioSource) { try { audioSource.stop(); } catch(e) {} }
+  if (audioCtx) audioCtx.close();
 }
 
 // =====================================================
