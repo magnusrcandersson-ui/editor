@@ -1611,13 +1611,8 @@
     <button class="mobile-tab" data-panel="mobileAdjust">Justera</button>
     <button class="mobile-tab" data-panel="mobileExport">Export</button>
   </div>
-  <div class="mobile-panel active" id="mobileFilters">
-    <div class="control-row" style="margin-bottom:8px;"><label>Intensitet</label><input type="range" id="mobileIntensity" min="0" max="100" value="50"><span class="value" id="mobileIntensityVal">50%</span></div>
-    <div id="mobilePresetList" class="mobile-presets"></div>
-  </div>
-  <div class="mobile-panel" id="mobileAdjust" style="padding:0;">
-    <p style="padding:12px 14px;font-size:12px;color:#888;margin:0;">Justeringsmenyn visas som overlay — bilden förblir stor</p>
-  </div>
+  <div class="mobile-panel" id="mobileFilters" style="display:none;"></div>
+  <div class="mobile-panel" id="mobileAdjust" style="display:none;"></div>
   <div class="mobile-panel" id="mobileExport">
     <div class="export-row" style="margin-bottom:8px;">
       <label>Kvalitet</label>
@@ -1631,6 +1626,16 @@
       <button class="btn" id="mobileBtnExportImg" style="flex:1;font-size:12px;">Exportera bild</button>
       <button class="btn btn-primary" id="mobileBtnExportVid" style="flex:1;font-size:12px;">Exportera video</button>
     </div>
+  </div>
+</div>
+
+<!-- Mobile filter overlay -->
+<div class="mob-adjust-bar" id="mobFilterBar">
+  <button class="mob-adjust-close" id="mobFilterClose">&times;</button>
+  <div id="mobilePresetList" class="mobile-presets" style="padding:8px 10px;"></div>
+  <div class="mob-adjust-slider">
+    <label id="mobFilterVal">50%</label>
+    <input type="range" id="mobileIntensity" min="0" max="100" value="50">
   </div>
 </div>
 
@@ -4126,7 +4131,7 @@ document.querySelectorAll('.mobile-tab').forEach(tab => {
 if ($('mobileIntensity')) {
   $('mobileIntensity').addEventListener('input', () => {
     const v = parseInt($('mobileIntensity').value);
-    $('mobileIntensityVal').textContent = v + '%';
+    $('mobFilterVal').textContent = v + '%';
     // Sync to desktop
     $('intensity').value = v;
     $('intensityVal').textContent = v + '%';
@@ -4138,28 +4143,45 @@ if ($('mobileIntensity')) {
 // Mobile adjust overlay logic
 let mobAdjustTarget = 'brightness';
 
-// Open adjust overlay when tapping Justera tab
+// Mobile tab → overlay logic
+function closeMobileOverlays() {
+  $('mobFilterBar').classList.remove('active');
+  $('mobAdjustBar').classList.remove('active');
+}
+
 document.querySelectorAll('.mobile-tab').forEach(tab => {
-  const origClick = tab.onclick;
-  tab.onclick = (e) => {
-    if (tab.dataset.panel === 'mobileAdjust') {
-      // Show overlay instead of panel
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    closeMobileOverlays();
+
+    if (tab.dataset.panel === 'mobileFilters') {
+      $('mobFilterBar').classList.add('active');
+    } else if (tab.dataset.panel === 'mobileAdjust') {
       $('mobAdjustBar').classList.add('active');
-      mobAdjustSelectTarget('brightness');
-      return;
+      mobAdjustSelectTarget(mobAdjustTarget);
+    } else {
+      // Export panel — show normally
+      document.querySelectorAll('.mobile-panel').forEach(p => p.classList.remove('active'));
+      const panel = $(tab.dataset.panel);
+      if (panel) panel.classList.add('active');
     }
-    $('mobAdjustBar').classList.remove('active');
-    if (origClick) origClick(e);
-  };
+  });
 });
 
-$('mobAdjustClose').onclick = () => {
-  $('mobAdjustBar').classList.remove('active');
-  // Switch back to filter tab
+// Show filter overlay by default on mobile
+if (window.innerWidth <= 768) {
+  setTimeout(() => $('mobFilterBar').classList.add('active'), 100);
+}
+
+$('mobFilterClose').onclick = () => {
+  closeMobileOverlays();
   document.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.mobile-panel').forEach(p => p.classList.remove('active'));
-  document.querySelector('.mobile-tab[data-panel="mobileFilters"]').classList.add('active');
-  $('mobileFilters').classList.add('active');
+};
+
+$('mobAdjustClose').onclick = () => {
+  closeMobileOverlays();
+  document.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
 };
 
 function mobAdjustSelectTarget(name) {
