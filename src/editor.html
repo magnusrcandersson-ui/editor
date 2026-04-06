@@ -3658,7 +3658,10 @@ async function exportVideoEnhanced() {
   for (let frame = 0; frame < totalFrames; frame++) {
     const time = trim.start + frame * frameDuration;
     videoEl.currentTime = time;
-    await new Promise(r => { videoEl.onseeked = r; });
+    await new Promise(r => {
+      const timeout = setTimeout(r, 200);
+      videoEl.onseeked = () => { clearTimeout(timeout); r(); };
+    });
     await new Promise(r => setTimeout(r, 5));
 
     renderExportFrame();
