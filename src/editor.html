@@ -2760,17 +2760,39 @@ function debouncedApply() { clearTimeout(applyTimeout); applyTimeout = setTimeou
 // =====================================================
 // EXPORT
 // =====================================================
+function saveBlob(blob, filename) {
+  // Try download link first (works on desktop)
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  // On iOS Safari, download doesn't work — open image in new tab
+  // User can then long-press to save
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  if (isIOS) {
+    setTimeout(() => {
+      const url = URL.createObjectURL(blob);
+      const w = window.open(url, '_blank');
+      if (!w) {
+        // Popup blocked — show inline
+        $('statusLeft').textContent = 'Håll in bilden för att spara';
+        canvas.style.cursor = 'pointer';
+        canvas.onclick = () => { canvas.style.cursor = ''; canvas.onclick = null; };
+      }
+    }, 100);
+  }
+}
+
 function exportCurrent() {
   if (state.currentIndex < 0 && !state.videoMode) return;
 
   if (state.videoMode) {
-    // Export current video frame as image
     canvas.toBlob(blob => {
       if (!blob) return;
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'viltra_frame.jpg';
-      a.click();
+      saveBlob(blob, 'viltra_frame.jpg');
     }, 'image/jpeg', 0.95);
     return;
   }
@@ -2784,10 +2806,8 @@ function exportCurrent() {
   setTimeout(() => {
     canvas.toBlob(blob => {
       if (!blob) return;
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = entry.name.replace(/\.[^.]+$/, '') + '_edited.jpg';
-      a.click();
+      const name = entry.name ? entry.name.replace(/\.[^.]+$/, '') + '_edited.jpg' : 'viltra_edited.jpg';
+      saveBlob(blob, name);
       state.viewMode = prev;
     }, 'image/jpeg', 0.95);
   }, 300);
