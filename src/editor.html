@@ -845,33 +845,6 @@
     margin-top: 5px;
   }
 
-  /* ---- LIGHT TOOL CURSOR ---- */
-  .preview-area.light-mode { cursor: crosshair; }
-  .light-marker {
-    position: absolute;
-    width: 12px; height: 12px;
-    border: 2px solid rgba(255,200,50,0.8);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    z-index: 6;
-    box-shadow: 0 0 8px rgba(255,200,50,0.4);
-  }
-  .light-marker::before, .light-marker::after {
-    content: '';
-    position: absolute;
-    background: rgba(255,200,50,0.5);
-  }
-  .light-marker::before {
-    width: 1px; height: 18px;
-    left: 50%; top: 50%;
-    transform: translate(-50%, -50%);
-  }
-  .light-marker::after {
-    width: 18px; height: 1px;
-    left: 50%; top: 50%;
-    transform: translate(-50%, -50%);
-  }
 
   /* ---- EXPORT SETTINGS ---- */
   .export-row {
@@ -1275,21 +1248,6 @@
         <button class="prompt-copy-btn" id="btnGeneratePrompt">Skapa prompt</button>
         <textarea id="promptOutput" class="prompt-output" readonly placeholder="Prompten visas här..."></textarea>
         <button class="prompt-copy-btn" id="btnCopyPrompt" style="background:#4a4a4a;margin-top:4px;">Kopiera till urklipp</button>
-      </div>
-    </div>
-
-    <div class="section collapsed">
-      <div class="section-title">Ljuseffekt</div>
-      <div class="section-body">
-        <p style="font-size:10px;color:#888;margin-bottom:6px;">Klicka på bilden för att placera ljuspunkt</p>
-        <div class="control-row"><label>Radie</label><input type="range" id="lightRadius" min="5" max="80" value="30"><span class="value" id="lightRadiusVal">30</span></div>
-        <div class="control-row"><label>Styrka</label><input type="range" id="lightStrength" min="0" max="100" value="40"><span class="value" id="lightStrengthVal">40</span></div>
-        <div class="control-row"><label>Värme</label><input type="range" id="lightWarmth" min="-50" max="50" value="15"><span class="value" id="lightWarmthVal">15</span></div>
-        <div class="control-row"><label>Mjukhet</label><input type="range" id="lightSoftness" min="10" max="100" value="60"><span class="value" id="lightSoftnessVal">60</span></div>
-        <div style="display:flex;gap:6px;margin-top:4px;">
-          <button class="btn" id="btnLightUndo" style="flex:1;font-size:10px;">Ångra senaste</button>
-          <button class="btn" id="btnLightClear" style="flex:1;font-size:10px;">Rensa alla</button>
-        </div>
       </div>
     </div>
 
@@ -2249,7 +2207,7 @@ function renderVideoFrame(fullRes) {
     }
     if (typeof applyFx === 'function') applyFx(ctx, ow, oh);
     // Skip grain during playback — too heavy
-    if (typeof drawLightPoints === 'function') drawLightPoints(ctx, ow, oh);
+
     if (typeof drawTextOverlay === 'function') drawTextOverlay(ctx, ow, oh);
   }
 
@@ -2468,8 +2426,7 @@ function applyFilter() {
 
     // Video effects
     if (typeof applyFx === 'function') applyFx(ctx, w, h);
-    // Light points
-    if (typeof drawLightPoints === 'function') drawLightPoints(ctx, w, h);
+
     // Text overlay
     if (typeof drawTextOverlay === 'function') drawTextOverlay(ctx, w, h);
 
@@ -3520,112 +3477,6 @@ $('btnInsertLogo').onclick = () => {
 };
 
 // =====================================================
-// LIGHT EFFECT (click to place light points)
-// =====================================================
-let lightPoints = [];
-
-function drawLightPoints(ctx, w, h) {
-  if (!lightPoints.length) return;
-  const radius = parseInt($('lightRadius').value) / 100;
-  const strength = parseInt($('lightStrength').value) / 100;
-  const warmth = parseInt($('lightWarmth').value);
-  const softness = parseInt($('lightSoftness').value) / 100;
-
-  lightPoints.forEach(pt => {
-    const cx = pt.x * w;
-    const cy = pt.y * h;
-    const r = radius * Math.max(w, h);
-    const innerR = r * (1 - softness);
-
-    // Warm or cool light color
-    let lr, lg, lb;
-    if (warmth >= 0) {
-      lr = 255; lg = 240 - warmth * 1.2; lb = 200 - warmth * 3;
-    } else {
-      lr = 200 + warmth * 2; lg = 220 + warmth; lb = 255;
-    }
-
-    const grad = ctx.createRadialGradient(cx, cy, innerR, cx, cy, r);
-    grad.addColorStop(0, `rgba(${lr},${lg},${lb},${strength * 0.6})`);
-    grad.addColorStop(0.5, `rgba(${lr},${lg},${lb},${strength * 0.25})`);
-    grad.addColorStop(1, `rgba(${lr},${lg},${lb},0)`);
-
-    ctx.save();
-    ctx.globalCompositeOperation = 'screen';
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, w, h);
-    ctx.restore();
-  });
-}
-
-// Toggle crosshair cursor when light section is open
-function updateLightMode() {
-  const lightSection = $('lightRadius')?.closest('.section');
-  const active = lightSection && !lightSection.classList.contains('collapsed');
-  $('previewArea').classList.toggle('light-mode', active);
-}
-
-// Update light markers on the preview
-function updateLightMarkers() {
-  // Remove old markers
-  document.querySelectorAll('.light-marker').forEach(m => m.remove());
-  const mainCanvas = $('canvas');
-  if (mainCanvas.classList.contains('hidden')) return;
-  const rect = mainCanvas.getBoundingClientRect();
-  const areaRect = $('previewArea').getBoundingClientRect();
-
-  lightPoints.forEach((pt, i) => {
-    const marker = document.createElement('div');
-    marker.className = 'light-marker';
-    marker.style.left = (rect.left - areaRect.left + pt.x * rect.width) + 'px';
-    marker.style.top = (rect.top - areaRect.top + pt.y * rect.height) + 'px';
-    $('previewArea').appendChild(marker);
-  });
-}
-
-function renderAndMark() {
-  if (state.videoMode && !state.videoPlaying) renderVideoFrame(true);
-  else if (state.currentIndex >= 0) applyFilter();
-  updateLightMarkers();
-}
-
-// Click on canvas to place light
-$('previewArea').addEventListener('click', (e) => {
-  const lightSection = $('lightRadius')?.closest('.section');
-  if (!lightSection || lightSection.classList.contains('collapsed')) return;
-  const mainCanvas = $('canvas');
-  if (mainCanvas.classList.contains('hidden')) return;
-
-  const rect = mainCanvas.getBoundingClientRect();
-  if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) return;
-
-  const x = (e.clientX - rect.left) / rect.width;
-  const y = (e.clientY - rect.top) / rect.height;
-  lightPoints.push({ x, y });
-  renderAndMark();
-});
-
-$('btnLightUndo').onclick = () => {
-  lightPoints.pop();
-  renderAndMark();
-};
-
-$('btnLightClear').onclick = () => {
-  lightPoints = [];
-  renderAndMark();
-};
-
-window.addEventListener('resize', updateLightMarkers);
-
-['lightRadius','lightStrength','lightWarmth','lightSoftness'].forEach(id => {
-  $(id).addEventListener('input', () => {
-    $(id + 'Val').textContent = $(id).value;
-    if (state.videoMode && !state.videoPlaying) renderVideoFrame(true);
-    else if (state.currentIndex >= 0) applyFilter();
-  });
-});
-
-// =====================================================
 // MUSIC / AUDIO
 // =====================================================
 let audioBuffer = null;
@@ -3798,7 +3649,6 @@ async function exportVideoEnhanced() {
       ectx.putImageData(gd,0,0);
     }
     if (typeof applyFx === 'function') applyFx(ectx, ow, oh);
-    if (typeof drawLightPoints === 'function') drawLightPoints(ectx, ow, oh);
     if (typeof drawTextOverlay === 'function') drawTextOverlay(ectx, ow, oh);
   }
 
@@ -3838,7 +3688,6 @@ $('btnExportVideo').onclick = exportVideoEnhanced;
 document.querySelectorAll('.section-title').forEach(title => {
   title.addEventListener('click', () => {
     title.parentElement.classList.toggle('collapsed');
-    if (typeof updateLightMode === 'function') updateLightMode();
   });
 });
 
