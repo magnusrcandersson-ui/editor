@@ -890,9 +890,9 @@
   }
   .mobile-panel {
     display: none;
-    max-height: 45vh;
+    max-height: 50vh;
     overflow-y: auto;
-    padding: 10px;
+    padding: 12px 14px;
   }
   .mobile-panel.active { display: block; }
   .mobile-panel::-webkit-scrollbar { width: 4px; }
@@ -973,8 +973,31 @@
     /* Text handles smaller on mobile */
     .text-handle { width: 18px; height: 18px; font-size: 8px; }
 
-    /* Control rows in mobile panels */
-    .mobile-panel .control-row label { width: 65px; font-size: 10px; }
+    /* Control rows in mobile panels — BIG touch targets */
+    .mobile-panel .control-row {
+      margin-bottom: 12px;
+      min-height: 40px;
+    }
+    .mobile-panel .control-row label {
+      width: 75px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .mobile-panel .control-row input[type="range"] {
+      height: 6px;
+    }
+    .mobile-panel .control-row input[type="range"]::-webkit-slider-thumb {
+      width: 24px; height: 24px;
+    }
+    .mobile-panel .control-row .value {
+      font-size: 14px;
+      width: 32px;
+    }
+    .mobile-panel .control-row .step-btn {
+      width: 32px; height: 32px;
+      font-size: 18px;
+      border-radius: 6px;
+    }
     .mobile-panel .section { margin-bottom: 4px; }
     .mobile-panel .section-title { font-size: 9px; padding: 4px 0 3px; }
     .mobile-panel .section-body { padding-top: 4px; }
@@ -1495,7 +1518,6 @@
   <div class="mobile-tab-bar">
     <button class="mobile-tab active" data-panel="mobileFilters">Filter</button>
     <button class="mobile-tab" data-panel="mobileAdjust">Justera</button>
-    <button class="mobile-tab" data-panel="mobileText">Text</button>
     <button class="mobile-tab" data-panel="mobileExport">Export</button>
   </div>
   <div class="mobile-panel active" id="mobileFilters">
@@ -1512,13 +1534,6 @@
     <div class="control-row"><label>Fade</label><input type="range" class="mob-slider" data-target="fade" min="0" max="60" value="0"><span class="value mob-val">0</span></div>
     <div class="control-row"><label>Vinjett</label><input type="range" class="mob-slider" data-target="vignette" min="0" max="100" value="0"><span class="value mob-val">0</span></div>
     <div class="control-row"><label>Skärpa</label><input type="range" class="mob-slider" data-target="sharpness" min="0" max="100" value="0"><span class="value mob-val">0</span></div>
-    <div class="control-row"><label>Filmkorn</label><input type="range" class="mob-slider" data-target="grain" min="0" max="50" value="0"><span class="value mob-val">0</span></div>
-  </div>
-  <div class="mobile-panel" id="mobileText">
-    <input type="text" id="mobileTextLine1" placeholder="Rad 1..." style="width:100%;padding:8px;font-size:13px;background:#333;border:1px solid #4a4a4a;border-radius:6px;color:#fff;font-family:inherit;margin-bottom:6px;">
-    <input type="text" id="mobileTextLine2" placeholder="Rad 2..." style="width:100%;padding:8px;font-size:13px;background:#333;border:1px solid #4a4a4a;border-radius:6px;color:#fff;font-family:inherit;margin-bottom:6px;">
-    <div class="control-row"><label>Storlek 1</label><input type="range" id="mobileTextSize1" min="16" max="160" value="64"><span class="value">64</span></div>
-    <div class="control-row"><label>Storlek 2</label><input type="range" id="mobileTextSize2" min="16" max="160" value="42"><span class="value">42</span></div>
   </div>
   <div class="mobile-panel" id="mobileExport">
     <div class="export-row" style="margin-bottom:8px;">
