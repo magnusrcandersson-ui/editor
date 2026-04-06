@@ -1096,7 +1096,7 @@
     <div class="section" id="intensitySection">
       <div class="section-title">Filterstyrka</div>
       <div class="section-body">
-        <div class="control-row"><label>Intensitet</label><input type="range" id="intensity" min="0" max="100" value="20"><span class="value" id="intensityVal">20%</span></div>
+        <div class="control-row"><label>Intensitet</label><input type="range" id="intensity" min="0" max="100" value="50"><span class="value" id="intensityVal">50%</span></div>
       </div>
     </div>
 
@@ -1627,47 +1627,46 @@ const PRESETS = {
     sharpness: 35, vignette: 40, vignetteRadius: 65, grain: 4
   },
 
-  // ---- MOODY FILM ----
-  // Warm skin tones, muted greens, soft fade, autumn/earthy feel
-  moodyFilm1: { // Autumn Haze
-    brightness: -12, contrast: 22, shadows: 18, highlights: -15, fade: 15,
-    temperature: 12, tint: 5,
-    tealIntensity: 0, tealSat: 50,
-    saturation: 52, warmDesat: 18,
-    shadowBlue: 5, shadowTeal: 0, shadowWarm: 22, highlightBlue: 0, highlightWarm: 15,
-    sharpness: 25, vignette: 35, vignetteRadius: 60, grain: 8
-  },
-  moodyFilm2: { // Golden Hour
-    brightness: -5, contrast: 18, shadows: 15, highlights: -8, fade: 10,
-    temperature: 20, tint: 8,
-    tealIntensity: 0, tealSat: 50,
-    saturation: 58, warmDesat: 12,
-    shadowBlue: 3, shadowTeal: 0, shadowWarm: 28, highlightBlue: 0, highlightWarm: 20,
-    sharpness: 20, vignette: 28, vignetteRadius: 65, grain: 6
-  },
-  moodyFilm3: { // Rustic Fade
-    brightness: -8, contrast: 15, shadows: 22, highlights: -12, fade: 22,
-    temperature: 10, tint: 4,
+  // ---- MOODY FILM ---- (dramatic, each very distinct)
+  moodyFilm1: { // Autumn Haze — heavy warm orange cast, crushed blacks, rich
+    brightness: -25, contrast: 35, shadows: 20, highlights: -25, fade: 18,
+    temperature: 30, tint: 12,
     tealIntensity: 0, tealSat: 50,
     saturation: 45, warmDesat: 25,
-    shadowBlue: 8, shadowTeal: 0, shadowWarm: 18, highlightBlue: 0, highlightWarm: 12,
-    sharpness: 18, vignette: 40, vignetteRadius: 55, grain: 12
+    shadowBlue: 5, shadowTeal: 0, shadowWarm: 40, highlightBlue: 0, highlightWarm: 28,
+    sharpness: 25, vignette: 50, vignetteRadius: 50, grain: 12
   },
-  moodyFilm4: { // Warm Matte
-    brightness: -6, contrast: 12, shadows: 20, highlights: -10, fade: 25,
+  moodyFilm2: { // Golden Hour — extreme golden warmth, blown highlights, dreamy
+    brightness: 5, contrast: 25, shadows: 22, highlights: -5, fade: 15,
+    temperature: 40, tint: 18,
+    tealIntensity: 0, tealSat: 50,
+    saturation: 55, warmDesat: 8,
+    shadowBlue: 0, shadowTeal: 0, shadowWarm: 45, highlightBlue: 0, highlightWarm: 35,
+    sharpness: 15, vignette: 40, vignetteRadius: 55, grain: 8
+  },
+  moodyFilm3: { // Rustic Fade — extreme matte, very faded, desaturated, vintage
+    brightness: -5, contrast: 10, shadows: 35, highlights: -8, fade: 45,
     temperature: 15, tint: 6,
     tealIntensity: 0, tealSat: 50,
-    saturation: 48, warmDesat: 20,
-    shadowBlue: 0, shadowTeal: 0, shadowWarm: 25, highlightBlue: 0, highlightWarm: 18,
-    sharpness: 15, vignette: 32, vignetteRadius: 60, grain: 10
+    saturation: 30, warmDesat: 35,
+    shadowBlue: 12, shadowTeal: 0, shadowWarm: 25, highlightBlue: 0, highlightWarm: 15,
+    sharpness: 12, vignette: 55, vignetteRadius: 45, grain: 20
   },
-  moodyFilm5: { // Forest Light
-    brightness: -10, contrast: 20, shadows: 16, highlights: -18, fade: 12,
-    temperature: 6, tint: 3,
-    tealIntensity: 8, tealSat: 45,
-    saturation: 50, warmDesat: 30,
-    shadowBlue: 8, shadowTeal: 5, shadowWarm: 15, highlightBlue: 0, highlightWarm: 10,
-    sharpness: 22, vignette: 38, vignetteRadius: 58, grain: 8
+  moodyFilm4: { // Warm Matte — chocolate/cocoa tones, very muted, editorial
+    brightness: -15, contrast: 18, shadows: 28, highlights: -15, fade: 35,
+    temperature: 25, tint: 10,
+    tealIntensity: 0, tealSat: 50,
+    saturation: 35, warmDesat: 28,
+    shadowBlue: 0, shadowTeal: 0, shadowWarm: 38, highlightBlue: 0, highlightWarm: 25,
+    sharpness: 15, vignette: 45, vignetteRadius: 50, grain: 14
+  },
+  moodyFilm5: { // Forest Light — green/teal in shadows, warm highlights, split tone
+    brightness: -18, contrast: 30, shadows: 18, highlights: -22, fade: 10,
+    temperature: -5, tint: -5,
+    tealIntensity: 25, tealSat: 60,
+    saturation: 45, warmDesat: 45,
+    shadowBlue: 10, shadowTeal: 20, shadowWarm: 8, highlightBlue: 0, highlightWarm: 18,
+    sharpness: 25, vignette: 50, vignetteRadius: 48, grain: 10
   },
 
   // ---- CINEMATIC ----
@@ -1756,156 +1755,156 @@ const PRESETS = {
     sharpness: 30, vignette: 50, vignetteRadius: 50, grain: 7
   },
 
-  // ---- KODAK FILM ----
-  portra400: {
-    brightness: -5, contrast: 15, shadows: 12, highlights: -8, fade: 8,
-    temperature: 8, tint: 3,
-    tealIntensity: 0, tealSat: 50,
-    saturation: 65, warmDesat: 20,
-    shadowBlue: 5, shadowTeal: 3, shadowWarm: 12, highlightBlue: 0, highlightWarm: 10,
-    sharpness: 20, vignette: 15, vignetteRadius: 75, grain: 8
-  },
-  portra800: {
-    brightness: -3, contrast: 18, shadows: 15, highlights: -6, fade: 10,
-    temperature: 10, tint: 5,
-    tealIntensity: 0, tealSat: 50,
-    saturation: 58, warmDesat: 25,
-    shadowBlue: 8, shadowTeal: 0, shadowWarm: 15, highlightBlue: 0, highlightWarm: 14,
-    sharpness: 15, vignette: 18, vignetteRadius: 70, grain: 14
-  },
-  kodakGold: {
-    brightness: 5, contrast: 22, shadows: 8, highlights: -5, fade: 5,
+  // ---- KODAK FILM ---- (strong, authentic film emulation)
+  portra400: { // Soft warm skin, lifted shadows, gentle fade, muted greens
+    brightness: -10, contrast: 25, shadows: 25, highlights: -15, fade: 15,
     temperature: 18, tint: 8,
     tealIntensity: 0, tealSat: 50,
-    saturation: 75, warmDesat: 10,
-    shadowBlue: 0, shadowTeal: 0, shadowWarm: 20, highlightBlue: 0, highlightWarm: 18,
-    sharpness: 25, vignette: 20, vignetteRadius: 70, grain: 10
+    saturation: 55, warmDesat: 35,
+    shadowBlue: 8, shadowTeal: 5, shadowWarm: 25, highlightBlue: 0, highlightWarm: 18,
+    sharpness: 20, vignette: 25, vignetteRadius: 65, grain: 12
   },
-  ektar100: {
-    brightness: 0, contrast: 30, shadows: 5, highlights: -10, fade: 0,
-    temperature: 5, tint: 2,
-    tealIntensity: 8, tealSat: 55,
-    saturation: 82, warmDesat: 8,
-    shadowBlue: 10, shadowTeal: 5, shadowWarm: 8, highlightBlue: 3, highlightWarm: 5,
-    sharpness: 40, vignette: 12, vignetteRadius: 80, grain: 5
-  },
-  colorplus: {
-    brightness: 5, contrast: 20, shadows: 10, highlights: -3, fade: 8,
-    temperature: 14, tint: 5,
+  portra800: { // Warmer, grainier, more lifted, dreamier
+    brightness: -8, contrast: 20, shadows: 30, highlights: -10, fade: 20,
+    temperature: 22, tint: 10,
     tealIntensity: 0, tealSat: 50,
-    saturation: 70, warmDesat: 15,
-    shadowBlue: 3, shadowTeal: 0, shadowWarm: 16, highlightBlue: 0, highlightWarm: 12,
-    sharpness: 20, vignette: 22, vignetteRadius: 65, grain: 12
+    saturation: 48, warmDesat: 40,
+    shadowBlue: 12, shadowTeal: 0, shadowWarm: 30, highlightBlue: 0, highlightWarm: 22,
+    sharpness: 12, vignette: 30, vignetteRadius: 60, grain: 22
   },
-  triX: {
-    brightness: -5, contrast: 35, shadows: 10, highlights: -12, fade: 5,
+  kodakGold: { // Punchy warm yellow/orange, saturated, nostalgic summer
+    brightness: 8, contrast: 35, shadows: 12, highlights: -8, fade: 8,
+    temperature: 35, tint: 15,
+    tealIntensity: 0, tealSat: 50,
+    saturation: 80, warmDesat: 5,
+    shadowBlue: 0, shadowTeal: 0, shadowWarm: 35, highlightBlue: 0, highlightWarm: 30,
+    sharpness: 25, vignette: 30, vignetteRadius: 60, grain: 15
+  },
+  ektar100: { // Ultra saturated, punchy contrast, vivid reds/greens/blues
+    brightness: -5, contrast: 45, shadows: 5, highlights: -15, fade: 0,
+    temperature: 8, tint: 4,
+    tealIntensity: 12, tealSat: 60,
+    saturation: 90, warmDesat: 5,
+    shadowBlue: 15, shadowTeal: 8, shadowWarm: 12, highlightBlue: 5, highlightWarm: 8,
+    sharpness: 45, vignette: 20, vignetteRadius: 70, grain: 6
+  },
+  colorplus: { // Budget warm, heavy grain, yellow cast, nostalgic
+    brightness: 10, contrast: 28, shadows: 15, highlights: -5, fade: 12,
+    temperature: 28, tint: 12,
+    tealIntensity: 0, tealSat: 50,
+    saturation: 68, warmDesat: 10,
+    shadowBlue: 0, shadowTeal: 0, shadowWarm: 28, highlightBlue: 0, highlightWarm: 25,
+    sharpness: 15, vignette: 35, vignetteRadius: 55, grain: 20
+  },
+  triX: { // Classic B&W, deep blacks, punchy contrast, heavy grain
+    brightness: -10, contrast: 55, shadows: 8, highlights: -18, fade: 5,
     temperature: 0, tint: 0,
     tealIntensity: 0, tealSat: 50,
     saturation: 0, warmDesat: 0,
     shadowBlue: 0, shadowTeal: 0, shadowWarm: 0, highlightBlue: 0, highlightWarm: 0,
-    sharpness: 35, vignette: 30, vignetteRadius: 60, grain: 18
+    sharpness: 40, vignette: 45, vignetteRadius: 50, grain: 25
   },
 
-  // ---- CINESTILL ----
-  cinestill800t: {
-    brightness: -10, contrast: 25, shadows: 15, highlights: -15, fade: 5,
-    temperature: -35, tint: -8,
-    tealIntensity: 40, tealSat: 65,
-    saturation: 55, warmDesat: 60,
-    shadowBlue: 35, shadowTeal: 20, shadowWarm: 0, highlightBlue: 15, highlightWarm: 12,
-    sharpness: 20, vignette: 25, vignetteRadius: 65, grain: 12
+  // ---- CINESTILL ---- (strong, distinctive tungsten/daylight looks)
+  cinestill800t: { // Iconic blue/teal shadows, warm halation highlights, neon glow
+    brightness: -20, contrast: 35, shadows: 18, highlights: -20, fade: 5,
+    temperature: -45, tint: -12,
+    tealIntensity: 70, tealSat: 85,
+    saturation: 50, warmDesat: 75,
+    shadowBlue: 50, shadowTeal: 35, shadowWarm: 0, highlightBlue: 10, highlightWarm: 25,
+    sharpness: 18, vignette: 35, vignetteRadius: 55, grain: 15
   },
-  cinestill400d: {
-    brightness: -5, contrast: 20, shadows: 12, highlights: -8, fade: 5,
-    temperature: 5, tint: 2,
-    tealIntensity: 10, tealSat: 50,
-    saturation: 62, warmDesat: 25,
-    shadowBlue: 10, shadowTeal: 8, shadowWarm: 8, highlightBlue: 5, highlightWarm: 8,
-    sharpness: 25, vignette: 20, vignetteRadius: 70, grain: 8
-  },
-  cinestill50d: {
-    brightness: 0, contrast: 18, shadows: 8, highlights: -5, fade: 3,
-    temperature: 3, tint: 0,
-    tealIntensity: 5, tealSat: 50,
-    saturation: 70, warmDesat: 15,
-    shadowBlue: 8, shadowTeal: 5, shadowWarm: 5, highlightBlue: 3, highlightWarm: 5,
-    sharpness: 35, vignette: 10, vignetteRadius: 80, grain: 4
-  },
-
-  // ---- FUJIFILM ----
-  pro400h: {
-    brightness: 5, contrast: 12, shadows: 15, highlights: -5, fade: 12,
-    temperature: -8, tint: -5,
-    tealIntensity: 15, tealSat: 45,
-    saturation: 55, warmDesat: 35,
-    shadowBlue: 12, shadowTeal: 10, shadowWarm: 0, highlightBlue: 8, highlightWarm: 3,
-    sharpness: 18, vignette: 12, vignetteRadius: 75, grain: 8
-  },
-  superia400: {
-    brightness: 0, contrast: 25, shadows: 10, highlights: -8, fade: 5,
-    temperature: -5, tint: -8,
-    tealIntensity: 18, tealSat: 55,
-    saturation: 68, warmDesat: 30,
-    shadowBlue: 15, shadowTeal: 12, shadowWarm: 5, highlightBlue: 8, highlightWarm: 0,
-    sharpness: 25, vignette: 20, vignetteRadius: 68, grain: 12
-  },
-  velvia50: {
-    brightness: -5, contrast: 35, shadows: 5, highlights: -10, fade: 0,
-    temperature: 3, tint: 2,
-    tealIntensity: 12, tealSat: 60,
-    saturation: 90, warmDesat: 5,
-    shadowBlue: 15, shadowTeal: 10, shadowWarm: 5, highlightBlue: 5, highlightWarm: 3,
-    sharpness: 40, vignette: 15, vignetteRadius: 75, grain: 3
-  },
-  provia100: {
-    brightness: 0, contrast: 22, shadows: 8, highlights: -5, fade: 3,
-    temperature: 0, tint: 0,
+  cinestill400d: { // Warm daylight, slightly muted, organic color
+    brightness: -8, contrast: 30, shadows: 18, highlights: -12, fade: 8,
+    temperature: 12, tint: 5,
     tealIntensity: 8, tealSat: 50,
-    saturation: 72, warmDesat: 10,
-    shadowBlue: 8, shadowTeal: 5, shadowWarm: 3, highlightBlue: 3, highlightWarm: 2,
-    sharpness: 35, vignette: 10, vignetteRadius: 80, grain: 4
+    saturation: 60, warmDesat: 30,
+    shadowBlue: 12, shadowTeal: 8, shadowWarm: 15, highlightBlue: 3, highlightWarm: 12,
+    sharpness: 22, vignette: 28, vignetteRadius: 62, grain: 10
+  },
+  cinestill50d: { // Clean, vibrant daylight film, rich color, fine grain
+    brightness: -3, contrast: 32, shadows: 8, highlights: -10, fade: 0,
+    temperature: 5, tint: 2,
+    tealIntensity: 10, tealSat: 55,
+    saturation: 78, warmDesat: 12,
+    shadowBlue: 12, shadowTeal: 8, shadowWarm: 5, highlightBlue: 5, highlightWarm: 8,
+    sharpness: 38, vignette: 15, vignetteRadius: 75, grain: 5
+  },
+
+  // ---- FUJIFILM ---- (strong, distinctive Japanese film looks)
+  pro400h: { // Cool pastel, lifted milky shadows, dreamy overexposed feel
+    brightness: 10, contrast: 15, shadows: 30, highlights: -5, fade: 25,
+    temperature: -15, tint: -8,
+    tealIntensity: 25, tealSat: 55,
+    saturation: 42, warmDesat: 45,
+    shadowBlue: 20, shadowTeal: 15, shadowWarm: 0, highlightBlue: 12, highlightWarm: 5,
+    sharpness: 15, vignette: 15, vignetteRadius: 75, grain: 10
+  },
+  superia400: { // Green/cyan cast, punchy, slightly gritty consumer film
+    brightness: -5, contrast: 35, shadows: 12, highlights: -12, fade: 5,
+    temperature: -12, tint: -15,
+    tealIntensity: 30, tealSat: 65,
+    saturation: 65, warmDesat: 45,
+    shadowBlue: 20, shadowTeal: 22, shadowWarm: 0, highlightBlue: 12, highlightWarm: 0,
+    sharpness: 28, vignette: 28, vignetteRadius: 60, grain: 16
+  },
+  velvia50: { // EXTREME saturation, vivid punchy colors, high contrast landscape film
+    brightness: -8, contrast: 50, shadows: 3, highlights: -15, fade: 0,
+    temperature: 5, tint: 3,
+    tealIntensity: 15, tealSat: 70,
+    saturation: 100, warmDesat: 0,
+    shadowBlue: 20, shadowTeal: 12, shadowWarm: 8, highlightBlue: 8, highlightWarm: 5,
+    sharpness: 50, vignette: 20, vignetteRadius: 70, grain: 3
+  },
+  provia100: { // Balanced, natural but enhanced, faithful colors
+    brightness: -3, contrast: 30, shadows: 10, highlights: -8, fade: 3,
+    temperature: 2, tint: 0,
+    tealIntensity: 10, tealSat: 55,
+    saturation: 75, warmDesat: 10,
+    shadowBlue: 10, shadowTeal: 8, shadowWarm: 5, highlightBlue: 5, highlightWarm: 3,
+    sharpness: 35, vignette: 15, vignetteRadius: 75, grain: 5
   },
 
   // ---- LUCID / STREET ----
-  lucid1: { // Lucid Clean — desaturated, clean, neutral
-    brightness: -5, contrast: 18, shadows: 15, highlights: -10, fade: 8,
+  lucid1: { // Lucid Clean — heavily desaturated, cool neutral, clean street
+    brightness: -12, contrast: 28, shadows: 18, highlights: -15, fade: 12,
+    temperature: -8, tint: -2,
+    tealIntensity: 10, tealSat: 50,
+    saturation: 28, warmDesat: 50,
+    shadowBlue: 15, shadowTeal: 8, shadowWarm: 5, highlightBlue: 5, highlightWarm: 3,
+    sharpness: 35, vignette: 25, vignetteRadius: 65, grain: 6
+  },
+  lucid2: { // Lucid Matte — extreme lifted blacks, very matte flat look
+    brightness: -5, contrast: 8, shadows: 35, highlights: -10, fade: 40,
     temperature: -3, tint: 0,
     tealIntensity: 5, tealSat: 50,
-    saturation: 48, warmDesat: 30,
-    shadowBlue: 8, shadowTeal: 5, shadowWarm: 5, highlightBlue: 3, highlightWarm: 3,
-    sharpness: 30, vignette: 15, vignetteRadius: 75, grain: 5
+    saturation: 35, warmDesat: 30,
+    shadowBlue: 10, shadowTeal: 5, shadowWarm: 10, highlightBlue: 3, highlightWarm: 8,
+    sharpness: 20, vignette: 18, vignetteRadius: 70, grain: 8
   },
-  lucid2: { // Lucid Matte — lifted blacks, soft matte
-    brightness: -3, contrast: 12, shadows: 20, highlights: -8, fade: 20,
-    temperature: -2, tint: 0,
-    tealIntensity: 3, tealSat: 50,
-    saturation: 45, warmDesat: 25,
-    shadowBlue: 6, shadowTeal: 3, shadowWarm: 8, highlightBlue: 2, highlightWarm: 5,
-    sharpness: 25, vignette: 12, vignetteRadius: 78, grain: 6
+  lucid3: { // Lucid Fade — washed out pastel, vintage disposable camera
+    brightness: 8, contrast: 5, shadows: 40, highlights: 0, fade: 50,
+    temperature: 5, tint: 3,
+    tealIntensity: 5, tealSat: 40,
+    saturation: 25, warmDesat: 20,
+    shadowBlue: 8, shadowTeal: 5, shadowWarm: 15, highlightBlue: 5, highlightWarm: 10,
+    sharpness: 12, vignette: 15, vignetteRadius: 75, grain: 18
   },
-  lucid3: { // Lucid Fade — heavy fade, pastel
-    brightness: 0, contrast: 8, shadows: 25, highlights: -5, fade: 30,
-    temperature: 0, tint: 0,
-    tealIntensity: 5, tealSat: 45,
-    saturation: 40, warmDesat: 20,
-    shadowBlue: 5, shadowTeal: 3, shadowWarm: 10, highlightBlue: 3, highlightWarm: 5,
-    sharpness: 20, vignette: 10, vignetteRadius: 80, grain: 8
+  lucid4: { // Street Shadow — very dark, crushed blacks, high contrast street
+    brightness: -30, contrast: 50, shadows: 5, highlights: -25, fade: 0,
+    temperature: -8, tint: -3,
+    tealIntensity: 15, tealSat: 55,
+    saturation: 35, warmDesat: 50,
+    shadowBlue: 18, shadowTeal: 12, shadowWarm: 5, highlightBlue: 5, highlightWarm: 10,
+    sharpness: 45, vignette: 55, vignetteRadius: 45, grain: 8
   },
-  lucid4: { // Street Shadow — dark, contrasty street
-    brightness: -18, contrast: 32, shadows: 8, highlights: -20, fade: 5,
-    temperature: -5, tint: -2,
-    tealIntensity: 10, tealSat: 50,
-    saturation: 42, warmDesat: 40,
-    shadowBlue: 12, shadowTeal: 8, shadowWarm: 5, highlightBlue: 5, highlightWarm: 8,
-    sharpness: 38, vignette: 35, vignetteRadius: 55, grain: 6
-  },
-  lucid5: { // London Fog — cool, desaturated, overcast
-    brightness: -8, contrast: 15, shadows: 18, highlights: -12, fade: 15,
-    temperature: -10, tint: -3,
-    tealIntensity: 8, tealSat: 45,
-    saturation: 35, warmDesat: 45,
-    shadowBlue: 15, shadowTeal: 8, shadowWarm: 0, highlightBlue: 8, highlightWarm: 0,
-    sharpness: 25, vignette: 20, vignetteRadius: 70, grain: 5
+  lucid5: { // London Fog — very cool, grey, moody overcast, desaturated
+    brightness: -12, contrast: 22, shadows: 22, highlights: -18, fade: 20,
+    temperature: -20, tint: -8,
+    tealIntensity: 12, tealSat: 50,
+    saturation: 20, warmDesat: 60,
+    shadowBlue: 25, shadowTeal: 12, shadowWarm: 0, highlightBlue: 15, highlightWarm: 0,
+    sharpness: 25, vignette: 30, vignetteRadius: 60, grain: 6
   },
 
   // ---- GLOW & HOLIDAY ----
@@ -2556,11 +2555,11 @@ function applyPreset(name) {
   manualOverrides.clear();
   const isNeutral = name === 'neutral';
   if (!isNeutral) {
-    $('intensity').value = 20;
-    $('intensityVal').textContent = '20%';
+    $('intensity').value = 50;
+    $('intensityVal').textContent = '50%';
   }
   const n = PRESETS.neutral;
-  const t = isNeutral ? 1 : 0.2;
+  const t = isNeutral ? 1 : 0.5;
   SLIDERS.forEach(id => {
     if (p[id] !== undefined) {
       const val = isNeutral ? p[id] : Math.round(n[id] + (p[id] - n[id]) * t);
