@@ -19,8 +19,8 @@
     --text: #eceeff;
     --text-dim: #8890c0;
     --muted2: #4a5080;
-    --accent: #ff7a00;
-    --accent2: #ff9a3d;
+    --accent: #e05200;
+    --accent2: #f06820;
     --violet: #a78bfa;
     --violet2: #c4b5fd;
     --glow: rgba(99,102,241,0.22);
@@ -82,12 +82,12 @@
     color: #fff;
     border: none;
     font-weight: 600;
-    box-shadow: 0 4px 18px rgba(255,122,0,0.25);
+    box-shadow: 0 4px 18px rgba(224,82,0,0.25);
   }
   .btn-primary:hover {
     filter: brightness(1.12);
     transform: translateY(-1px);
-    box-shadow: 0 6px 24px rgba(255,122,0,0.35);
+    box-shadow: 0 6px 24px rgba(224,82,0,0.35);
   }
 
   .main { display: flex; flex: 1; overflow: hidden; }
@@ -164,7 +164,7 @@
   .preset-item.active {
     border-color: var(--accent);
     color: var(--accent2);
-    background: rgba(255,122,0,0.1);
+    background: rgba(224,82,0,0.1);
   }
 
   /* ---- RIGHT PANEL: CONTROLS ---- */
@@ -247,7 +247,7 @@
     background: linear-gradient(135deg, var(--accent), var(--violet));
     cursor: pointer;
     border: 2px solid var(--bg);
-    box-shadow: 0 0 6px rgba(255,122,0,0.35);
+    box-shadow: 0 0 6px rgba(224,82,0,0.35);
   }
   .control-row .value {
     font-size: 10px;
@@ -305,7 +305,7 @@
     border: 2px dashed var(--accent);
     border-radius: 16px;
     padding: 50px;
-    background: rgba(255,122,0,0.04);
+    background: rgba(224,82,0,0.04);
   }
 
   canvas {
@@ -424,7 +424,7 @@
   .thumb.active {
     border-color: var(--accent);
     opacity: 1;
-    box-shadow: 0 0 8px rgba(255,122,0,0.3);
+    box-shadow: 0 0 8px rgba(224,82,0,0.3);
   }
 
   /* ---- STATUS BAR ---- */
@@ -574,7 +574,7 @@
   .format-btn.active {
     border-color: var(--accent);
     color: var(--accent2);
-    background: rgba(255,122,0,0.1);
+    background: rgba(224,82,0,0.1);
   }
 
   /* ---- FX PANEL (inside controls) ---- */
@@ -670,7 +670,7 @@
     position: absolute;
     top: 6px;
     height: 6px;
-    background: rgba(255,122,0,0.35);
+    background: rgba(224,82,0,0.35);
     border-radius: 3px;
     pointer-events: none;
   }
@@ -1297,7 +1297,7 @@
       <div class="section-title">Text / Rubrik</div>
       <div class="section-body">
         <div style="display:flex;gap:4px;margin-bottom:6px;">
-          <button class="btn" id="btnInsertLogo" style="flex:1;font-size:10px;padding:5px;">VILTRA /TRAINING .com</button>
+          <button class="btn" id="btnInsertLogo" style="flex:1;font-size:10px;padding:5px;">viltratraining.com</button>
           <select id="textFont" class="prompt-select" style="flex:1;margin:0;">
             <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
             <option value="'DM Sans', sans-serif">DM Sans</option>
@@ -1312,7 +1312,7 @@
           </select>
         </div>
         <div class="text-line-row" data-line="0">
-          <span class="text-line-num" style="background:rgba(255,122,0,0.8);">1</span>
+          <span class="text-line-num" style="background:rgba(224,82,0,0.8);">1</span>
           <input type="text" class="text-line-input" placeholder="Rad 1...">
           <input type="range" class="text-line-size" min="12" max="160" value="64" title="Storlek">
           <span class="text-line-size-val">64</span>
@@ -1323,7 +1323,7 @@
           <input type="text" class="text-line-input" placeholder="Rad 2...">
           <input type="range" class="text-line-size" min="12" max="160" value="48" title="Storlek">
           <span class="text-line-size-val">48</span>
-          <input type="color" class="text-line-color" value="#ff7a00" title="Färg">
+          <input type="color" class="text-line-color" value="#e05200" title="Färg">
         </div>
         <div class="text-line-row" data-line="2">
           <span class="text-line-num" style="background:rgba(59,130,246,0.8);">3</span>
@@ -1337,7 +1337,7 @@
           <input type="text" class="text-line-input" placeholder="Rad 4...">
           <input type="range" class="text-line-size" min="12" max="160" value="36" title="Storlek">
           <span class="text-line-size-val">36</span>
-          <input type="color" class="text-line-color" value="#ff7a00" title="Färg">
+          <input type="color" class="text-line-color" value="#e05200" title="Färg">
         </div>
         <div class="text-line-row" data-line="4">
           <span class="text-line-num" style="background:rgba(248,113,113,0.8);">5</span>
@@ -1351,14 +1351,7 @@
           <input type="text" class="text-line-input" placeholder="Rad 6...">
           <input type="range" class="text-line-size" min="12" max="160" value="28" title="Storlek">
           <span class="text-line-size-val">28</span>
-          <input type="color" class="text-line-color" value="#ff7a00" title="Färg">
-        </div>
-        <div class="text-line-row" data-line="6">
-          <span class="text-line-num" style="background:rgba(255,255,255,0.5);">W</span>
-          <input type="text" class="text-line-input" value="viltratraining.com" placeholder="Webbadress...">
-          <input type="range" class="text-line-size" min="12" max="160" value="22" title="Storlek">
-          <span class="text-line-size-val">22</span>
-          <input type="color" class="text-line-color" value="#ff7a00" title="Färg">
+          <input type="color" class="text-line-color" value="#e05200" title="Färg">
         </div>
         <p style="font-size:10px;color:#888;margin-top:6px;">Dra siffran direkt på bilden</p>
       </div>
@@ -3332,8 +3325,8 @@ $('btnCopyPrompt').onclick = () => {
 // =====================================================
 // 6 INDEPENDENT DRAGGABLE TEXT BLOCKS
 // =====================================================
-const TEXT_COUNT = 7;
-const TEXT_COLORS = ['rgba(255,122,0,0.8)','rgba(167,139,250,0.8)','rgba(59,130,246,0.8)','rgba(52,211,153,0.8)','rgba(248,113,113,0.8)','rgba(250,204,21,0.8)','rgba(255,255,255,0.5)'];
+const TEXT_COUNT = 6;
+const TEXT_COLORS = ['rgba(224,82,0,0.8)','rgba(167,139,250,0.8)','rgba(59,130,246,0.8)','rgba(52,211,153,0.8)','rgba(248,113,113,0.8)','rgba(250,204,21,0.8)'];
 const textBlocks = [];
 for (let i = 0; i < TEXT_COUNT; i++) {
   textBlocks.push({ x: 0.5, y: 0.12 + i * 0.11, handle: null });
@@ -3462,21 +3455,24 @@ function drawTextOverlay(ctx, w, h) {
     ctx.save();
     ctx.textBaseline = 'middle';
 
-    if (isLogo && data.text.includes('/TRAINING')) {
-      // Special Viltra logo rendering: VILTRA in white, /TRAINING in orange
+    if (isLogo && data.text.includes('training')) {
+      // Special viltratraining.com rendering: viltra in white, training.com in orange
       ctx.textAlign = 'center';
       ctx.font = `900 ${fs}px ${font}`;
-      const parts = data.text.split('/TRAINING');
-      const viltraText = parts[0]; // "VILTRA "
-      const trainingText = '/TRAINING';
-      const viltraW = ctx.measureText(viltraText).width;
-      const trainingW = ctx.measureText(trainingText).width;
-      const totalW = viltraW + trainingW;
-      const startX = cx - totalW / 2;
-
-      ctx.textAlign = 'left';
-      drawStyledText(viltraText, startX, cy, fs, '#ffffff');
-      drawStyledText(trainingText, startX + viltraW, cy, fs, '#ff7a00');
+      const match = data.text.match(/^(viltra)(training\.com)$/i);
+      if (match) {
+        const part1 = match[1];
+        const part2 = match[2];
+        const w1 = ctx.measureText(part1).width;
+        const w2 = ctx.measureText(part2).width;
+        const startX = cx - (w1 + w2) / 2;
+        ctx.textAlign = 'left';
+        drawStyledText(part1, startX, cy, fs, '#ffffff');
+        drawStyledText(part2, startX + w1, cy, fs, '#e05200');
+      } else {
+        ctx.textAlign = 'center';
+        drawStyledText(data.text, cx, cy, fs, data.color);
+      }
     } else {
       ctx.textAlign = 'center';
       drawStyledText(data.text, cx, cy, fs, data.color);
@@ -3506,20 +3502,18 @@ $('textFont').addEventListener('change', () => rerender());
 $('textStyle').addEventListener('change', () => rerender());
 window.addEventListener('resize', updateTextHandles);
 
-// Insert Viltra logo text
+// Insert viltratraining.com logo text
 $('btnInsertLogo').onclick = () => {
   const rows = getTextRows();
-  // Find first empty row, or use row 0
   let target = 0;
   for (let i = 0; i < rows.length; i++) {
     if (!rows[i].querySelector('.text-line-input').value) { target = i; break; }
   }
   const row = rows[target];
-  row.querySelector('.text-line-input').value = 'VILTRA /TRAINING';
+  row.querySelector('.text-line-input').value = 'viltratraining.com';
   row.querySelector('.text-line-color').value = '#ffffff';
-  row.querySelector('.text-line-size').value = 52;
-  row.querySelector('.text-line-size-val').textContent = '52';
-  // Mark this as logo line for special rendering
+  row.querySelector('.text-line-size').value = 36;
+  row.querySelector('.text-line-size-val').textContent = '36';
   row.dataset.logo = 'true';
   updateTextHandles();
   rerender();
