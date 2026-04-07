@@ -1377,6 +1377,43 @@
     <!-- Trim controls moved to video timeline area -->
 
     <div class="section collapsed">
+      <div class="section-title">Social Media Mallar</div>
+      <div class="section-body">
+        <p style="font-size:10px;color:#888;margin-bottom:8px;">Välj en mall → format, text & preset sätts automatiskt. Ladda en bild först.</p>
+        <div id="smTemplates" style="display:flex;flex-direction:column;gap:4px;">
+          <button class="btn sm-tpl" data-tpl="hook_tiktok" style="width:100%;text-align:left;font-size:11px;padding:8px 12px;">
+            <span style="color:var(--accent);font-weight:700;">TikTok Hook</span>
+            <span style="color:#888;font-size:10px;display:block;">9:16 · Stor hooktext + CTA + logga</span>
+          </button>
+          <button class="btn sm-tpl" data-tpl="ig_post" style="width:100%;text-align:left;font-size:11px;padding:8px 12px;">
+            <span style="color:var(--violet);font-weight:700;">Instagram Post</span>
+            <span style="color:#888;font-size:10px;display:block;">4:5 · Rubrik + undertext + logga</span>
+          </button>
+          <button class="btn sm-tpl" data-tpl="ig_story" style="width:100%;text-align:left;font-size:11px;padding:8px 12px;">
+            <span style="color:var(--violet2);font-weight:700;">Instagram Story</span>
+            <span style="color:#888;font-size:10px;display:block;">9:16 · Stor text + swipe up CTA</span>
+          </button>
+          <button class="btn sm-tpl" data-tpl="ig_square" style="width:100%;text-align:left;font-size:11px;padding:8px 12px;">
+            <span style="color:#60a5fa;font-weight:700;">Karusell-slide</span>
+            <span style="color:#888;font-size:10px;display:block;">1:1 · Perfekt för TikTok fotoinlägg / IG karusell</span>
+          </button>
+          <button class="btn sm-tpl" data-tpl="feature_card" style="width:100%;text-align:left;font-size:11px;padding:8px 12px;">
+            <span style="color:#34d399;font-weight:700;">Feature-kort</span>
+            <span style="color:#888;font-size:10px;display:block;">4:5 · Visa en Viltra-funktion med data</span>
+          </button>
+          <button class="btn sm-tpl" data-tpl="stats_dark" style="width:100%;text-align:left;font-size:11px;padding:8px 12px;">
+            <span style="color:#f87171;font-weight:700;">Stats Dark</span>
+            <span style="color:#888;font-size:10px;display:block;">1:1 · Mörkt kort med siffra + text</span>
+          </button>
+          <button class="btn sm-tpl" data-tpl="promo_wide" style="width:100%;text-align:left;font-size:11px;padding:8px 12px;">
+            <span style="color:#fbbf24;font-weight:700;">YouTube Thumbnail</span>
+            <span style="color:#888;font-size:10px;display:block;">16:9 · Stor rubrik + logga</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section collapsed">
       <div class="section-title">AI Bildprompt</div>
       <div class="section-body">
         <select id="aiCharacter" class="prompt-select">
@@ -4356,6 +4393,157 @@ if ($('mobileTextSize2')) {
 }
 
 // Mobile export buttons
+
+// =====================================================
+// SOCIAL MEDIA TEMPLATES
+// =====================================================
+const smTemplates = {
+  hook_tiktok: {
+    format: '9:16',
+    preset: 'darkMoody',
+    textStyle: 'bold-outline',
+    lines: [
+      { text: '', size: 72, color: '#ffffff', y: 0.35 },   // Hook — user fills in
+      { text: '', size: 36, color: '#ff9a3d', y: 0.50 },   // Subtext
+      { text: 'viltratraining.com', size: 32, color: '#ffffff', y: 0.88, logo: true },
+      { text: '', size: 28, color: '#e05200', y: 0.94 },   // CTA
+    ],
+    placeholders: ['Skriv din hook här...', 'Kort förklaring...', 'viltratraining.com', 'Testa gratis idag →']
+  },
+  ig_post: {
+    format: '4:5',
+    preset: 'darkMoody',
+    textStyle: 'bold-outline',
+    lines: [
+      { text: '', size: 56, color: '#ffffff', y: 0.30 },
+      { text: '', size: 30, color: '#ff9a3d', y: 0.42 },
+      { text: 'viltratraining.com', size: 28, color: '#ffffff', y: 0.90, logo: true },
+    ],
+    placeholders: ['Rubrik här...', 'Undertext / förklaring...', 'viltratraining.com']
+  },
+  ig_story: {
+    format: '9:16',
+    preset: 'luxuryBlack',
+    textStyle: 'shadow',
+    lines: [
+      { text: '', size: 64, color: '#ffffff', y: 0.30 },
+      { text: '', size: 32, color: '#c4b5fd', y: 0.45 },
+      { text: 'viltratraining.com', size: 28, color: '#ffffff', y: 0.85, logo: true },
+      { text: 'Svep upp ↑', size: 24, color: '#ff9a3d', y: 0.92 },
+    ],
+    placeholders: ['Stor rubrik...', 'Förklaring...', 'viltratraining.com', 'Svep upp ↑']
+  },
+  ig_square: {
+    format: '1:1',
+    preset: 'darkMoody',
+    textStyle: 'bold-outline',
+    lines: [
+      { text: '', size: 52, color: '#ffffff', y: 0.25 },
+      { text: '', size: 28, color: '#ff9a3d', y: 0.40 },
+      { text: 'viltratraining.com', size: 24, color: '#ffffff', y: 0.90, logo: true },
+    ],
+    placeholders: ['Rubrik...', 'Kort text...', 'viltratraining.com']
+  },
+  feature_card: {
+    format: '4:5',
+    preset: 'coldCinema',
+    textStyle: 'box',
+    lines: [
+      { text: 'VILTRA FEATURE', size: 22, color: '#ff9a3d', y: 0.12 },
+      { text: '', size: 48, color: '#ffffff', y: 0.28 },
+      { text: '', size: 26, color: '#c4b5fd', y: 0.40 },
+      { text: 'viltratraining.com', size: 26, color: '#ffffff', y: 0.90, logo: true },
+    ],
+    placeholders: ['VILTRA FEATURE', 'Funktionsnamn...', 'Kort beskrivning...', 'viltratraining.com']
+  },
+  stats_dark: {
+    format: '1:1',
+    preset: 'matteBlack',
+    textStyle: 'bold-outline',
+    lines: [
+      { text: '', size: 80, color: '#ff9a3d', y: 0.35 },
+      { text: '', size: 24, color: '#ffffff', y: 0.52 },
+      { text: '', size: 20, color: '#8890c0', y: 0.60 },
+      { text: 'viltratraining.com', size: 22, color: '#ffffff', y: 0.90, logo: true },
+    ],
+    placeholders: ['CTL 85', 'Din form just nu', 'Chronic Training Load', 'viltratraining.com']
+  },
+  promo_wide: {
+    format: '16:9',
+    preset: 'tealOrange',
+    textStyle: 'bold-outline',
+    lines: [
+      { text: '', size: 64, color: '#ffffff', y: 0.40 },
+      { text: '', size: 32, color: '#ff9a3d', y: 0.58 },
+      { text: 'viltratraining.com', size: 28, color: '#ffffff', y: 0.85, logo: true },
+    ],
+    placeholders: ['STOR RUBRIK...', 'Undertext...', 'viltratraining.com']
+  },
+};
+
+document.querySelectorAll('.sm-tpl').forEach(btn => {
+  btn.onclick = () => {
+    const tpl = smTemplates[btn.dataset.tpl];
+    if (!tpl) return;
+
+    // Apply format
+    applyFormat(tpl.format);
+
+    // Apply preset
+    applyPreset(tpl.preset);
+
+    // Set text style
+    if ($('textStyle')) $('textStyle').value = tpl.textStyle;
+
+    // Open text section
+    const textSection = document.querySelector('.section-title');
+    let textSec = null;
+    document.querySelectorAll('.section-title').forEach(t => {
+      if (t.textContent.trim().startsWith('Text')) textSec = t.parentElement;
+    });
+    if (textSec && textSec.classList.contains('collapsed')) textSec.classList.remove('collapsed');
+
+    // Fill text rows
+    const rows = getTextRows();
+    tpl.lines.forEach((line, i) => {
+      if (!rows[i]) return;
+      const input = rows[i].querySelector('.text-line-input');
+      const sizeSlider = rows[i].querySelector('.text-line-size');
+      const sizeVal = rows[i].querySelector('.text-line-size-val');
+      const colorInput = rows[i].querySelector('.text-line-color');
+
+      input.value = line.text || '';
+      input.placeholder = tpl.placeholders[i] || '';
+      sizeSlider.value = line.size;
+      sizeVal.textContent = line.size;
+      colorInput.value = line.color;
+
+      if (line.logo) rows[i].dataset.logo = 'true';
+      else delete rows[i].dataset.logo;
+
+      // Position text block
+      if (textBlocks[i]) {
+        textBlocks[i].x = 0.5;
+        textBlocks[i].y = line.y;
+      }
+    });
+
+    // Clear remaining rows
+    for (let i = tpl.lines.length; i < rows.length; i++) {
+      rows[i].querySelector('.text-line-input').value = '';
+      delete rows[i].dataset.logo;
+    }
+
+    updateTextHandles();
+    rerender();
+
+    // Flash button to confirm
+    btn.style.borderColor = 'var(--accent)';
+    btn.style.background = 'rgba(224,82,0,0.15)';
+    setTimeout(() => { btn.style.borderColor = ''; btn.style.background = ''; }, 800);
+  };
+});
+
 applyPreset('neutral');
 </script>
 </body>
